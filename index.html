@@ -20,9 +20,19 @@
         }
         header {
             text-align: center;
-            padding: 2rem;
-            background-color: #000;
-            border-bottom: 2px solid var(--card-bg);
+            padding: 4rem 2rem; /* زيادة الارتفاع لتبدو الخلفية أفخم */
+            /* دمج صورة سينمائية مع طبقة داكنة لتوضيح النصوص */
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(20, 20, 20, 1)), 
+                        url('https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            border-bottom: 3px solid #e50914; /* خط أحمر سفلي بستايل نتفليكس */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        
+        header h1, header p {
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.8); /* إضافة ظل للنصوص لتبرز أكثر */
+        }
         }
         
         /* ----- Search & Sort Controls ----- */
@@ -522,3 +532,4 @@
     </script>
 </body>
 </html>
+
