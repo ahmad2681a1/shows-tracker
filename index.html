@@ -31,17 +31,12 @@
             border-bottom: 3px solid #e50914;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
-        header h1, header p {
-            text-shadow: 2px 2px 5px rgba(0,0,0,0.8);
-        }
-        header h1 {
-            margin-top: 0;
-            font-size: 2.5rem;
-        }
+        header h1, header p { text-shadow: 2px 2px 5px rgba(0,0,0,0.8); }
+        header h1 { margin-top: 0; font-size: 2.5rem; }
         
-        /* ----- Search & Sort Controls ----- */
+        /* ----- Search & Controls ----- */
         .controls-wrapper {
-            max-width: 600px;
+            max-width: 800px;
             margin: 20px auto;
             padding: 0 20px;
             display: flex;
@@ -64,9 +59,7 @@
             outline: none;
             transition: 0.3s;
         }
-        .search-container input:focus {
-            border-color: #e50914;
-        }
+        .search-container input:focus { border-color: #e50914; }
         .search-container button {
             background-color: #e50914;
             border-radius: 25px;
@@ -76,24 +69,33 @@
             cursor: pointer;
             font-weight: bold;
         }
-        .sort-container {
-            text-align: center;
+        
+        /* --- Dropdowns Row --- */
+        .dropdowns-row {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
         }
-        .sort-container select {
-            padding: 8px 15px;
-            border-radius: 5px;
+        .sort-container, .genre-container {
+            display: flex;
+            align-items: center;
             background-color: var(--card-bg);
-            color: white;
+            padding: 5px 15px;
+            border-radius: 25px;
             border: 1px solid #555;
+        }
+        .sort-container select, .genre-container select {
+            background-color: transparent;
+            color: white;
+            border: none;
             font-size: 1rem;
             outline: none;
             cursor: pointer;
-            transition: border-color 0.3s;
-        }
-        .sort-container select:focus {
-            border-color: #e50914;
+            padding: 5px;
         }
 
+        /* --- Network Filters --- */
         .filters {
             display: flex;
             justify-content: center;
@@ -101,7 +103,7 @@
             padding: 20px;
             flex-wrap: wrap;
         }
-        button {
+        button.network-btn {
             background-color: var(--card-bg);
             color: white;
             border: none;
@@ -111,18 +113,22 @@
             transition: 0.3s;
             font-weight: bold;
         }
-        button:hover, button.active {
+        button.network-btn:hover, button.network-btn.active {
             background-color: #e50914; 
         }
-        
         .fav-filter-btn {
             background-color: #FFD700 !important;
             color: #000 !important;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
         }
-        .fav-filter-btn:hover, .fav-filter-btn.active {
-            background-color: #e5c100 !important;
-        }
+        .fav-filter-btn:hover, .fav-filter-btn.active { background-color: #e5c100 !important; }
 
+        /* --- Grid & Cards --- */
         .shows-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -142,6 +148,7 @@
         .show-card:hover {
             transform: scale(1.05);
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            z-index: 2;
         }
         .show-image {
             width: 100%;
@@ -160,200 +167,77 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        .loading {
-            text-align: center;
-            padding: 50px;
-            font-size: 1.5rem;
-            color: #aaa;
-            width: 100%;
+
+        /* --- Skeleton Loaders --- */
+        .skeleton {
+            background: linear-gradient(90deg, #333 25%, #444 50%, #333 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
         }
-        
-        #load-more-btn {
-            background-color: #333;
-            border: 2px solid #555;
-            padding: 12px 30px;
-            font-size: 1.1rem;
-            border-radius: 25px;
-            margin-bottom: 40px;
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
-        #load-more-btn:hover {
-            background-color: #e50914;
-            border-color: #e50914;
+        .skeleton-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
+        .skeleton-img { width: 100%; height: 300px; }
+        .skeleton-info { padding: 15px; display: flex; flex-direction: column; gap: 10px; align-items: center; }
+        .skeleton-text { height: 18px; border-radius: 4px; width: 80%; }
+        .skeleton-text-small { height: 14px; border-radius: 4px; width: 100%; }
+
+        .loading-message { text-align: center; color: #aaa; padding: 20px; font-size: 1.2rem; grid-column: 1 / -1; }
 
         /* ----- Modal Design ----- */
         .modal {
-            display: none; 
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.85); 
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            box-sizing: border-box;
+            display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.85); justify-content: center; align-items: center;
+            padding: 20px; box-sizing: border-box;
         }
         .modal-content {
-            background-color: var(--card-bg);
-            padding: 30px;
-            border-radius: 15px;
-            max-width: 900px;
-            width: 100%;
-            position: relative;
-            animation: fadeIn 0.3s ease-in-out;
-            display: flex;
-            gap: 25px;
-            flex-wrap: wrap;
-            max-height: 90vh;
-            overflow-y: auto;
+            background-color: var(--card-bg); padding: 30px; border-radius: 15px; max-width: 900px;
+            width: 100%; position: relative; animation: fadeIn 0.3s ease-in-out; display: flex;
+            gap: 25px; flex-wrap: wrap; max-height: 90vh; overflow-y: auto;
         }
-        .close-btn {
-            position: absolute;
-            top: 15px;
-            right: 20px; 
-            font-size: 35px;
-            cursor: pointer;
-            color: #aaa;
-            transition: color 0.3s;
-        }
-        .close-btn:hover {
-            color: #fff;
-        }
-        .modal-poster {
-            width: 280px;
-            border-radius: 10px;
-            object-fit: cover;
-            align-self: flex-start;
-        }
-        .modal-details {
-            flex: 1;
-            min-width: 300px;
-        }
+        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 35px; cursor: pointer; color: #aaa; transition: color 0.3s; }
+        .close-btn:hover { color: #fff; }
+        .modal-poster { width: 280px; border-radius: 10px; object-fit: cover; align-self: flex-start; }
+        .modal-details { flex: 1; min-width: 300px; }
         .modal-details h2 { margin-top: 0; margin-bottom: 5px; color: #fff; font-size: 2rem; }
-        .modal-meta-info {
-            color: #aaa;
-            font-size: 0.95rem;
-            margin-bottom: 15px;
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-        .meta-badge {
-            background-color: #444;
-            padding: 4px 10px;
-            border-radius: 5px;
-            color: #fff;
-            font-weight: bold;
-        }
+        .modal-meta-info { color: #aaa; font-size: 0.95rem; margin-bottom: 15px; display: flex; gap: 15px; flex-wrap: wrap; }
+        .meta-badge { background-color: #444; padding: 4px 10px; border-radius: 5px; color: #fff; font-weight: bold; }
         
-        .ratings-box {
-            background-color: #1a1a1a;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
-        }
-        .rating-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            background-color: #222;
-            padding: 15px;
-            border-radius: 8px;
-        }
-        .rating-label {
-            font-size: 0.9rem;
-            color: #aaa;
-            margin-bottom: 8px;
-        }
-        .rating-value {
-            font-size: 1.3rem;
-            font-weight: bold;
-        }
+        .ratings-box { background-color: #1a1a1a; padding: 15px; border-radius: 8px; margin: 15px 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; }
+        .rating-item { display: flex; flex-direction: column; align-items: center; text-align: center; background-color: #222; padding: 15px; border-radius: 8px; }
+        .rating-label { font-size: 0.9rem; color: #aaa; margin-bottom: 8px; }
+        .rating-value { font-size: 1.3rem; font-weight: bold; }
 
         .modal-overview { line-height: 1.6; color: #ddd; font-size: 1.05rem; }
         
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-        .trailer-btn, .fav-btn {
-            color: white;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-weight: bold;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: 0.3s;
-            border: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        .action-buttons { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+        .trailer-btn, .fav-btn { color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: 0.3s; border: none; display: flex; align-items: center; gap: 8px; }
         .trailer-btn { background-color: #e50914; }
         .trailer-btn:hover { background-color: #f40612; transform: scale(1.05); }
         .fav-btn { background-color: #333; }
         .fav-btn:hover { background-color: #555; transform: scale(1.05); }
 
-        /* قسم التوصيات */
-        .recommendations-section {
-            width: 100%;
-            margin-top: 30px;
-            border-top: 1px solid #444;
-            padding-top: 20px;
-        }
-        .recommendations-section h3 {
-            margin-top: 0;
-            color: #fff;
-        }
-        .rec-container {
-            display: flex;
-            gap: 15px;
-            overflow-x: auto;
-            padding-bottom: 15px;
-            scrollbar-width: thin;
-            scrollbar-color: #e50914 #222;
-        }
+        .recommendations-section { width: 100%; margin-top: 30px; border-top: 1px solid #444; padding-top: 20px; }
+        .recommendations-section h3 { margin-top: 0; color: #fff; }
+        .rec-container { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px; scrollbar-width: thin; scrollbar-color: #e50914 #222; }
         .rec-container::-webkit-scrollbar { height: 8px; }
         .rec-container::-webkit-scrollbar-track { background: #222; border-radius: 10px; }
         .rec-container::-webkit-scrollbar-thumb { background: #e50914; border-radius: 10px; }
         
-        .rec-card {
-            min-width: 140px;
-            width: 140px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
+        .rec-card { min-width: 140px; width: 140px; cursor: pointer; transition: 0.3s; }
         .rec-card:hover { transform: scale(1.05); }
-        .rec-img {
-            width: 100%;
-            height: 210px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-        .rec-title {
-            font-size: 0.9rem;
-            text-align: center;
-            margin-top: 5px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            color: #ddd;
-        }
+        .rec-img { width: 100%; height: 210px; object-fit: cover; border-radius: 8px; }
+        .rec-title { font-size: 0.9rem; text-align: center; margin-top: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #ddd; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
     </style>
 </head>
 <body>
@@ -367,32 +251,37 @@
                 <input type="text" id="search-input" placeholder="Search for any TV show..." onkeypress="handleKeyPress(event)">
                 <button onclick="performSearch()">Search</button>
             </div>
-            <div class="sort-container">
-                <label for="sort-select" style="color: #aaa; font-weight: bold; margin-right: 10px;">Sort By:</label>
-                <select id="sort-select" onchange="applySort()">
-                    <option value="popularity.desc">Most Popular</option>
-                    <option value="first_air_date.desc">Newest Release</option>
-                    <option value="vote_average.desc">Highest Rated</option>
-                </select>
+            
+            <div class="dropdowns-row">
+                <div class="sort-container">
+                    <label for="sort-select" style="color: #aaa; font-weight: bold; margin-right: 5px;">Sort:</label>
+                    <select id="sort-select" onchange="applyFilters()">
+                        <option value="popularity.desc">Most Popular</option>
+                        <option value="first_air_date.desc">Newest Release</option>
+                        <option value="vote_average.desc">Highest Rated</option>
+                    </select>
+                </div>
+                <div class="genre-container">
+                    <label for="genre-select" style="color: #aaa; font-weight: bold; margin-right: 5px;">Genre:</label>
+                    <select id="genre-select" onchange="applyFilters()">
+                        <option value="">All Genres</option>
+                        </select>
+                </div>
             </div>
         </div>
     </header>
 
     <div class="filters" id="filters">
-        <button class="active" onclick="fetchShows('213', this)">Netflix</button>
-        <button onclick="fetchShows('1024', this)">Amazon Prime</button>
-        <button onclick="fetchShows('49', this)">HBO</button>
-        <button onclick="fetchShows('2552', this)">Apple TV+</button>
-        <button onclick="fetchShows('453', this)">Hulu</button>
-        <button onclick="fetchShows('2739', this)">Disney+</button>
+        <button class="network-btn active" onclick="fetchShows('213', this, 1)">Netflix</button>
+        <button class="network-btn" onclick="fetchShows('1024', this, 1)">Amazon Prime</button>
+        <button class="network-btn" onclick="fetchShows('49', this, 1)">HBO</button>
+        <button class="network-btn" onclick="fetchShows('2552', this, 1)">Apple TV+</button>
+        <button class="network-btn" onclick="fetchShows('453', this, 1)">Hulu</button>
+        <button class="network-btn" onclick="fetchShows('2739', this, 1)">Disney+</button>
         <button class="fav-filter-btn" onclick="showFavorites(this)">⭐ My Favorites</button>
     </div>
 
     <div class="shows-grid" id="shows-grid"></div>
-
-    <div style="text-align: center;">
-        <button id="load-more-btn" style="display: none;" onclick="loadMore()">Load More ⬇️</button>
-    </div>
 
     <div id="show-modal" class="modal">
         <div class="modal-content">
@@ -430,8 +319,7 @@
 
             <div class="recommendations-section" id="rec-section" style="display: none;">
                 <h3>You Might Also Like</h3>
-                <div class="rec-container" id="rec-container">
-                    </div>
+                <div class="rec-container" id="rec-container"></div>
             </div>
         </div>
     </div>
@@ -439,34 +327,78 @@
     <script>
         const TMDB_API_KEY = 'e7be99b2666a862f16f0a6b5441c150b'; 
         const OMDB_API_KEY = '75583472';
-
         const BASE_URL = 'https://api.themoviedb.org/3';
         const IMG_URL = 'https://image.tmdb.org/t/p/w500';
         
         const grid = document.getElementById('shows-grid');
         const modal = document.getElementById('show-modal');
-        const loadMoreBtn = document.getElementById('load-more-btn');
 
         let currentPage = 1;
         let currentMode = 'network';
         let currentNetwork = '213';
         let currentSearchQuery = '';
+        
+        // متغيرات التمرير اللانهائي (Infinite Scroll)
+        let isLoading = false;
+        let hasMorePages = true;
 
-        function applySort() {
+        // 1. تحميل التصنيفات (Genres) المتقدمة
+        async function fetchGenres() {
+            try {
+                const response = await fetch(`${BASE_URL}/genre/tv/list?api_key=${TMDB_API_KEY}&language=en-US`);
+                const data = await response.json();
+                const genreSelect = document.getElementById('genre-select');
+                data.genres.forEach(genre => {
+                    const option = document.createElement('option');
+                    option.value = genre.id;
+                    option.textContent = genre.name;
+                    genreSelect.appendChild(option);
+                });
+            } catch (error) { console.error("Error loading genres", error); }
+        }
+        fetchGenres();
+
+        function applyFilters() {
             if (currentMode === 'network') fetchShows(currentNetwork, document.querySelector('.filters button.active'), 1);
             else if (currentMode === 'search') performSearch(1);
             else if (currentMode === 'favorites') showFavorites(document.querySelector('.fav-filter-btn'));
         }
 
+        // 2. دوال الشاشات الهيكلية (Skeleton Loaders)
+        function showSkeletons(count = 20, clearGrid = false) {
+            if (clearGrid) grid.innerHTML = '';
+            for (let i = 0; i < count; i++) {
+                const skeleton = document.createElement('div');
+                skeleton.className = 'skeleton-card skeleton-item';
+                skeleton.innerHTML = `
+                    <div class="skeleton-img skeleton"></div>
+                    <div class="skeleton-info">
+                        <div class="skeleton-text skeleton"></div>
+                        <div class="skeleton-text-small skeleton"></div>
+                    </div>
+                `;
+                grid.appendChild(skeleton);
+            }
+        }
+
+        function removeSkeletons() {
+            const skeletons = document.querySelectorAll('.skeleton-item');
+            skeletons.forEach(s => s.remove());
+        }
+
         async function fetchShows(networkId, btnElement, page = 1) {
+            if (isLoading) return;
+            isLoading = true;
             currentMode = 'network';
             currentNetwork = networkId;
             currentPage = page;
 
             if (page === 1) {
                 document.getElementById('search-input').value = ''; 
-                grid.innerHTML = '<div class="loading">Loading shows... ⏳</div>';
-                loadMoreBtn.style.display = 'none';
+                hasMorePages = true;
+                showSkeletons(20, true); // تفريغ الشبكة ووضع 20 هيكل
+            } else {
+                showSkeletons(8, false); // وضع 8 هياكل في الأسفل أثناء التحميل الإضافي
             }
             
             if (btnElement) {
@@ -475,56 +407,82 @@
             }
 
             const sortValue = document.getElementById('sort-select').value;
+            const genreValue = document.getElementById('genre-select').value;
+            
             let extraParams = '';
             if (sortValue === 'vote_average.desc') extraParams = '&vote_count.gte=200';
             else if (sortValue === 'first_air_date.desc') extraParams = '&vote_count.gte=5';
+            if (genreValue) extraParams += `&with_genres=${genreValue}`;
 
             try {
                 const response = await fetch(`${BASE_URL}/discover/tv?api_key=${TMDB_API_KEY}&language=en-US&sort_by=${sortValue}${extraParams}&with_networks=${networkId}&page=${page}`);
                 if (!response.ok) throw new Error('Connection error.');
                 const data = await response.json();
-                if (page === 1) grid.innerHTML = '';
+                
+                removeSkeletons();
                 displayShows(data.results);
-                loadMoreBtn.style.display = (data.page < data.total_pages) ? 'inline-block' : 'none';
+                
+                hasMorePages = data.page < data.total_pages;
+                if (data.results.length === 0 && page === 1) grid.innerHTML = '<div class="loading-message">No shows found for this filter.</div>';
             } catch (error) {
-                if (page === 1) grid.innerHTML = `<div class="loading" style="color: red;">${error.message}</div>`;
+                removeSkeletons();
+                if (page === 1) grid.innerHTML = `<div class="loading-message" style="color: red;">${error.message}</div>`;
             }
+            isLoading = false;
         }
 
         async function performSearch(page = 1) {
+            if (isLoading) return;
+            isLoading = true;
             currentMode = 'search';
             currentPage = page;
 
             if (page === 1) {
                 currentSearchQuery = document.getElementById('search-input').value.trim();
-                grid.innerHTML = '<div class="loading">Searching... 🔍</div>';
-                loadMoreBtn.style.display = 'none';
+                hasMorePages = true;
+                showSkeletons(20, true);
                 document.querySelectorAll('.filters button').forEach(btn => btn.classList.remove('active'));
+            } else {
+                showSkeletons(8, false);
             }
 
-            if (!currentSearchQuery) return;
+            if (!currentSearchQuery) { isLoading = false; removeSkeletons(); return; }
 
             try {
                 const response = await fetch(`${BASE_URL}/search/tv?api_key=${TMDB_API_KEY}&language=en-US&query=${encodeURIComponent(currentSearchQuery)}&page=${page}`);
                 const data = await response.json();
                 
+                removeSkeletons();
                 if (page === 1 && data.results.length === 0) {
-                    grid.innerHTML = '<div class="loading">No shows found. Try another name!</div>';
-                    return;
+                    grid.innerHTML = '<div class="loading-message">No shows found. Try another name!</div>';
+                    isLoading = false; return;
                 }
-                if (page === 1) grid.innerHTML = '';
 
                 let sortedResults = data.results;
+                const genreValue = document.getElementById('genre-select').value;
+                
+                // فلترة النتائج حسب التصنيف المختار محلياً (لأن محرك بحث TMDB لا يدعم with_genres مباشرة)
+                if (genreValue) {
+                    sortedResults = sortedResults.filter(show => show.genre_ids && show.genre_ids.includes(parseInt(genreValue)));
+                }
+
                 const sortValue = document.getElementById('sort-select').value;
                 if (sortValue === 'first_air_date.desc') sortedResults.sort((a, b) => new Date(b.first_air_date || 0) - new Date(a.first_air_date || 0));
                 else if (sortValue === 'vote_average.desc') sortedResults.sort((a, b) => b.vote_average - a.vote_average);
                 else sortedResults.sort((a, b) => b.popularity - a.popularity);
 
-                displayShows(sortedResults);
-                loadMoreBtn.style.display = (data.page < data.total_pages) ? 'inline-block' : 'none';
+                if (sortedResults.length === 0 && page === 1) {
+                    grid.innerHTML = '<div class="loading-message">No results match this genre.</div>';
+                } else {
+                    displayShows(sortedResults);
+                }
+                
+                hasMorePages = data.page < data.total_pages;
             } catch (error) {
-                if (page === 1) grid.innerHTML = `<div class="loading" style="color: red;">${error.message}</div>`;
+                removeSkeletons();
+                if (page === 1) grid.innerHTML = `<div class="loading-message" style="color: red;">${error.message}</div>`;
             }
+            isLoading = false;
         }
 
         function handleKeyPress(event) { if (event.key === 'Enter') performSearch(1); }
@@ -532,6 +490,7 @@
         function showFavorites(btnElement) {
             currentMode = 'favorites';
             document.getElementById('search-input').value = '';
+            hasMorePages = false; // لا يوجد صفحات إضافية في المفضلة
             
             if (btnElement) {
                 document.querySelectorAll('.filters button').forEach(btn => btn.classList.remove('active'));
@@ -539,11 +498,15 @@
             }
 
             grid.innerHTML = '';
-            loadMoreBtn.style.display = 'none'; 
-
             let favorites = JSON.parse(localStorage.getItem('my_favorite_shows')) || [];
+            
+            const genreValue = document.getElementById('genre-select').value;
+            if (genreValue) {
+                favorites = favorites.filter(show => show.genre_ids && show.genre_ids.includes(parseInt(genreValue)));
+            }
+
             if (favorites.length === 0) {
-                grid.innerHTML = '<div class="loading" style="grid-column: 1 / -1;">No favorites yet. Save some shows first! ⭐</div>';
+                grid.innerHTML = '<div class="loading-message">No favorite shows found here. ⭐</div>';
                 return;
             }
 
@@ -555,10 +518,16 @@
             displayShows(favorites);
         }
 
-        function loadMore() {
-            if (currentMode === 'network') fetchShows(currentNetwork, null, currentPage + 1);
-            else if (currentMode === 'search') performSearch(currentPage + 1);
-        }
+        // 3. نظام التمرير اللانهائي (Infinite Scroll) الذكي
+        window.addEventListener('scroll', () => {
+            // التحقق مما إذا كان المستخدم اقترب من نهاية الصفحة بمسافة 500 بكسل
+            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500) {
+                if (!isLoading && hasMorePages) {
+                    if (currentMode === 'network') fetchShows(currentNetwork, null, currentPage + 1);
+                    else if (currentMode === 'search') performSearch(currentPage + 1);
+                }
+            }
+        });
 
         function displayShows(showsToDisplay) {
             showsToDisplay.forEach(show => {
@@ -570,7 +539,7 @@
                 const releaseYear = show.first_air_date ? show.first_air_date.substring(0,4) : 'N/A';
 
                 card.innerHTML = `
-                    <img src="${posterPath}" alt="${show.name}" class="show-image">
+                    <img src="${posterPath}" alt="${show.name}" class="show-image" loading="lazy">
                     <div class="show-info">
                         <h3 class="show-title">${show.name}</h3>
                         <p style="color: #aaa; font-size: 0.85rem; margin: 0; display: flex; justify-content: space-between;">
@@ -583,25 +552,19 @@
             });
         }
 
-        // جلب تقييم IMDb فقط بعد تنظيف الكود
         async function fetchExternalRatings(tmdbId) {
             try {
                 const extRes = await fetch(`${BASE_URL}/tv/${tmdbId}/external_ids?api_key=${TMDB_API_KEY}`);
                 const extData = await extRes.json();
                 const imdbId = extData.imdb_id;
-
                 if (!imdbId) return { imdb: "N/A" };
-
                 const omdbRes = await fetch(`https://www.omdbapi.com/?i=${imdbId}&apikey=${OMDB_API_KEY}`);
                 const omdbData = await omdbRes.json();
-
                 if (omdbData.Response === "True" && omdbData.imdbRating && omdbData.imdbRating !== "N/A") {
                     return { imdb: `${omdbData.imdbRating} / 10` };
                 }
                 return { imdb: "N/A" };
-            } catch (error) {
-                return { imdb: "N/A" };
-            }
+            } catch (error) { return { imdb: "N/A" }; }
         }
 
         async function openModal(show) {
@@ -612,7 +575,6 @@
             
             document.getElementById('modal-status').innerText = 'Status: Loading...';
             document.getElementById('modal-seasons').innerText = 'Seasons: Loading...';
-            
             document.getElementById('modal-imdb-rating').innerText = '⏳';
 
             const posterPath = show.poster_path ? IMG_URL + show.poster_path : 'https://via.placeholder.com/500x750?text=No+Image';
@@ -649,7 +611,6 @@
             modal.style.display = 'flex';
             document.querySelector('.modal-content').scrollTop = 0;
 
-            // 1. جلب تفاصيل المسلسل الإضافية (مواسم وحالة)
             fetch(`${BASE_URL}/tv/${show.id}?api_key=${TMDB_API_KEY}&language=en-US`)
                 .then(res => res.json())
                 .then(details => {
@@ -661,19 +622,17 @@
                     document.getElementById('modal-seasons').innerText = 'Seasons: N/A';
                 });
 
-            // 2. جلب تقييم IMDb
             fetchExternalRatings(show.id).then(ratings => {
                 document.getElementById('modal-imdb-rating').innerText = ratings.imdb;
             });
             
-            // 3. البحث عن الإعلان (Trailer)
             fetch(`${BASE_URL}/tv/${show.id}/videos?api_key=${TMDB_API_KEY}`) 
                 .then(res => res.json())
                 .then(data => {
                     if (data.results && data.results.length > 0) {
-                        let trailer = data.results.find(vid => vid.site === 'YouTube' && vid.type === 'Trailer');
-                        if (!trailer) trailer = data.results.find(vid => vid.site === 'YouTube' && vid.type === 'Teaser');
-                        if (!trailer) trailer = data.results.find(vid => vid.site === 'YouTube');
+                        let trailer = data.results.find(vid => vid.site === 'YouTube' && vid.type === 'Trailer') || 
+                                      data.results.find(vid => vid.site === 'YouTube' && vid.type === 'Teaser') || 
+                                      data.results.find(vid => vid.site === 'YouTube');
                         if (trailer) {
                             trailerBtn.href = `https://www.youtube.com/watch?v=${trailer.key}`;
                             trailerBtn.style.display = 'inline-flex';
@@ -682,7 +641,6 @@
                 })
                 .catch(err => console.log("Trailer error:", err));
                 
-            // 4. جلب التوصيات (المسلسلات المشابهة)
             fetch(`${BASE_URL}/tv/${show.id}/recommendations?api_key=${TMDB_API_KEY}&language=en-US`)
                 .then(res => res.json())
                 .then(data => {
@@ -695,31 +653,22 @@
                             recCard.className = 'rec-card';
                             recCard.onclick = () => openModal(recShow);
                             recCard.innerHTML = `
-                                <img class="rec-img" src="${IMG_URL + recShow.poster_path}" alt="${recShow.name}">
+                                <img class="rec-img" src="${IMG_URL + recShow.poster_path}" alt="${recShow.name}" loading="lazy">
                                 <div class="rec-title">${recShow.name}</div>
                             `;
                             recContainer.appendChild(recCard);
                         });
-                        if (recContainer.innerHTML !== '') {
-                            document.getElementById('rec-section').style.display = 'block';
-                        }
+                        if (recContainer.innerHTML !== '') document.getElementById('rec-section').style.display = 'block';
                     }
                 })
                 .catch(err => console.log("Recs error:", err));
         }
 
-        function closeModal() {
-            modal.style.display = 'none';
-        }
-
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                closeModal();
-            }
-        }
+        function closeModal() { modal.style.display = 'none'; }
+        window.onclick = function(event) { if (event.target == modal) closeModal(); }
 
         // Initial fetch
-        fetchShows('213', document.querySelector('.filters button'), 1);
+        fetchShows('213', document.querySelector('.filters button.active'), 1);
     </script>
 </body>
 </html>
