@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📺</text></svg>">
     <title>New Shows Tracker</title>
     <style>
         :root {
@@ -113,6 +114,16 @@
         button:hover, button.active {
             background-color: #e50914; 
         }
+        
+        /* زر المفضلة في القائمة الرئيسية */
+        .fav-filter-btn {
+            background-color: #FFD700 !important;
+            color: #000 !important;
+        }
+        .fav-filter-btn:hover, .fav-filter-btn.active {
+            background-color: #e5c100 !important;
+        }
+
         .shows-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -158,7 +169,6 @@
             width: 100%;
         }
         
-        /* Load More Button */
         #load-more-btn {
             background-color: #333;
             border: 2px solid #555;
@@ -244,21 +254,38 @@
             width: 140px;
         }
 
-        /* Trailer Button Design */
-        .trailer-btn {
-            background-color: #e50914;
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .trailer-btn, .fav-btn {
             color: white;
             text-decoration: none;
             padding: 10px 20px;
             border-radius: 5px;
             font-weight: bold;
             font-size: 1.1rem;
-            display: inline-block;
-            margin-top: 15px;
+            cursor: pointer;
             transition: 0.3s;
+            border: none;
+        }
+        
+        .trailer-btn {
+            background-color: #e50914;
         }
         .trailer-btn:hover {
             background-color: #f40612;
+            transform: scale(1.05);
+        }
+
+        .fav-btn {
+            background-color: #333;
+        }
+        .fav-btn:hover {
+            background-color: #555;
             transform: scale(1.05);
         }
 
@@ -298,6 +325,7 @@
         <button onclick="fetchShows('2552', this)">Apple TV+</button>
         <button onclick="fetchShows('453', this)">Hulu</button>
         <button onclick="fetchShows('2739', this)">Disney+</button>
+        <button class="fav-filter-btn" onclick="showFavorites(this)">⭐ My Favorites</button>
     </div>
 
     <div class="shows-grid" id="shows-grid">
@@ -329,7 +357,10 @@
                 <h3>Overview:</h3>
                 <p id="modal-overview" class="modal-overview"></p>
                 
-                <a id="trailer-btn" class="trailer-btn" href="#" target="_blank" style="display: none;">▶ Watch Trailer</a>
+                <div class="action-buttons">
+                    <a id="trailer-btn" class="trailer-btn" href="#" target="_blank" style="display: none;">▶ Watch Trailer</a>
+                    <button id="favorite-btn" class="fav-btn">❤️ Add to Favorites</button>
+                </div>
             </div>
         </div>
     </div>
@@ -353,8 +384,10 @@
         function applySort() {
             if (currentMode === 'network') {
                 fetchShows(currentNetwork, document.querySelector('.filters button.active'), 1);
-            } else {
+            } else if (currentMode === 'search') {
                 performSearch(1);
+            } else if (currentMode === 'favorites') {
+                showFavorites(document.querySelector('.fav-filter-btn'));
             }
         }
 
@@ -459,10 +492,44 @@
             }
         }
 
+        // دالة عرض المفضلة
+        function showFavorites(btnElement) {
+            currentMode = 'favorites';
+            document.getElementById('search-input').value = '';
+            
+            if (btnElement) {
+                const buttons = document.querySelectorAll('.filters button');
+                buttons.forEach(btn => btn.classList.remove('active'));
+                btnElement.classList.add('active');
+            }
+
+            grid.innerHTML = '';
+            loadMoreBtn.style.display = 'none'; // لا حاجة لزر تحميل المزيد في المفضلة
+
+            let favorites = JSON.parse(localStorage.getItem('my_favorite_shows')) || [];
+
+            if (favorites.length === 0) {
+                grid.innerHTML = '<div class="loading" style="grid-column: 1 / -1;">No favorites yet. Save some shows first! ⭐</div>';
+                return;
+            }
+
+            // ترتيب المفضلة حسب اختيار المستخدم
+            const sortValue = document.getElementById('sort-select').value;
+            if (sortValue === 'first_air_date.desc') {
+                favorites.sort((a, b) => new Date(b.first_air_date || 0) - new Date(a.first_air_date || 0));
+            } else if (sortValue === 'vote_average.desc') {
+                favorites.sort((a, b) => b.vote_average - a.vote_average);
+            } else {
+                favorites.sort((a, b) => b.popularity - a.popularity);
+            }
+
+            displayShows(favorites);
+        }
+
         function loadMore() {
             if (currentMode === 'network') {
                 fetchShows(currentNetwork, null, currentPage + 1);
-            } else {
+            } else if (currentMode === 'search') {
                 performSearch(currentPage + 1);
             }
         }
@@ -524,31 +591,55 @@
             imdbRatingSpan.style.color = '#aaa';
             
             const trailerBtn = document.getElementById('trailer-btn');
-            trailerBtn.style.display = 'none'; // إخفاء الزر مؤقتاً
+            trailerBtn.style.display = 'none'; 
+
+            // معالجة زر المفضلة
+            let favorites = JSON.parse(localStorage.getItem('my_favorite_shows')) || [];
+            let favBtn = document.getElementById('favorite-btn');
+            
+            // إزالة المستمعات القديمة حتى لا تتكرر العمليات
+            let newFavBtn = favBtn.cloneNode(true);
+            favBtn.parentNode.replaceChild(newFavBtn, favBtn);
+            
+            const isFav = favorites.some(f => f.id === show.id);
+            newFavBtn.innerText = isFav ? '❌ Remove from Favorites' : '❤️ Add to Favorites';
+            
+            newFavBtn.onclick = (e) => {
+                e.preventDefault();
+                favorites = JSON.parse(localStorage.getItem('my_favorite_shows')) || [];
+                
+                if (favorites.some(f => f.id === show.id)) {
+                    // إزالة من المفضلة
+                    favorites = favorites.filter(f => f.id !== show.id);
+                    newFavBtn.innerText = '❤️ Add to Favorites';
+                } else {
+                    // إضافة للمفضلة
+                    favorites.push(show);
+                    newFavBtn.innerText = '❌ Remove from Favorites';
+                }
+                
+                localStorage.setItem('my_favorite_shows', JSON.stringify(favorites));
+                
+                // تحديث الشاشة فوراً إذا كنا في تبويب المفضلة
+                if (currentMode === 'favorites') {
+                    showFavorites(document.querySelector('.fav-filter-btn'));
+                }
+            };
 
             modal.style.display = 'flex';
 
-            // 1. جلب تقييم IMDb
             fetchIMDbRating(show.id).then(imdbRating => {
                 imdbRatingSpan.innerText = imdbRating;
                 imdbRatingSpan.style.color = 'white';
             });
             
-            // 2. البحث عن الإعلان الترويجي (التعديل الجديد والمحسن)
-            fetch(`${BASE_URL}/tv/${show.id}/videos?api_key=${TMDB_API_KEY}`) // أزلنا تحديد اللغة لجلب كل الفيديوهات
+            fetch(`${BASE_URL}/tv/${show.id}/videos?api_key=${TMDB_API_KEY}`) 
                 .then(res => res.json())
                 .then(data => {
                     if (data.results && data.results.length > 0) {
-                        // نبحث عن Trailer أولاً
                         let trailer = data.results.find(vid => vid.site === 'YouTube' && vid.type === 'Trailer');
-                        // إن لم نجد، نبحث عن Teaser (تشويقة)
-                        if (!trailer) {
-                            trailer = data.results.find(vid => vid.site === 'YouTube' && vid.type === 'Teaser');
-                        }
-                        // إن لم نجد أياً منهما، نأخذ أي فيديو متاح كحل أخير
-                        if (!trailer) {
-                            trailer = data.results.find(vid => vid.site === 'YouTube');
-                        }
+                        if (!trailer) trailer = data.results.find(vid => vid.site === 'YouTube' && vid.type === 'Teaser');
+                        if (!trailer) trailer = data.results.find(vid => vid.site === 'YouTube');
 
                         if (trailer) {
                             trailerBtn.href = `https://www.youtube.com/watch?v=${trailer.key}`;
