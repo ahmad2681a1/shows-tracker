@@ -94,6 +94,12 @@
             cursor: pointer;
             padding: 5px;
         }
+        
+        /* إصلاح الألوان الخفية للقوائم المنسدلة */
+        select option {
+            background-color: #222222;
+            color: #ffffff;
+        }
 
         /* --- Network Filters --- */
         .filters {
@@ -338,11 +344,9 @@
         let currentNetwork = '213';
         let currentSearchQuery = '';
         
-        // متغيرات التمرير اللانهائي (Infinite Scroll)
         let isLoading = false;
         let hasMorePages = true;
 
-        // 1. تحميل التصنيفات (Genres) المتقدمة
         async function fetchGenres() {
             try {
                 const response = await fetch(`${BASE_URL}/genre/tv/list?api_key=${TMDB_API_KEY}&language=en-US`);
@@ -364,7 +368,6 @@
             else if (currentMode === 'favorites') showFavorites(document.querySelector('.fav-filter-btn'));
         }
 
-        // 2. دوال الشاشات الهيكلية (Skeleton Loaders)
         function showSkeletons(count = 20, clearGrid = false) {
             if (clearGrid) grid.innerHTML = '';
             for (let i = 0; i < count; i++) {
@@ -396,9 +399,9 @@
             if (page === 1) {
                 document.getElementById('search-input').value = ''; 
                 hasMorePages = true;
-                showSkeletons(20, true); // تفريغ الشبكة ووضع 20 هيكل
+                showSkeletons(20, true);
             } else {
-                showSkeletons(8, false); // وضع 8 هياكل في الأسفل أثناء التحميل الإضافي
+                showSkeletons(8, false);
             }
             
             if (btnElement) {
@@ -461,7 +464,6 @@
                 let sortedResults = data.results;
                 const genreValue = document.getElementById('genre-select').value;
                 
-                // فلترة النتائج حسب التصنيف المختار محلياً (لأن محرك بحث TMDB لا يدعم with_genres مباشرة)
                 if (genreValue) {
                     sortedResults = sortedResults.filter(show => show.genre_ids && show.genre_ids.includes(parseInt(genreValue)));
                 }
@@ -490,7 +492,7 @@
         function showFavorites(btnElement) {
             currentMode = 'favorites';
             document.getElementById('search-input').value = '';
-            hasMorePages = false; // لا يوجد صفحات إضافية في المفضلة
+            hasMorePages = false; 
             
             if (btnElement) {
                 document.querySelectorAll('.filters button').forEach(btn => btn.classList.remove('active'));
@@ -518,9 +520,7 @@
             displayShows(favorites);
         }
 
-        // 3. نظام التمرير اللانهائي (Infinite Scroll) الذكي
         window.addEventListener('scroll', () => {
-            // التحقق مما إذا كان المستخدم اقترب من نهاية الصفحة بمسافة 500 بكسل
             if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500) {
                 if (!isLoading && hasMorePages) {
                     if (currentMode === 'network') fetchShows(currentNetwork, null, currentPage + 1);
