@@ -3,11 +3,9 @@
 A comprehensive, interactive web application designed to help users track, discover, and organize the latest TV shows from top streaming platforms. Built with a sleek, cinematic Dark Mode UI.
 
 ## 🚀 Live Demo
-[Click here to view the live website]([https://yourusername.github.io/shows-tracker/](https://ahmad2681a1.github.io/shows-tracker/)) 
+**[🎬 Click here to view the live website!](https://ahmad2681a1.github.io/shows-tracker/)** ## ✨ Core Features
 
-## ✨ Core Features
-
-* **🎬 Platform Filtering:** Instantly browse the latest shows from major networks including Netflix, Amazon Prime, HBO, Apple TV+, Hulu, and Disney+.
+* **🍿 Platform Filtering:** Instantly browse the latest shows from major networks including Netflix, Amazon Prime, HBO, Apple TV+, Hulu, and Disney+.
 * **🔍 Smart Search:** Quickly search for any TV show globally by its title.
 * **📊 Advanced Sorting:** Sort TV shows by Most Popular, Newest Release, or Highest Rated.
 * **📋 Interactive Details Modal:** Click on any show to open a cinematic modal featuring:
@@ -31,3 +29,5 @@ A comprehensive, interactive web application designed to help users track, disco
 * **Hosting:** Deployed seamlessly via GitHub Pages.
 
 ## ⚙️ How to Run Locally
+1. Clone the repository: `git clone https://github.com/ahmad2681a1/shows-tracker.git`
+2. Open the folder and double-click `index.html` to run it in your browser. No installation or build process required!
