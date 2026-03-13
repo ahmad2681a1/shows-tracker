@@ -254,7 +254,7 @@
             font-weight: bold;
             font-size: 1.1rem;
             display: inline-block;
-            margin-top: 10px;
+            margin-top: 15px;
             transition: 0.3s;
         }
         .trailer-btn:hover {
@@ -524,7 +524,7 @@
             imdbRatingSpan.style.color = '#aaa';
             
             const trailerBtn = document.getElementById('trailer-btn');
-            trailerBtn.style.display = 'none'; // إخفاء الزر مؤقتاً حتى نتحقق من وجود إعلان
+            trailerBtn.style.display = 'none'; // إخفاء الزر مؤقتاً
 
             modal.style.display = 'flex';
 
@@ -534,15 +534,26 @@
                 imdbRatingSpan.style.color = 'white';
             });
             
-            // 2. البحث عن الإعلان الترويجي (Trailer) في يوتيوب
-            fetch(`${BASE_URL}/tv/${show.id}/videos?api_key=${TMDB_API_KEY}&language=en-US`)
+            // 2. البحث عن الإعلان الترويجي (التعديل الجديد والمحسن)
+            fetch(`${BASE_URL}/tv/${show.id}/videos?api_key=${TMDB_API_KEY}`) // أزلنا تحديد اللغة لجلب كل الفيديوهات
                 .then(res => res.json())
                 .then(data => {
-                    // البحث عن فيديو نوعه Trailer ومصدره YouTube
-                    const trailer = data.results.find(vid => vid.site === 'YouTube' && vid.type === 'Trailer');
-                    if (trailer) {
-                        trailerBtn.href = `https://www.youtube.com/watch?v=${trailer.key}`;
-                        trailerBtn.style.display = 'inline-block';
+                    if (data.results && data.results.length > 0) {
+                        // نبحث عن Trailer أولاً
+                        let trailer = data.results.find(vid => vid.site === 'YouTube' && vid.type === 'Trailer');
+                        // إن لم نجد، نبحث عن Teaser (تشويقة)
+                        if (!trailer) {
+                            trailer = data.results.find(vid => vid.site === 'YouTube' && vid.type === 'Teaser');
+                        }
+                        // إن لم نجد أياً منهما، نأخذ أي فيديو متاح كحل أخير
+                        if (!trailer) {
+                            trailer = data.results.find(vid => vid.site === 'YouTube');
+                        }
+
+                        if (trailer) {
+                            trailerBtn.href = `https://www.youtube.com/watch?v=${trailer.key}`;
+                            trailerBtn.style.display = 'inline-block';
+                        }
                     }
                 })
                 .catch(err => console.log("Trailer fetch error:", err));
