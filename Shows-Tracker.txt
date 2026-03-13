@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Shows Tracker</title>
+    <style>
+        :root {
+            --bg-color: #141414;
+            --text-color: #ffffff;
+            --card-bg: #2f2f2f;
+            --imdb-color: #f5c518;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            text-align: center;
+            padding: 2rem;
+            background-color: #000;
+            border-bottom: 2px solid var(--card-bg);
+        }
+        
+        /* ----- Search & Sort Controls ----- */
+        .controls-wrapper {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 0 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .search-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .search-container input {
+            flex: 1;
+            padding: 12px 20px;
+            border-radius: 25px;
+            border: 2px solid var(--card-bg);
+            background-color: #111;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: 0.3s;
+        }
+        .search-container input:focus {
+            border-color: #e50914;
+        }
+        .search-container button {
+            background-color: #e50914;
+            border-radius: 25px;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .sort-container {
+            text-align: center;
+        }
+        .sort-container select {
+            padding: 8px 15px;
+            border-radius: 5px;
+            background-color: var(--card-bg);
+            color: white;
+            border: 1px solid #555;
+            font-size: 1rem;
+            outline: none;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+        .sort-container select:focus {
+            border-color: #e50914;
+        }
+
+        .filters {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 10px 20px 20px 20px;
+            flex-wrap: wrap;
+        }
+        button {
+            background-color: var(--card-bg);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: bold;
+        }
+        button:hover, button.active {
+            background-color: #e50914; 
+        }
+        .shows-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .show-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            position: relative;
+            cursor: pointer;
+        }
+        .show-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        .show-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            background-color: #444;
+        }
+        .show-info {
+            padding: 15px;
+            text-align: center;
+        }
+        .show-title {
+            margin: 0 0 5px 0;
+            font-size: 1.1rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 1.5rem;
+            color: #aaa;
+            width: 100%;
+        }
+
+        /* ----- Modal Design ----- */
+        .modal {
+            display: none; 
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85); 
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .modal-content {
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 800px;
+            width: 100%;
+            position: relative;
+            animation: fadeIn 0.3s ease-in-out;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px; 
+            font-size: 35px;
+            cursor: pointer;
+            color: #aaa;
+            transition: color 0.3s;
+        }
+        .close-btn:hover {
+            color: #fff;
+        }
+        .modal-poster {
+            width: 250px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+        .modal-details {
+            flex: 1;
+            min-width: 300px;
+        }
+        .modal-details h2 { margin-top: 0; color: #fff; }
+        .modal-overview { line-height: 1.6; color: #ddd; font-size: 1.05rem; }
+        
+        .ratings-box {
+            background-color: #1a1a1a;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .rating-item {
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        .rating-label {
+            width: 140px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>📺 New Shows Tracker</h1>
+        <p>Your quick guide to the latest and most popular TV shows</p>
+        
+        <div class="controls-wrapper">
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Search for any TV show..." onkeypress="handleKeyPress(event)">
+                <button onclick="performSearch()">Search</button>
+            </div>
+
+            <div class="sort-container">
+                <label for="sort-select" style="color: #aaa; font-weight: bold; margin-right: 10px;">Sort By:</label>
+                <select id="sort-select" onchange="applySort()">
+                    <option value="popularity.desc">Most Popular</option>
+                    <option value="first_air_date.desc">Newest Release</option>
+                    <option value="vote_average.desc">Highest Rated</option>
+                </select>
+            </div>
+        </div>
+    </header>
+
+    <div class="filters" id="filters">
+        <button class="active" onclick="fetchShows('213', this)">Netflix</button>
+        <button onclick="fetchShows('119', this)">Amazon Prime</button>
+        <button onclick="fetchShows('49', this)">HBO</button>
+        <button onclick="fetchShows('2552', this)">Apple TV+</button>
+        <button onclick="fetchShows('453', this)">Hulu</button>
+        <button onclick="fetchShows('2739', this)">Disney+</button>
+    </div>
+
+    <div class="shows-grid" id="shows-grid">
+        </div>
+
+    <div id="show-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <img id="modal-img" src="" alt="Poster" class="modal-poster">
+            <div class="modal-details">
+                <h2 id="modal-title">Show Title</h2>
+                <p id="modal-date" style="color: #aaa; font-size: 0.9rem; margin-top: 0;"></p>
+                
+                <div class="ratings-box">
+                    <div class="rating-item" style="color: #01b4e4;">
+                        <span class="rating-label">TMDB Rating:</span> 
+                        <span>⭐ <span id="modal-rating"></span> / 10</span>
+                    </div>
+                    <div class="rating-item" style="color: var(--imdb-color);">
+                        <span class="rating-label">IMDb Rating:</span> 
+                        <span>🎬 <span id="modal-imdb-rating">Loading...</span></span>
+                    </div>
+                </div>
+
+                <h3>Overview:</h3>
+                <p id="modal-overview" class="modal-overview"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // مفاتيح الـ API الخاصة بك
+        const TMDB_API_KEY = 'e7be99b2666a862f16f0a6b5441c150b'; 
+        const OMDB_API_KEY = '75583472';
+
+        const BASE_URL = 'https://api.themoviedb.org/3';
+        const IMG_URL = 'https://image.tmdb.org/t/p/w500';
+        
+        const grid = document.getElementById('shows-grid');
+        const modal = document.getElementById('show-modal');
+
+        let currentNetwork = '213'; // لحفظ المنصة المحددة حالياً
+
+        // دالة تطبيق الترتيب عند تغيير القائمة المنسدلة
+        function applySort() {
+            const activeBtn = document.querySelector('.filters button.active');
+            if (activeBtn) {
+                // إذا كنا نستعرض منصة، نعيد جلب البيانات بالترتيب الجديد
+                fetchShows(currentNetwork, activeBtn);
+            } else if (document.getElementById('search-input').value.trim() !== '') {
+                // إذا كنا في وضع البحث، نعيد ترتيب نتائج البحث
+                performSearch();
+            }
+        }
+
+        // Fetch Shows by Network
+        async function fetchShows(networkId, btnElement) {
+            currentNetwork = networkId; // حفظ المنصة الحالية
+            document.getElementById('search-input').value = ''; 
+            
+            if (btnElement) {
+                const buttons = document.querySelectorAll('.filters button');
+                buttons.forEach(btn => btn.classList.remove('active'));
+                btnElement.classList.add('active');
+            }
+
+            const sortValue = document.getElementById('sort-select').value;
+            
+            // إضافة فلتر إضافي لمنع ظهور مسلسلات مستقبلية فارغة أو بدون تقييم عند اختيار الترتيب بالتاريخ أو التقييم
+            let extraParams = '';
+            if (sortValue === 'vote_average.desc') {
+                extraParams = '&vote_count.gte=200'; // يفضل أن يكون التقييم مبني على 200 صوت على الأقل
+            } else if (sortValue === 'first_air_date.desc') {
+                extraParams = '&vote_count.gte=5'; // لمنع المسلسلات غير المصدرة بعد والتي ليس لها صور
+            }
+
+            grid.innerHTML = '<div class="loading">Loading shows... ⏳</div>';
+
+            try {
+                const response = await fetch(`${BASE_URL}/discover/tv?api_key=${TMDB_API_KEY}&language=en-US&sort_by=${sortValue}${extraParams}&with_networks=${networkId}`);
+                if (!response.ok) throw new Error('Connection error with TMDB.');
+
+                const data = await response.json();
+                displayShows(data.results);
+            } catch (error) {
+                grid.innerHTML = `<div class="loading" style="color: red;">${error.message}</div>`;
+            }
+        }
+
+        // Search Functionality
+        async function performSearch() {
+            const query = document.getElementById('search-input').value.trim();
+            if (!query) return;
+
+            const buttons = document.querySelectorAll('.filters button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            grid.innerHTML = '<div class="loading">Searching... 🔍</div>';
+
+            try {
+                const response = await fetch(`${BASE_URL}/search/tv?api_key=${TMDB_API_KEY}&language=en-US&query=${encodeURIComponent(query)}`);
+                if (!response.ok) throw new Error('Search failed.');
+
+                const data = await response.json();
+                
+                if (data.results.length === 0) {
+                    grid.innerHTML = '<div class="loading">No shows found. Try another name!</div>';
+                    return;
+                }
+
+                // ترتيب نتائج البحث يدوياً (Client-side sorting)
+                const sortValue = document.getElementById('sort-select').value;
+                let sortedResults = data.results;
+                
+                if (sortValue === 'first_air_date.desc') {
+                    // ترتيب حسب الأحدث
+                    sortedResults.sort((a, b) => new Date(b.first_air_date || 0) - new Date(a.first_air_date || 0));
+                } else if (sortValue === 'vote_average.desc') {
+                    // ترتيب حسب التقييم
+                    sortedResults.sort((a, b) => b.vote_average - a.vote_average);
+                } else {
+                    // ترتيب حسب الشهرة (الافتراضي)
+                    sortedResults.sort((a, b) => b.popularity - a.popularity);
+                }
+
+                displayShows(sortedResults);
+            } catch (error) {
+                grid.innerHTML = `<div class="loading" style="color: red;">${error.message}</div>`;
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                performSearch();
+            }
+        }
+
+        function displayShows(showsToDisplay) {
+            grid.innerHTML = '';
+            
+            showsToDisplay.forEach(show => {
+                const card = document.createElement('div');
+                card.className = 'show-card';
+                card.onclick = () => openModal(show);
+                
+                const posterPath = show.poster_path ? IMG_URL + show.poster_path : 'https://via.placeholder.com/500x750?text=No+Image';
+                
+                // إضافة تاريخ الإصدار للبطاقة ليراه المستخدم عند الترتيب بالتاريخ
+                const releaseYear = show.first_air_date ? show.first_air_date.substring(0,4) : 'N/A';
+
+                card.innerHTML = `
+                    <img src="${posterPath}" alt="${show.name}" class="show-image">
+                    <div class="show-info">
+                        <h3 class="show-title">${show.name}</h3>
+                        <p style="color: #aaa; font-size: 0.85rem; margin: 0; display: flex; justify-content: space-between;">
+                            <span>⭐ ${show.vote_average.toFixed(1)}</span>
+                            <span>📅 ${releaseYear}</span>
+                        </p>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Fetch IMDb Rating using OMDb API
+        async function fetchIMDbRating(tmdbId) {
+            try {
+                const extRes = await fetch(`${BASE_URL}/tv/${tmdbId}/external_ids?api_key=${TMDB_API_KEY}`);
+                const extData = await extRes.json();
+                const imdbId = extData.imdb_id;
+
+                if (!imdbId) return "No IMDb ID available";
+
+                const omdbRes = await fetch(`https://www.omdbapi.com/?i=${imdbId}&apikey=${OMDB_API_KEY}`);
+                const omdbData = await omdbRes.json();
+
+                if (omdbData.Response === "True" && omdbData.imdbRating !== "N/A") {
+                    return `${omdbData.imdbRating} / 10 (${omdbData.imdbVotes} votes)`;
+                }
+                return "Not available";
+            } catch (error) {
+                return "Error loading IMDb data";
+            }
+        }
+
+        // --- Modal Functions ---
+        async function openModal(show) {
+            document.getElementById('modal-title').innerText = show.name;
+            document.getElementById('modal-rating').innerText = show.vote_average.toFixed(1);
+            document.getElementById('modal-date').innerText = 'Release Date: ' + (show.first_air_date || 'Not available');
+            document.getElementById('modal-overview').innerText = show.overview ? show.overview : 'Sorry, no overview available for this show.';
+            
+            const posterPath = show.poster_path ? IMG_URL + show.poster_path : 'https://via.placeholder.com/500x750?text=No+Image';
+            document.getElementById('modal-img').src = posterPath;
+            
+            const imdbRatingSpan = document.getElementById('modal-imdb-rating');
+            imdbRatingSpan.innerText = 'Loading... ⏳';
+            imdbRatingSpan.style.color = '#aaa';
+
+            modal.style.display = 'flex';
+
+            const imdbRating = await fetchIMDbRating(show.id);
+            imdbRatingSpan.innerText = imdbRating;
+            imdbRatingSpan.style.color = 'white';
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+        // Initial fetch
+        fetchShows('213', document.querySelector('.filters button'));
+    </script>
+</body>
+</html>
