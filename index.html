@@ -168,17 +168,17 @@
             text-overflow: ellipsis;
         }
 
-        /* شارة "تم المشاهدة" على البوستر */
+        /* شارة "تم المشاهدة" المصغرة والأنيقة */
         .watched-badge {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 8px; /* تقريبها قليلاً للأعلى */
+            right: 8px; /* تقريبها قليلاً لليمين */
             background-color: rgba(76, 175, 80, 0.95);
             color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 0.85rem;
-            font-weight: bold;
+            padding: 4px; /* حشو صغير ومربع */
+            border-radius: 4px; /* زوايا أقل استدارة لتبدو أكثر حدة */
+            font-size: 0.75rem; /* نص أصغر */
+            line-height: 1; /* جعل النص يملأ المساحة بشكل جيد */
             z-index: 10;
             box-shadow: 0 2px 5px rgba(0,0,0,0.5);
         }
@@ -589,9 +589,9 @@
                 const posterPath = show.poster_path ? IMG_URL + show.poster_path : 'https://via.placeholder.com/500x750?text=No+Image';
                 const releaseYear = show.first_air_date ? show.first_air_date.substring(0,4) : 'N/A';
                 
-                // التحقق مما إذا كان المسلسل ضمن قائمة المشاهدة لوضع الشارة (Badge)
+                // شارة "تم المشاهدة" المصغرة والأنيقة
                 const isWatched = watchedShows.some(w => w.id === show.id);
-                const badgeHTML = isWatched ? `<div class="watched-badge">✔️ Watched</div>` : '';
+                const badgeHTML = isWatched ? `<div class="watched-badge">✔️</div>` : '';
 
                 card.innerHTML = `
                     ${badgeHTML}
@@ -633,9 +633,11 @@
             document.getElementById('modal-status').innerText = 'Status: Loading...';
             document.getElementById('modal-seasons').innerText = 'Seasons: Loading...';
             
+            // تعيين تقييم وعدد أصوات TMDB مباشرة
             document.getElementById('modal-tmdb-rating').innerText = show.vote_average ? show.vote_average.toFixed(1) + ' / 10' : 'N/A';
             document.getElementById('modal-tmdb-votes').innerText = show.vote_count ? formatVotes(show.vote_count) : '';
 
+            // تصفير IMDb لحين تحميله
             document.getElementById('modal-imdb-rating').innerText = '⏳';
             document.getElementById('modal-imdb-votes').innerText = '';
 
