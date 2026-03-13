@@ -18,21 +18,24 @@
             margin: 0;
             padding: 0;
         }
+        
+        /* ----- Header & Background Design ----- */
         header {
             text-align: center;
-            padding: 4rem 2rem; /* زيادة الارتفاع لتبدو الخلفية أفخم */
-            /* دمج صورة سينمائية مع طبقة داكنة لتوضيح النصوص */
+            padding: 4rem 2rem;
             background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(20, 20, 20, 1)), 
                         url('https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=2070&auto=format&fit=crop');
             background-size: cover;
             background-position: center;
-            border-bottom: 3px solid #e50914; /* خط أحمر سفلي بستايل نتفليكس */
+            border-bottom: 3px solid #e50914;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
-        
         header h1, header p {
-            text-shadow: 2px 2px 5px rgba(0,0,0,0.8); /* إضافة ظل للنصوص لتبرز أكثر */
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.8);
         }
+        header h1 {
+            margin-top: 0;
+            font-size: 2.5rem;
         }
         
         /* ----- Search & Sort Controls ----- */
@@ -94,7 +97,7 @@
             display: flex;
             justify-content: center;
             gap: 10px;
-            padding: 10px 20px 20px 20px;
+            padding: 20px;
             flex-wrap: wrap;
         }
         button {
@@ -241,6 +244,24 @@
             width: 140px;
         }
 
+        /* Trailer Button Design */
+        .trailer-btn {
+            background-color: #e50914;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            display: inline-block;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+        .trailer-btn:hover {
+            background-color: #f40612;
+            transform: scale(1.05);
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: scale(0.95); }
             to { opacity: 1; transform: scale(1); }
@@ -307,6 +328,8 @@
 
                 <h3>Overview:</h3>
                 <p id="modal-overview" class="modal-overview"></p>
+                
+                <a id="trailer-btn" class="trailer-btn" href="#" target="_blank" style="display: none;">▶ Watch Trailer</a>
             </div>
         </div>
     </div>
@@ -322,9 +345,8 @@
         const modal = document.getElementById('show-modal');
         const loadMoreBtn = document.getElementById('load-more-btn');
 
-        // متغيرات تتبع الصفحة الحالية وحالة البحث
         let currentPage = 1;
-        let currentMode = 'network'; // 'network' او 'search'
+        let currentMode = 'network';
         let currentNetwork = '213';
         let currentSearchQuery = '';
 
@@ -336,7 +358,6 @@
             }
         }
 
-        // Fetch Shows by Network
         async function fetchShows(networkId, btnElement, page = 1) {
             currentMode = 'network';
             currentNetwork = networkId;
@@ -360,17 +381,15 @@
             else if (sortValue === 'first_air_date.desc') extraParams = '&vote_count.gte=5';
 
             try {
-                // إضافة متغير الصفحة &page=
                 const response = await fetch(`${BASE_URL}/discover/tv?api_key=${TMDB_API_KEY}&language=en-US&sort_by=${sortValue}${extraParams}&with_networks=${networkId}&page=${page}`);
                 if (!response.ok) throw new Error('Connection error with TMDB.');
 
                 const data = await response.json();
                 
-                if (page === 1) grid.innerHTML = ''; // مسح القديم فقط إذا كانت الصفحة الأولى
+                if (page === 1) grid.innerHTML = '';
                 
                 displayShows(data.results);
 
-                // إظهار أو إخفاء زر "تحميل المزيد" بناءً على توفر صفحات أخرى
                 if (data.page < data.total_pages) {
                     loadMoreBtn.style.display = 'inline-block';
                 } else {
@@ -382,7 +401,6 @@
             }
         }
 
-        // Search Functionality
         async function performSearch(page = 1) {
             currentMode = 'search';
             currentPage = page;
@@ -441,9 +459,7 @@
             }
         }
 
-        // Load More Function
         function loadMore() {
-            // نزيد رقم الصفحة الحالية بمقدار 1 ونستدعي الدالة المناسبة
             if (currentMode === 'network') {
                 fetchShows(currentNetwork, null, currentPage + 1);
             } else {
@@ -452,7 +468,6 @@
         }
 
         function displayShows(showsToDisplay) {
-            // تم إزالة grid.innerHTML = ''; من هنا لكي لا تمسح الصفحة السابقة عند دمج الصفحة الجديدة
             showsToDisplay.forEach(show => {
                 const card = document.createElement('div');
                 card.className = 'show-card';
@@ -475,7 +490,6 @@
             });
         }
 
-        // Fetch IMDb Rating using OMDb API
         async function fetchIMDbRating(tmdbId) {
             try {
                 const extRes = await fetch(`${BASE_URL}/tv/${tmdbId}/external_ids?api_key=${TMDB_API_KEY}`);
@@ -496,7 +510,6 @@
             }
         }
 
-        // --- Modal Functions ---
         async function openModal(show) {
             document.getElementById('modal-title').innerText = show.name;
             document.getElementById('modal-rating').innerText = show.vote_average.toFixed(1);
@@ -509,12 +522,30 @@
             const imdbRatingSpan = document.getElementById('modal-imdb-rating');
             imdbRatingSpan.innerText = 'Loading... ⏳';
             imdbRatingSpan.style.color = '#aaa';
+            
+            const trailerBtn = document.getElementById('trailer-btn');
+            trailerBtn.style.display = 'none'; // إخفاء الزر مؤقتاً حتى نتحقق من وجود إعلان
 
             modal.style.display = 'flex';
 
-            const imdbRating = await fetchIMDbRating(show.id);
-            imdbRatingSpan.innerText = imdbRating;
-            imdbRatingSpan.style.color = 'white';
+            // 1. جلب تقييم IMDb
+            fetchIMDbRating(show.id).then(imdbRating => {
+                imdbRatingSpan.innerText = imdbRating;
+                imdbRatingSpan.style.color = 'white';
+            });
+            
+            // 2. البحث عن الإعلان الترويجي (Trailer) في يوتيوب
+            fetch(`${BASE_URL}/tv/${show.id}/videos?api_key=${TMDB_API_KEY}&language=en-US`)
+                .then(res => res.json())
+                .then(data => {
+                    // البحث عن فيديو نوعه Trailer ومصدره YouTube
+                    const trailer = data.results.find(vid => vid.site === 'YouTube' && vid.type === 'Trailer');
+                    if (trailer) {
+                        trailerBtn.href = `https://www.youtube.com/watch?v=${trailer.key}`;
+                        trailerBtn.style.display = 'inline-block';
+                    }
+                })
+                .catch(err => console.log("Trailer fetch error:", err));
         }
 
         function closeModal() {
@@ -532,4 +563,3 @@
     </script>
 </body>
 </html>
-
