@@ -95,7 +95,6 @@
             padding: 5px;
         }
         
-        /* إصلاح الألوان الخفية للقوائم المنسدلة */
         select option {
             background-color: #222222;
             color: #ffffff;
@@ -219,8 +218,11 @@
         
         .ratings-box { background-color: #1a1a1a; padding: 15px; border-radius: 8px; margin: 15px 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; }
         .rating-item { display: flex; flex-direction: column; align-items: center; text-align: center; background-color: #222; padding: 15px; border-radius: 8px; }
-        .rating-label { font-size: 0.9rem; color: #aaa; margin-bottom: 8px; }
-        .rating-value { font-size: 1.3rem; font-weight: bold; }
+        .rating-label { font-size: 0.9rem; color: #aaa; margin-bottom: 8px; letter-spacing: 1px; text-transform: uppercase;}
+        .rating-value { font-size: 1.4rem; font-weight: bold; }
+        
+        /* تنسيق عدد المصوتين الجديد */
+        .rating-votes { font-size: 0.9rem; color: #888; margin-top: 5px; font-weight: normal; }
 
         .modal-overview { line-height: 1.6; color: #ddd; font-size: 1.05rem; }
         
@@ -271,7 +273,7 @@
                     <label for="genre-select" style="color: #aaa; font-weight: bold; margin-right: 5px;">Genre:</label>
                     <select id="genre-select" onchange="applyFilters()">
                         <option value="">All Genres</option>
-                        </select>
+                    </select>
                 </div>
             </div>
         </div>
@@ -306,11 +308,13 @@
                 <div class="ratings-box">
                     <div class="rating-item" style="color: #01b4e4;">
                         <span class="rating-label">TMDB Rating</span> 
-                        <span class="rating-value">⭐ <span id="modal-tmdb-rating">...</span> / 10</span>
+                        <span class="rating-value">⭐ <span id="modal-tmdb-rating">...</span></span>
+                        <span id="modal-tmdb-votes" class="rating-votes"></span>
                     </div>
                     <div class="rating-item" style="color: var(--imdb-color);">
                         <span class="rating-label">IMDb Rating</span> 
                         <span class="rating-value">🎬 <span id="modal-imdb-rating">...</span></span>
+                        <span id="modal-imdb-votes" class="rating-votes"></span>
                     </div>
                 </div>
 
@@ -346,6 +350,16 @@
         
         let isLoading = false;
         let hasMorePages = true;
+
+        // دالة تحويل أرقام المصوتين إلى اختصارات (150K أو 1.5M)
+        function formatVotes(votesStr) {
+            if (!votesStr || votesStr === "N/A") return "";
+            const votes = parseInt(votesStr.toString().replace(/,/g, ''));
+            if (isNaN(votes)) return "";
+            if (votes >= 1000000) return (votes / 1000000).toFixed(1) + 'M';
+            if (votes >= 1000) return (votes / 1000).toFixed(1).replace('.0', '') + 'K';
+            return votes.toString();
+        }
 
         async function fetchGenres() {
             try {
@@ -552,30 +566,39 @@
             });
         }
 
+        // جلب تقييم IMDb وعدد المصوتين معاً
         async function fetchExternalRatings(tmdbId) {
             try {
                 const extRes = await fetch(`${BASE_URL}/tv/${tmdbId}/external_ids?api_key=${TMDB_API_KEY}`);
                 const extData = await extRes.json();
                 const imdbId = extData.imdb_id;
-                if (!imdbId) return { imdb: "N/A" };
+                if (!imdbId) return { imdb: "N/A", votes: "" };
+                
                 const omdbRes = await fetch(`https://www.omdbapi.com/?i=${imdbId}&apikey=${OMDB_API_KEY}`);
                 const omdbData = await omdbRes.json();
+                
                 if (omdbData.Response === "True" && omdbData.imdbRating && omdbData.imdbRating !== "N/A") {
-                    return { imdb: `${omdbData.imdbRating} / 10` };
+                    return { imdb: `${omdbData.imdbRating} / 10`, votes: omdbData.imdbVotes };
                 }
-                return { imdb: "N/A" };
-            } catch (error) { return { imdb: "N/A" }; }
+                return { imdb: "N/A", votes: "" };
+            } catch (error) { return { imdb: "N/A", votes: "" }; }
         }
 
         async function openModal(show) {
             document.getElementById('modal-title').innerText = show.name;
-            document.getElementById('modal-tmdb-rating').innerText = show.vote_average ? show.vote_average.toFixed(1) : 'N/A';
             document.getElementById('modal-date').innerText = '📅 Release Date: ' + (show.first_air_date || 'N/A');
             document.getElementById('modal-overview').innerText = show.overview ? show.overview : 'Sorry, no overview available for this show.';
             
             document.getElementById('modal-status').innerText = 'Status: Loading...';
             document.getElementById('modal-seasons').innerText = 'Seasons: Loading...';
+            
+            // تعيين تقييم وعدد أصوات TMDB مباشرة
+            document.getElementById('modal-tmdb-rating').innerText = show.vote_average ? show.vote_average.toFixed(1) + ' / 10' : 'N/A';
+            document.getElementById('modal-tmdb-votes').innerText = show.vote_count ? formatVotes(show.vote_count) : '';
+
+            // تصفير IMDb لحين تحميله
             document.getElementById('modal-imdb-rating').innerText = '⏳';
+            document.getElementById('modal-imdb-votes').innerText = '';
 
             const posterPath = show.poster_path ? IMG_URL + show.poster_path : 'https://via.placeholder.com/500x750?text=No+Image';
             document.getElementById('modal-img').src = posterPath;
@@ -622,8 +645,10 @@
                     document.getElementById('modal-seasons').innerText = 'Seasons: N/A';
                 });
 
+            // جلب وعرض تقييم وعدد مصوتين IMDb
             fetchExternalRatings(show.id).then(ratings => {
                 document.getElementById('modal-imdb-rating').innerText = ratings.imdb;
+                document.getElementById('modal-imdb-votes').innerText = ratings.votes ? formatVotes(ratings.votes) : '';
             });
             
             fetch(`${BASE_URL}/tv/${show.id}/videos?api_key=${TMDB_API_KEY}`) 
