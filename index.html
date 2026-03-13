@@ -71,117 +71,36 @@
         }
         
         /* --- Dropdowns Row --- */
-        .dropdowns-row {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-        .sort-container, .genre-container {
-            display: flex;
-            align-items: center;
-            background-color: var(--card-bg);
-            padding: 5px 15px;
-            border-radius: 25px;
-            border: 1px solid #555;
-        }
-        .sort-container select, .genre-container select {
-            background-color: transparent;
-            color: white;
-            border: none;
-            font-size: 1rem;
-            outline: none;
-            cursor: pointer;
-            padding: 5px;
-        }
-        select option {
-            background-color: #222222;
-            color: #ffffff;
-        }
+        .dropdowns-row { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+        .sort-container, .genre-container { display: flex; align-items: center; background-color: var(--card-bg); padding: 5px 15px; border-radius: 25px; border: 1px solid #555; }
+        .sort-container select, .genre-container select { background-color: transparent; color: white; border: none; font-size: 1rem; outline: none; cursor: pointer; padding: 5px; }
+        select option { background-color: #222222; color: #ffffff; }
 
         /* --- Network Filters --- */
-        .filters {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            padding: 20px;
-            flex-wrap: wrap;
-        }
-        button.network-btn {
-            background-color: var(--card-bg);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: 0.3s;
-            font-weight: bold;
-        }
-        button.network-btn:hover, button.network-btn.active {
-            background-color: #e50914; 
-        }
-        
-        /* أزرار الفلاتر الخاصة (المفضلة والمشاهدة) */
+        .filters { display: flex; justify-content: center; gap: 10px; padding: 20px; flex-wrap: wrap; }
+        button.network-btn { background-color: var(--card-bg); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; transition: 0.3s; font-weight: bold; }
+        button.network-btn:hover, button.network-btn.active { background-color: #e50914; }
         .fav-filter-btn { background-color: #FFD700 !important; color: #000 !important; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; cursor: pointer; transition: 0.3s; }
         .fav-filter-btn:hover, .fav-filter-btn.active { background-color: #e5c100 !important; }
-        
         .watched-filter-btn { background-color: #4CAF50 !important; color: white !important; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; cursor: pointer; transition: 0.3s; }
         .watched-filter-btn:hover, .watched-filter-btn.active { background-color: #45a049 !important; }
 
         /* --- Grid & Cards --- */
-        .shows-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .show-card {
-            background-color: var(--card-bg);
-            border-radius: 10px;
-            overflow: hidden;
-            transition: transform 0.3s;
-            position: relative;
-            cursor: pointer;
-        }
-        .show-card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            z-index: 2;
-        }
-        .show-image {
-            width: 100%;
-            height: 300px;
-            object-fit: cover;
-            background-color: #444;
-        }
-        .show-info {
-            padding: 15px;
-            text-align: center;
-        }
-        .show-title {
-            margin: 0 0 5px 0;
-            font-size: 1.1rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+        .shows-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; padding: 20px; max-width: 1200px; margin: 0 auto; }
+        .show-card { background-color: var(--card-bg); border-radius: 10px; overflow: hidden; transition: transform 0.3s; position: relative; cursor: pointer; display: flex; flex-direction: column; }
+        .show-card:hover { transform: scale(1.05); box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 2; }
+        .show-image { width: 100%; height: 300px; object-fit: cover; background-color: #444; }
+        .show-info { padding: 15px; text-align: center; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .show-title { margin: 0 0 10px 0; font-size: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        
+        /* تنسيق كبسولات التقييمات في الكروت (الجديد) */
+        .card-meta-footer { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+        .rating-pill { display: flex; align-items: center; gap: 5px; background-color: #1a1a1a; padding: 4px 8px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: #eee; border: 1px solid #333; }
+        .icon-tmdb { height: 10px; }
+        .icon-imdb { height: 12px; border-radius: 2px; }
 
         /* شارة "تم المشاهدة" المصغرة والأنيقة */
-        .watched-badge {
-            position: absolute;
-            top: 8px; /* تقريبها قليلاً للأعلى */
-            right: 8px; /* تقريبها قليلاً لليمين */
-            background-color: rgba(76, 175, 80, 0.95);
-            color: white;
-            padding: 4px; /* حشو صغير ومربع */
-            border-radius: 4px; /* زوايا أقل استدارة لتبدو أكثر حدة */
-            font-size: 0.75rem; /* نص أصغر */
-            line-height: 1; /* جعل النص يملأ المساحة بشكل جيد */
-            z-index: 10;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-        }
+        .watched-badge { position: absolute; top: 8px; right: 8px; background-color: rgba(76, 175, 80, 0.95); color: white; padding: 4px; border-radius: 4px; font-size: 0.75rem; line-height: 1; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
 
         /* --- Skeleton Loaders --- */
         .skeleton { background: linear-gradient(90deg, #333 25%, #444 50%, #333 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
@@ -191,20 +110,11 @@
         .skeleton-info { padding: 15px; display: flex; flex-direction: column; gap: 10px; align-items: center; }
         .skeleton-text { height: 18px; border-radius: 4px; width: 80%; }
         .skeleton-text-small { height: 14px; border-radius: 4px; width: 100%; }
-
         .loading-message { text-align: center; color: #aaa; padding: 20px; font-size: 1.2rem; grid-column: 1 / -1; }
 
         /* ----- Modal Design ----- */
-        .modal {
-            display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
-            background-color: rgba(0, 0, 0, 0.85); justify-content: center; align-items: center;
-            padding: 20px; box-sizing: border-box;
-        }
-        .modal-content {
-            background-color: var(--card-bg); padding: 30px; border-radius: 15px; max-width: 900px;
-            width: 100%; position: relative; animation: fadeIn 0.3s ease-in-out; display: flex;
-            gap: 25px; flex-wrap: wrap; max-height: 90vh; overflow-y: auto;
-        }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.85); justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
+        .modal-content { background-color: var(--card-bg); padding: 30px; border-radius: 15px; max-width: 900px; width: 100%; position: relative; animation: fadeIn 0.3s ease-in-out; display: flex; gap: 25px; flex-wrap: wrap; max-height: 90vh; overflow-y: auto; }
         .close-btn { position: absolute; top: 15px; right: 20px; font-size: 35px; cursor: pointer; color: #aaa; transition: color 0.3s; }
         .close-btn:hover { color: #fff; }
         .modal-poster { width: 280px; border-radius: 10px; object-fit: cover; align-self: flex-start; }
@@ -221,16 +131,12 @@
 
         .modal-overview { line-height: 1.6; color: #ddd; font-size: 1.05rem; }
         
-        /* Action Buttons */
         .action-buttons { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
         .trailer-btn, .fav-btn, .watched-btn { color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: 0.3s; border: none; display: flex; align-items: center; gap: 8px; }
-        
         .trailer-btn { background-color: #e50914; }
         .trailer-btn:hover { background-color: #f40612; transform: scale(1.05); }
-        
         .fav-btn { background-color: #333; }
         .fav-btn:hover { background-color: #555; transform: scale(1.05); }
-
         .watched-btn { background-color: #2196F3; }
         .watched-btn:hover { background-color: #0b7dda; transform: scale(1.05); }
 
@@ -286,7 +192,6 @@
         <button class="network-btn" onclick="fetchShows('2552', this, 1)">Apple TV+</button>
         <button class="network-btn" onclick="fetchShows('453', this, 1)">Hulu</button>
         <button class="network-btn" onclick="fetchShows('2739', this, 1)">Disney+</button>
-        
         <button class="fav-filter-btn" onclick="showFavorites(this)">⭐ My Favorites</button>
         <button class="watched-filter-btn" onclick="showWatched(this)">✔️ Watched Shows</button>
     </div>
@@ -353,6 +258,9 @@
         
         let isLoading = false;
         let hasMorePages = true;
+        
+        // التخزين المؤقت (Cache) لمنع تكرار طلبات IMDb المفرطة
+        let imdbCache = JSON.parse(sessionStorage.getItem('imdbCache')) || {};
 
         function formatVotes(votesStr) {
             if (!votesStr || votesStr === "N/A") return "";
@@ -480,10 +388,7 @@
 
                 let sortedResults = data.results;
                 const genreValue = document.getElementById('genre-select').value;
-                
-                if (genreValue) {
-                    sortedResults = sortedResults.filter(show => show.genre_ids && show.genre_ids.includes(parseInt(genreValue)));
-                }
+                if (genreValue) sortedResults = sortedResults.filter(show => show.genre_ids && show.genre_ids.includes(parseInt(genreValue)));
 
                 const sortValue = document.getElementById('sort-select').value;
                 if (sortValue === 'first_air_date.desc') sortedResults.sort((a, b) => new Date(b.first_air_date || 0) - new Date(a.first_air_date || 0));
@@ -495,7 +400,6 @@
                 } else {
                     displayShows(sortedResults);
                 }
-                
                 hasMorePages = data.page < data.total_pages;
             } catch (error) {
                 removeSkeletons();
@@ -520,9 +424,7 @@
             let favorites = JSON.parse(localStorage.getItem('my_favorite_shows')) || [];
             
             const genreValue = document.getElementById('genre-select').value;
-            if (genreValue) {
-                favorites = favorites.filter(show => show.genre_ids && show.genre_ids.includes(parseInt(genreValue)));
-            }
+            if (genreValue) favorites = favorites.filter(show => show.genre_ids && show.genre_ids.includes(parseInt(genreValue)));
 
             if (favorites.length === 0) {
                 grid.innerHTML = '<div class="loading-message">No favorite shows found here. ⭐</div>';
@@ -537,7 +439,6 @@
             displayShows(favorites);
         }
 
-        // دالة عرض المسلسلات المشاهدة
         function showWatched(btnElement) {
             currentMode = 'watched';
             document.getElementById('search-input').value = '';
@@ -552,9 +453,7 @@
             let watched = JSON.parse(localStorage.getItem('my_watched_shows')) || [];
             
             const genreValue = document.getElementById('genre-select').value;
-            if (genreValue) {
-                watched = watched.filter(show => show.genre_ids && show.genre_ids.includes(parseInt(genreValue)));
-            }
+            if (genreValue) watched = watched.filter(show => show.genre_ids && show.genre_ids.includes(parseInt(genreValue)));
 
             if (watched.length === 0) {
                 grid.innerHTML = '<div class="loading-message">You haven\'t marked any shows as watched yet. ✔️</div>';
@@ -578,6 +477,46 @@
             }
         });
 
+        // جلب تقييم IMDb في الخلفية بدون تجميد الموقع
+        async function fetchIMDbForCard(tmdbId) {
+            const span = document.getElementById(`card-imdb-${tmdbId}`);
+            if (!span) return;
+            
+            if (imdbCache[tmdbId]) {
+                span.innerText = imdbCache[tmdbId];
+                return;
+            }
+
+            try {
+                const extRes = await fetch(`${BASE_URL}/tv/${tmdbId}/external_ids?api_key=${TMDB_API_KEY}`);
+                const extData = await extRes.json();
+                const imdbId = extData.imdb_id;
+                
+                if (!imdbId) {
+                    imdbCache[tmdbId] = "N/A";
+                    if(document.getElementById(`card-imdb-${tmdbId}`)) document.getElementById(`card-imdb-${tmdbId}`).innerText = "N/A";
+                    return;
+                }
+                
+                const omdbRes = await fetch(`https://www.omdbapi.com/?i=${imdbId}&apikey=${OMDB_API_KEY}`);
+                const omdbData = await omdbRes.json();
+                
+                let rating = "N/A";
+                if (omdbData.Response === "True" && omdbData.imdbRating && omdbData.imdbRating !== "N/A") {
+                    rating = omdbData.imdbRating;
+                }
+                
+                imdbCache[tmdbId] = rating;
+                sessionStorage.setItem('imdbCache', JSON.stringify(imdbCache));
+                
+                if(document.getElementById(`card-imdb-${tmdbId}`)) {
+                    document.getElementById(`card-imdb-${tmdbId}`).innerText = rating;
+                }
+            } catch (error) {
+                // Ignore silent errors for cards
+            }
+        }
+
         function displayShows(showsToDisplay) {
             let watchedShows = JSON.parse(localStorage.getItem('my_watched_shows')) || [];
 
@@ -588,26 +527,40 @@
                 
                 const posterPath = show.poster_path ? IMG_URL + show.poster_path : 'https://via.placeholder.com/500x750?text=No+Image';
                 const releaseYear = show.first_air_date ? show.first_air_date.substring(0,4) : 'N/A';
+                const tmdbRating = show.vote_average ? show.vote_average.toFixed(1) : 'NR';
                 
-                // شارة "تم المشاهدة" المصغرة والأنيقة
                 const isWatched = watchedShows.some(w => w.id === show.id);
                 const badgeHTML = isWatched ? `<div class="watched-badge">✔️</div>` : '';
 
+                // إضافة التقييمات مع الشعارات في الكرت الخارجي
                 card.innerHTML = `
                     ${badgeHTML}
                     <img src="${posterPath}" alt="${show.name}" class="show-image" loading="lazy">
                     <div class="show-info">
                         <h3 class="show-title">${show.name}</h3>
-                        <p style="color: #aaa; font-size: 0.85rem; margin: 0; display: flex; justify-content: space-between;">
-                            <span>⭐ ${show.vote_average ? show.vote_average.toFixed(1) : 'NR'}</span>
-                            <span>📅 ${releaseYear}</span>
-                        </p>
+                        <div class="card-meta-footer">
+                            <div class="rating-pill">
+                                <img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_square_1-5bdc75aaebeb75dc7ae79426ddd9be3b2be1e342510f8202baf6bffa71d7f5c4.svg" alt="TMDB" class="icon-tmdb">
+                                <span>${tmdbRating}</span>
+                            </div>
+                            <div class="rating-pill">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg" alt="IMDb" class="icon-imdb">
+                                <span id="card-imdb-${show.id}">${imdbCache[show.id] || '⏳'}</span>
+                            </div>
+                            <div class="rating-pill">📅 ${releaseYear}</div>
+                        </div>
                     </div>
                 `;
                 grid.appendChild(card);
+                
+                // جلب تقييم IMDb في الخلفية إذا لم يكن موجوداً في الـ Cache
+                if (!imdbCache[show.id]) {
+                    fetchIMDbForCard(show.id);
+                }
             });
         }
 
+        // --- دوال النافذة المنبثقة (Modal) ---
         async function fetchExternalRatings(tmdbId) {
             try {
                 const extRes = await fetch(`${BASE_URL}/tv/${tmdbId}/external_ids?api_key=${TMDB_API_KEY}`);
@@ -619,6 +572,9 @@
                 const omdbData = await omdbRes.json();
                 
                 if (omdbData.Response === "True" && omdbData.imdbRating && omdbData.imdbRating !== "N/A") {
+                    // تحديث الـ Cache أيضاً عند الفتح
+                    imdbCache[tmdbId] = omdbData.imdbRating;
+                    sessionStorage.setItem('imdbCache', JSON.stringify(imdbCache));
                     return { imdb: `${omdbData.imdbRating} / 10`, votes: omdbData.imdbVotes };
                 }
                 return { imdb: "N/A", votes: "" };
@@ -633,12 +589,10 @@
             document.getElementById('modal-status').innerText = 'Status: Loading...';
             document.getElementById('modal-seasons').innerText = 'Seasons: Loading...';
             
-            // تعيين تقييم وعدد أصوات TMDB مباشرة
             document.getElementById('modal-tmdb-rating').innerText = show.vote_average ? show.vote_average.toFixed(1) + ' / 10' : 'N/A';
             document.getElementById('modal-tmdb-votes').innerText = show.vote_count ? formatVotes(show.vote_count) : '';
 
-            // تصفير IMDb لحين تحميله
-            document.getElementById('modal-imdb-rating').innerText = '⏳';
+            document.getElementById('modal-imdb-rating').innerText = imdbCache[show.id] ? imdbCache[show.id] + ' / 10' : '⏳';
             document.getElementById('modal-imdb-votes').innerText = '';
 
             const posterPath = show.poster_path ? IMG_URL + show.poster_path : 'https://via.placeholder.com/500x750?text=No+Image';
@@ -662,13 +616,8 @@
             newFavBtn.onclick = (e) => {
                 e.preventDefault();
                 favorites = JSON.parse(localStorage.getItem('my_favorite_shows')) || [];
-                if (favorites.some(f => f.id === show.id)) {
-                    favorites = favorites.filter(f => f.id !== show.id);
-                    newFavBtn.innerHTML = '❤️ Add to Favorites';
-                } else {
-                    favorites.push(show);
-                    newFavBtn.innerHTML = '❌ Remove Favorite';
-                }
+                if (favorites.some(f => f.id === show.id)) favorites = favorites.filter(f => f.id !== show.id);
+                else favorites.push(show);
                 localStorage.setItem('my_favorite_shows', JSON.stringify(favorites));
                 if (currentMode === 'favorites') showFavorites(document.querySelector('.fav-filter-btn'));
             };
@@ -685,18 +634,15 @@
             newWatchBtn.onclick = (e) => {
                 e.preventDefault();
                 watched = JSON.parse(localStorage.getItem('my_watched_shows')) || [];
-                if (watched.some(w => w.id === show.id)) {
-                    watched = watched.filter(w => w.id !== show.id);
-                    newWatchBtn.innerHTML = '✔️ Mark as Watched';
-                } else {
-                    watched.push(show);
-                    newWatchBtn.innerHTML = '❌ Unmark Watched';
-                }
+                if (watched.some(w => w.id === show.id)) watched = watched.filter(w => w.id !== show.id);
+                else watched.push(show);
                 localStorage.setItem('my_watched_shows', JSON.stringify(watched));
                 
-                // تحديث الواجهة فوراً عند التعليم لكي تظهر أو تختفي الشارة
                 if (currentMode === 'watched') showWatched(document.querySelector('.watched-filter-btn'));
-                else applyFilters(); // يقوم بإعادة تحميل الشبكة الحالية ليظهر الشريط الأخضر على المسلسل
+                else {
+                    const cards = document.querySelectorAll('.show-card');
+                    applyFilters(); 
+                }
             };
 
             modal.style.display = 'flex';
@@ -716,6 +662,9 @@
             fetchExternalRatings(show.id).then(ratings => {
                 document.getElementById('modal-imdb-rating').innerText = ratings.imdb;
                 document.getElementById('modal-imdb-votes').innerText = ratings.votes ? formatVotes(ratings.votes) : '';
+                // تحديث الكرت الخارجي أيضاً إذا كان مرئياً
+                const cardImdbSpan = document.getElementById(`card-imdb-${show.id}`);
+                if(cardImdbSpan) cardImdbSpan.innerText = imdbCache[show.id];
             });
             
             fetch(`${BASE_URL}/tv/${show.id}/videos?api_key=${TMDB_API_KEY}`) 
@@ -759,7 +708,6 @@
         function closeModal() { modal.style.display = 'none'; }
         window.onclick = function(event) { if (event.target == modal) closeModal(); }
 
-        // Initial fetch
         fetchShows('213', document.querySelector('.filters button.active'), 1);
     </script>
 </body>
