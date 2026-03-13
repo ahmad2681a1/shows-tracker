@@ -144,6 +144,20 @@
             color: #aaa;
             width: 100%;
         }
+        
+        /* Load More Button */
+        #load-more-btn {
+            background-color: #333;
+            border: 2px solid #555;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            border-radius: 25px;
+            margin-bottom: 40px;
+        }
+        #load-more-btn:hover {
+            background-color: #e50914;
+            border-color: #e50914;
+        }
 
         /* ----- Modal Design ----- */
         .modal {
@@ -258,6 +272,10 @@
     <div class="shows-grid" id="shows-grid">
         </div>
 
+    <div style="text-align: center;">
+        <button id="load-more-btn" style="display: none;" onclick="loadMore()">Load More ⬇️</button>
+    </div>
+
     <div id="show-modal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
@@ -284,7 +302,6 @@
     </div>
 
     <script>
-        // مفاتيح الـ API الخاصة بك
         const TMDB_API_KEY = 'e7be99b2666a862f16f0a6b5441c150b'; 
         const OMDB_API_KEY = '75583472';
 
@@ -293,25 +310,33 @@
         
         const grid = document.getElementById('shows-grid');
         const modal = document.getElementById('show-modal');
+        const loadMoreBtn = document.getElementById('load-more-btn');
 
-        let currentNetwork = '213'; // لحفظ المنصة المحددة حالياً
+        // متغيرات تتبع الصفحة الحالية وحالة البحث
+        let currentPage = 1;
+        let currentMode = 'network'; // 'network' او 'search'
+        let currentNetwork = '213';
+        let currentSearchQuery = '';
 
-        // دالة تطبيق الترتيب عند تغيير القائمة المنسدلة
         function applySort() {
-            const activeBtn = document.querySelector('.filters button.active');
-            if (activeBtn) {
-                // إذا كنا نستعرض منصة، نعيد جلب البيانات بالترتيب الجديد
-                fetchShows(currentNetwork, activeBtn);
-            } else if (document.getElementById('search-input').value.trim() !== '') {
-                // إذا كنا في وضع البحث، نعيد ترتيب نتائج البحث
-                performSearch();
+            if (currentMode === 'network') {
+                fetchShows(currentNetwork, document.querySelector('.filters button.active'), 1);
+            } else {
+                performSearch(1);
             }
         }
 
         // Fetch Shows by Network
-        async function fetchShows(networkId, btnElement) {
-            currentNetwork = networkId; // حفظ المنصة الحالية
-            document.getElementById('search-input').value = ''; 
+        async function fetchShows(networkId, btnElement, page = 1) {
+            currentMode = 'network';
+            currentNetwork = networkId;
+            currentPage = page;
+
+            if (page === 1) {
+                document.getElementById('search-input').value = ''; 
+                grid.innerHTML = '<div class="loading">Loading shows... ⏳</div>';
+                loadMoreBtn.style.display = 'none';
+            }
             
             if (btnElement) {
                 const buttons = document.querySelectorAll('.filters button');
@@ -320,87 +345,110 @@
             }
 
             const sortValue = document.getElementById('sort-select').value;
-            
-            // إضافة فلتر إضافي لمنع ظهور مسلسلات مستقبلية فارغة أو بدون تقييم عند اختيار الترتيب بالتاريخ أو التقييم
             let extraParams = '';
-            if (sortValue === 'vote_average.desc') {
-                extraParams = '&vote_count.gte=200'; // يفضل أن يكون التقييم مبني على 200 صوت على الأقل
-            } else if (sortValue === 'first_air_date.desc') {
-                extraParams = '&vote_count.gte=5'; // لمنع المسلسلات غير المصدرة بعد والتي ليس لها صور
-            }
-
-            grid.innerHTML = '<div class="loading">Loading shows... ⏳</div>';
+            if (sortValue === 'vote_average.desc') extraParams = '&vote_count.gte=200';
+            else if (sortValue === 'first_air_date.desc') extraParams = '&vote_count.gte=5';
 
             try {
-                const response = await fetch(`${BASE_URL}/discover/tv?api_key=${TMDB_API_KEY}&language=en-US&sort_by=${sortValue}${extraParams}&with_networks=${networkId}`);
+                // إضافة متغير الصفحة &page=
+                const response = await fetch(`${BASE_URL}/discover/tv?api_key=${TMDB_API_KEY}&language=en-US&sort_by=${sortValue}${extraParams}&with_networks=${networkId}&page=${page}`);
                 if (!response.ok) throw new Error('Connection error with TMDB.');
 
                 const data = await response.json();
+                
+                if (page === 1) grid.innerHTML = ''; // مسح القديم فقط إذا كانت الصفحة الأولى
+                
                 displayShows(data.results);
+
+                // إظهار أو إخفاء زر "تحميل المزيد" بناءً على توفر صفحات أخرى
+                if (data.page < data.total_pages) {
+                    loadMoreBtn.style.display = 'inline-block';
+                } else {
+                    loadMoreBtn.style.display = 'none';
+                }
+
             } catch (error) {
-                grid.innerHTML = `<div class="loading" style="color: red;">${error.message}</div>`;
+                if (page === 1) grid.innerHTML = `<div class="loading" style="color: red;">${error.message}</div>`;
             }
         }
 
         // Search Functionality
-        async function performSearch() {
-            const query = document.getElementById('search-input').value.trim();
-            if (!query) return;
+        async function performSearch(page = 1) {
+            currentMode = 'search';
+            currentPage = page;
 
-            const buttons = document.querySelectorAll('.filters button');
-            buttons.forEach(btn => btn.classList.remove('active'));
+            if (page === 1) {
+                currentSearchQuery = document.getElementById('search-input').value.trim();
+                grid.innerHTML = '<div class="loading">Searching... 🔍</div>';
+                loadMoreBtn.style.display = 'none';
+                
+                const buttons = document.querySelectorAll('.filters button');
+                buttons.forEach(btn => btn.classList.remove('active'));
+            }
 
-            grid.innerHTML = '<div class="loading">Searching... 🔍</div>';
+            if (!currentSearchQuery) return;
 
             try {
-                const response = await fetch(`${BASE_URL}/search/tv?api_key=${TMDB_API_KEY}&language=en-US&query=${encodeURIComponent(query)}`);
+                const response = await fetch(`${BASE_URL}/search/tv?api_key=${TMDB_API_KEY}&language=en-US&query=${encodeURIComponent(currentSearchQuery)}&page=${page}`);
                 if (!response.ok) throw new Error('Search failed.');
 
                 const data = await response.json();
                 
-                if (data.results.length === 0) {
+                if (page === 1 && data.results.length === 0) {
                     grid.innerHTML = '<div class="loading">No shows found. Try another name!</div>';
                     return;
                 }
 
-                // ترتيب نتائج البحث يدوياً (Client-side sorting)
-                const sortValue = document.getElementById('sort-select').value;
+                if (page === 1) grid.innerHTML = '';
+
                 let sortedResults = data.results;
+                const sortValue = document.getElementById('sort-select').value;
                 
                 if (sortValue === 'first_air_date.desc') {
-                    // ترتيب حسب الأحدث
                     sortedResults.sort((a, b) => new Date(b.first_air_date || 0) - new Date(a.first_air_date || 0));
                 } else if (sortValue === 'vote_average.desc') {
-                    // ترتيب حسب التقييم
                     sortedResults.sort((a, b) => b.vote_average - a.vote_average);
                 } else {
-                    // ترتيب حسب الشهرة (الافتراضي)
                     sortedResults.sort((a, b) => b.popularity - a.popularity);
                 }
 
                 displayShows(sortedResults);
+
+                if (data.page < data.total_pages) {
+                    loadMoreBtn.style.display = 'inline-block';
+                } else {
+                    loadMoreBtn.style.display = 'none';
+                }
+
             } catch (error) {
-                grid.innerHTML = `<div class="loading" style="color: red;">${error.message}</div>`;
+                if (page === 1) grid.innerHTML = `<div class="loading" style="color: red;">${error.message}</div>`;
             }
         }
 
         function handleKeyPress(event) {
             if (event.key === 'Enter') {
-                performSearch();
+                performSearch(1);
+            }
+        }
+
+        // Load More Function
+        function loadMore() {
+            // نزيد رقم الصفحة الحالية بمقدار 1 ونستدعي الدالة المناسبة
+            if (currentMode === 'network') {
+                fetchShows(currentNetwork, null, currentPage + 1);
+            } else {
+                performSearch(currentPage + 1);
             }
         }
 
         function displayShows(showsToDisplay) {
-            grid.innerHTML = '';
-            
+            // تم إزالة grid.innerHTML = ''; من هنا لكي لا تمسح الصفحة السابقة عند دمج الصفحة الجديدة
             showsToDisplay.forEach(show => {
                 const card = document.createElement('div');
                 card.className = 'show-card';
                 card.onclick = () => openModal(show);
                 
                 const posterPath = show.poster_path ? IMG_URL + show.poster_path : 'https://via.placeholder.com/500x750?text=No+Image';
-                
-                // إضافة تاريخ الإصدار للبطاقة ليراه المستخدم عند الترتيب بالتاريخ
                 const releaseYear = show.first_air_date ? show.first_air_date.substring(0,4) : 'N/A';
 
                 card.innerHTML = `
@@ -470,8 +518,7 @@
         }
 
         // Initial fetch
-        fetchShows('213', document.querySelector('.filters button'));
+        fetchShows('213', document.querySelector('.filters button'), 1);
     </script>
 </body>
 </html>
-
