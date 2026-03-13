@@ -94,7 +94,6 @@
             cursor: pointer;
             padding: 5px;
         }
-        
         select option {
             background-color: #222222;
             color: #ffffff;
@@ -121,17 +120,13 @@
         button.network-btn:hover, button.network-btn.active {
             background-color: #e50914; 
         }
-        .fav-filter-btn {
-            background-color: #FFD700 !important;
-            color: #000 !important;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-        }
+        
+        /* أزرار الفلاتر الخاصة (المفضلة والمشاهدة) */
+        .fav-filter-btn { background-color: #FFD700 !important; color: #000 !important; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; cursor: pointer; transition: 0.3s; }
         .fav-filter-btn:hover, .fav-filter-btn.active { background-color: #e5c100 !important; }
+        
+        .watched-filter-btn { background-color: #4CAF50 !important; color: white !important; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .watched-filter-btn:hover, .watched-filter-btn.active { background-color: #45a049 !important; }
 
         /* --- Grid & Cards --- */
         .shows-grid {
@@ -173,23 +168,25 @@
             text-overflow: ellipsis;
         }
 
+        /* شارة "تم المشاهدة" على البوستر */
+        .watched-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(76, 175, 80, 0.95);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            z-index: 10;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
+
         /* --- Skeleton Loaders --- */
-        .skeleton {
-            background: linear-gradient(90deg, #333 25%, #444 50%, #333 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-        }
-        @keyframes shimmer {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-        .skeleton-card {
-            background-color: var(--card-bg);
-            border-radius: 10px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
+        .skeleton { background: linear-gradient(90deg, #333 25%, #444 50%, #333 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        .skeleton-card { background-color: var(--card-bg); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; }
         .skeleton-img { width: 100%; height: 300px; }
         .skeleton-info { padding: 15px; display: flex; flex-direction: column; gap: 10px; align-items: center; }
         .skeleton-text { height: 18px; border-radius: 4px; width: 80%; }
@@ -220,18 +217,22 @@
         .rating-item { display: flex; flex-direction: column; align-items: center; text-align: center; background-color: #222; padding: 15px; border-radius: 8px; }
         .rating-label { font-size: 0.9rem; color: #aaa; margin-bottom: 8px; letter-spacing: 1px; text-transform: uppercase;}
         .rating-value { font-size: 1.4rem; font-weight: bold; }
-        
-        /* تنسيق عدد المصوتين الجديد */
         .rating-votes { font-size: 0.9rem; color: #888; margin-top: 5px; font-weight: normal; }
 
         .modal-overview { line-height: 1.6; color: #ddd; font-size: 1.05rem; }
         
+        /* Action Buttons */
         .action-buttons { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
-        .trailer-btn, .fav-btn { color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: 0.3s; border: none; display: flex; align-items: center; gap: 8px; }
+        .trailer-btn, .fav-btn, .watched-btn { color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: 0.3s; border: none; display: flex; align-items: center; gap: 8px; }
+        
         .trailer-btn { background-color: #e50914; }
         .trailer-btn:hover { background-color: #f40612; transform: scale(1.05); }
+        
         .fav-btn { background-color: #333; }
         .fav-btn:hover { background-color: #555; transform: scale(1.05); }
+
+        .watched-btn { background-color: #2196F3; }
+        .watched-btn:hover { background-color: #0b7dda; transform: scale(1.05); }
 
         .recommendations-section { width: 100%; margin-top: 30px; border-top: 1px solid #444; padding-top: 20px; }
         .recommendations-section h3 { margin-top: 0; color: #fff; }
@@ -239,7 +240,6 @@
         .rec-container::-webkit-scrollbar { height: 8px; }
         .rec-container::-webkit-scrollbar-track { background: #222; border-radius: 10px; }
         .rec-container::-webkit-scrollbar-thumb { background: #e50914; border-radius: 10px; }
-        
         .rec-card { min-width: 140px; width: 140px; cursor: pointer; transition: 0.3s; }
         .rec-card:hover { transform: scale(1.05); }
         .rec-img { width: 100%; height: 210px; object-fit: cover; border-radius: 8px; }
@@ -286,7 +286,9 @@
         <button class="network-btn" onclick="fetchShows('2552', this, 1)">Apple TV+</button>
         <button class="network-btn" onclick="fetchShows('453', this, 1)">Hulu</button>
         <button class="network-btn" onclick="fetchShows('2739', this, 1)">Disney+</button>
+        
         <button class="fav-filter-btn" onclick="showFavorites(this)">⭐ My Favorites</button>
+        <button class="watched-filter-btn" onclick="showWatched(this)">✔️ Watched Shows</button>
     </div>
 
     <div class="shows-grid" id="shows-grid"></div>
@@ -324,6 +326,7 @@
                 <div class="action-buttons">
                     <a id="trailer-btn" class="trailer-btn" href="#" target="_blank" style="display: none;">▶ Watch Trailer</a>
                     <button id="favorite-btn" class="fav-btn">❤️ Add to Favorites</button>
+                    <button id="watched-btn" class="watched-btn">✔️ Mark as Watched</button>
                 </div>
             </div>
 
@@ -351,7 +354,6 @@
         let isLoading = false;
         let hasMorePages = true;
 
-        // دالة تحويل أرقام المصوتين إلى اختصارات (150K أو 1.5M)
         function formatVotes(votesStr) {
             if (!votesStr || votesStr === "N/A") return "";
             const votes = parseInt(votesStr.toString().replace(/,/g, ''));
@@ -380,6 +382,7 @@
             if (currentMode === 'network') fetchShows(currentNetwork, document.querySelector('.filters button.active'), 1);
             else if (currentMode === 'search') performSearch(1);
             else if (currentMode === 'favorites') showFavorites(document.querySelector('.fav-filter-btn'));
+            else if (currentMode === 'watched') showWatched(document.querySelector('.watched-filter-btn'));
         }
 
         function showSkeletons(count = 20, clearGrid = false) {
@@ -534,6 +537,38 @@
             displayShows(favorites);
         }
 
+        // دالة عرض المسلسلات المشاهدة
+        function showWatched(btnElement) {
+            currentMode = 'watched';
+            document.getElementById('search-input').value = '';
+            hasMorePages = false; 
+            
+            if (btnElement) {
+                document.querySelectorAll('.filters button').forEach(btn => btn.classList.remove('active'));
+                btnElement.classList.add('active');
+            }
+
+            grid.innerHTML = '';
+            let watched = JSON.parse(localStorage.getItem('my_watched_shows')) || [];
+            
+            const genreValue = document.getElementById('genre-select').value;
+            if (genreValue) {
+                watched = watched.filter(show => show.genre_ids && show.genre_ids.includes(parseInt(genreValue)));
+            }
+
+            if (watched.length === 0) {
+                grid.innerHTML = '<div class="loading-message">You haven\'t marked any shows as watched yet. ✔️</div>';
+                return;
+            }
+
+            const sortValue = document.getElementById('sort-select').value;
+            if (sortValue === 'first_air_date.desc') watched.sort((a, b) => new Date(b.first_air_date || 0) - new Date(a.first_air_date || 0));
+            else if (sortValue === 'vote_average.desc') watched.sort((a, b) => b.vote_average - a.vote_average);
+            else watched.sort((a, b) => b.popularity - a.popularity);
+
+            displayShows(watched);
+        }
+
         window.addEventListener('scroll', () => {
             if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500) {
                 if (!isLoading && hasMorePages) {
@@ -544,6 +579,8 @@
         });
 
         function displayShows(showsToDisplay) {
+            let watchedShows = JSON.parse(localStorage.getItem('my_watched_shows')) || [];
+
             showsToDisplay.forEach(show => {
                 const card = document.createElement('div');
                 card.className = 'show-card';
@@ -551,8 +588,13 @@
                 
                 const posterPath = show.poster_path ? IMG_URL + show.poster_path : 'https://via.placeholder.com/500x750?text=No+Image';
                 const releaseYear = show.first_air_date ? show.first_air_date.substring(0,4) : 'N/A';
+                
+                // التحقق مما إذا كان المسلسل ضمن قائمة المشاهدة لوضع الشارة (Badge)
+                const isWatched = watchedShows.some(w => w.id === show.id);
+                const badgeHTML = isWatched ? `<div class="watched-badge">✔️ Watched</div>` : '';
 
                 card.innerHTML = `
+                    ${badgeHTML}
                     <img src="${posterPath}" alt="${show.name}" class="show-image" loading="lazy">
                     <div class="show-info">
                         <h3 class="show-title">${show.name}</h3>
@@ -566,7 +608,6 @@
             });
         }
 
-        // جلب تقييم IMDb وعدد المصوتين معاً
         async function fetchExternalRatings(tmdbId) {
             try {
                 const extRes = await fetch(`${BASE_URL}/tv/${tmdbId}/external_ids?api_key=${TMDB_API_KEY}`);
@@ -592,11 +633,9 @@
             document.getElementById('modal-status').innerText = 'Status: Loading...';
             document.getElementById('modal-seasons').innerText = 'Seasons: Loading...';
             
-            // تعيين تقييم وعدد أصوات TMDB مباشرة
             document.getElementById('modal-tmdb-rating').innerText = show.vote_average ? show.vote_average.toFixed(1) + ' / 10' : 'N/A';
             document.getElementById('modal-tmdb-votes').innerText = show.vote_count ? formatVotes(show.vote_count) : '';
 
-            // تصفير IMDb لحين تحميله
             document.getElementById('modal-imdb-rating').innerText = '⏳';
             document.getElementById('modal-imdb-votes').innerText = '';
 
@@ -609,6 +648,7 @@
             document.getElementById('rec-section').style.display = 'none';
             document.getElementById('rec-container').innerHTML = '';
 
+            // --- معالجة زر المفضلة ---
             let favorites = JSON.parse(localStorage.getItem('my_favorite_shows')) || [];
             let favBtn = document.getElementById('favorite-btn');
             let newFavBtn = favBtn.cloneNode(true);
@@ -631,6 +671,32 @@
                 if (currentMode === 'favorites') showFavorites(document.querySelector('.fav-filter-btn'));
             };
 
+            // --- معالجة زر تمت المشاهدة ---
+            let watched = JSON.parse(localStorage.getItem('my_watched_shows')) || [];
+            let watchBtn = document.getElementById('watched-btn');
+            let newWatchBtn = watchBtn.cloneNode(true);
+            watchBtn.parentNode.replaceChild(newWatchBtn, watchBtn);
+            
+            const isWatched = watched.some(w => w.id === show.id);
+            newWatchBtn.innerHTML = isWatched ? '❌ Unmark Watched' : '✔️ Mark as Watched';
+            
+            newWatchBtn.onclick = (e) => {
+                e.preventDefault();
+                watched = JSON.parse(localStorage.getItem('my_watched_shows')) || [];
+                if (watched.some(w => w.id === show.id)) {
+                    watched = watched.filter(w => w.id !== show.id);
+                    newWatchBtn.innerHTML = '✔️ Mark as Watched';
+                } else {
+                    watched.push(show);
+                    newWatchBtn.innerHTML = '❌ Unmark Watched';
+                }
+                localStorage.setItem('my_watched_shows', JSON.stringify(watched));
+                
+                // تحديث الواجهة فوراً عند التعليم لكي تظهر أو تختفي الشارة
+                if (currentMode === 'watched') showWatched(document.querySelector('.watched-filter-btn'));
+                else applyFilters(); // يقوم بإعادة تحميل الشبكة الحالية ليظهر الشريط الأخضر على المسلسل
+            };
+
             modal.style.display = 'flex';
             document.querySelector('.modal-content').scrollTop = 0;
 
@@ -645,7 +711,6 @@
                     document.getElementById('modal-seasons').innerText = 'Seasons: N/A';
                 });
 
-            // جلب وعرض تقييم وعدد مصوتين IMDb
             fetchExternalRatings(show.id).then(ratings => {
                 document.getElementById('modal-imdb-rating').innerText = ratings.imdb;
                 document.getElementById('modal-imdb-votes').innerText = ratings.votes ? formatVotes(ratings.votes) : '';
