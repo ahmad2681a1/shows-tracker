@@ -11,8 +11,6 @@
             --text-color: #ffffff;
             --card-bg: #2f2f2f;
             --imdb-color: #f5c518;
-            --rt-color: #fa320a;
-            --meta-color: #66cc33;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -266,22 +264,21 @@
             align-items: center;
             text-align: center;
             background-color: #222;
-            padding: 10px;
+            padding: 15px;
             border-radius: 8px;
         }
         .rating-label {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: #aaa;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
         }
         .rating-value {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             font-weight: bold;
         }
 
         .modal-overview { line-height: 1.6; color: #ddd; font-size: 1.05rem; }
         
-        /* أزرار الإجراءات */
         .action-buttons {
             display: flex;
             gap: 10px;
@@ -307,7 +304,7 @@
         .fav-btn { background-color: #333; }
         .fav-btn:hover { background-color: #555; transform: scale(1.05); }
 
-        /* قسم المسلسلات المشابهة */
+        /* قسم التوصيات */
         .recommendations-section {
             width: 100%;
             margin-top: 30px;
@@ -409,25 +406,16 @@
                     <span id="modal-date">📅 Release Date: Loading...</span>
                     <span id="modal-status" class="meta-badge">Status: Loading...</span>
                     <span id="modal-seasons" class="meta-badge">Seasons: Loading...</span>
-                    <span id="modal-episodes" class="meta-badge">Episodes: Loading...</span>
                 </div>
                 
                 <div class="ratings-box">
                     <div class="rating-item" style="color: #01b4e4;">
-                        <span class="rating-label">TMDB</span> 
-                        <span class="rating-value">⭐ <span id="modal-tmdb-rating">...</span></span>
+                        <span class="rating-label">TMDB Rating</span> 
+                        <span class="rating-value">⭐ <span id="modal-tmdb-rating">...</span> / 10</span>
                     </div>
                     <div class="rating-item" style="color: var(--imdb-color);">
-                        <span class="rating-label">IMDb</span> 
+                        <span class="rating-label">IMDb Rating</span> 
                         <span class="rating-value">🎬 <span id="modal-imdb-rating">...</span></span>
-                    </div>
-                    <div class="rating-item" style="color: var(--rt-color);">
-                        <span class="rating-label">Rotten Tomatoes</span> 
-                        <span class="rating-value">🍅 <span id="modal-rt-rating">...</span></span>
-                    </div>
-                    <div class="rating-item" style="color: var(--meta-color);">
-                        <span class="rating-label">Metacritic</span> 
-                        <span class="rating-value">Ⓜ️ <span id="modal-meta-rating">...</span></span>
                     </div>
                 </div>
 
@@ -482,8 +470,7 @@
             }
             
             if (btnElement) {
-                const buttons = document.querySelectorAll('.filters button');
-                buttons.forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.filters button').forEach(btn => btn.classList.remove('active'));
                 btnElement.classList.add('active');
             }
 
@@ -494,7 +481,7 @@
 
             try {
                 const response = await fetch(`${BASE_URL}/discover/tv?api_key=${TMDB_API_KEY}&language=en-US&sort_by=${sortValue}${extraParams}&with_networks=${networkId}&page=${page}`);
-                if (!response.ok) throw new Error('Connection error with TMDB.');
+                if (!response.ok) throw new Error('Connection error.');
                 const data = await response.json();
                 if (page === 1) grid.innerHTML = '';
                 displayShows(data.results);
@@ -596,51 +583,37 @@
             });
         }
 
-        // جلب جميع التقييمات الخارجية من OMDb
+        // جلب تقييم IMDb فقط بعد تنظيف الكود
         async function fetchExternalRatings(tmdbId) {
             try {
                 const extRes = await fetch(`${BASE_URL}/tv/${tmdbId}/external_ids?api_key=${TMDB_API_KEY}`);
                 const extData = await extRes.json();
                 const imdbId = extData.imdb_id;
 
-                if (!imdbId) return { imdb: "N/A", rt: "N/A", meta: "N/A" };
+                if (!imdbId) return { imdb: "N/A" };
 
                 const omdbRes = await fetch(`https://www.omdbapi.com/?i=${imdbId}&apikey=${OMDB_API_KEY}`);
                 const omdbData = await omdbRes.json();
 
-                let ratings = { imdb: "N/A", rt: "N/A", meta: "N/A" };
-
-                if (omdbData.Response === "True") {
-                    if (omdbData.imdbRating && omdbData.imdbRating !== "N/A") {
-                        ratings.imdb = `${omdbData.imdbRating}`;
-                    }
-                    if (omdbData.Ratings) {
-                        const rtData = omdbData.Ratings.find(r => r.Source === "Rotten Tomatoes");
-                        if (rtData) ratings.rt = rtData.Value;
-                        
-                        const metaData = omdbData.Ratings.find(r => r.Source === "Metacritic");
-                        if (metaData) ratings.meta = metaData.Value;
-                    }
+                if (omdbData.Response === "True" && omdbData.imdbRating && omdbData.imdbRating !== "N/A") {
+                    return { imdb: `${omdbData.imdbRating} / 10` };
                 }
-                return ratings;
+                return { imdb: "N/A" };
             } catch (error) {
-                return { imdb: "N/A", rt: "N/A", meta: "N/A" };
+                return { imdb: "N/A" };
             }
         }
 
         async function openModal(show) {
-            // تهيئة النصوص لتظهر أنها قيد التحميل
             document.getElementById('modal-title').innerText = show.name;
             document.getElementById('modal-tmdb-rating').innerText = show.vote_average ? show.vote_average.toFixed(1) : 'N/A';
             document.getElementById('modal-date').innerText = '📅 Release Date: ' + (show.first_air_date || 'N/A');
             document.getElementById('modal-overview').innerText = show.overview ? show.overview : 'Sorry, no overview available for this show.';
+            
             document.getElementById('modal-status').innerText = 'Status: Loading...';
             document.getElementById('modal-seasons').innerText = 'Seasons: Loading...';
-            document.getElementById('modal-episodes').innerText = 'Episodes: Loading...';
             
             document.getElementById('modal-imdb-rating').innerText = '⏳';
-            document.getElementById('modal-rt-rating').innerText = '⏳';
-            document.getElementById('modal-meta-rating').innerText = '⏳';
 
             const posterPath = show.poster_path ? IMG_URL + show.poster_path : 'https://via.placeholder.com/500x750?text=No+Image';
             document.getElementById('modal-img').src = posterPath;
@@ -651,7 +624,6 @@
             document.getElementById('rec-section').style.display = 'none';
             document.getElementById('rec-container').innerHTML = '';
 
-            // معالجة المفضلة
             let favorites = JSON.parse(localStorage.getItem('my_favorite_shows')) || [];
             let favBtn = document.getElementById('favorite-btn');
             let newFavBtn = favBtn.cloneNode(true);
@@ -674,30 +646,24 @@
                 if (currentMode === 'favorites') showFavorites(document.querySelector('.fav-filter-btn'));
             };
 
-            // إظهار النافذة المنبثقة فوراً
             modal.style.display = 'flex';
-            // جعل النافذة تصعد لأعلى لكي يرى المستخدم العنوان من البداية
             document.querySelector('.modal-content').scrollTop = 0;
 
-            // 1. جلب تفاصيل المسلسل الإضافية (مواسم، حلقات، حالة)
+            // 1. جلب تفاصيل المسلسل الإضافية (مواسم وحالة)
             fetch(`${BASE_URL}/tv/${show.id}?api_key=${TMDB_API_KEY}&language=en-US`)
                 .then(res => res.json())
                 .then(details => {
                     document.getElementById('modal-status').innerText = 'Status: ' + (details.status || 'Unknown');
                     document.getElementById('modal-seasons').innerText = 'Seasons: ' + (details.number_of_seasons || 'N/A');
-                    document.getElementById('modal-episodes').innerText = 'Episodes: ' + (details.number_of_episodes || 'N/A');
                 })
                 .catch(() => {
                     document.getElementById('modal-status').innerText = 'Status: N/A';
                     document.getElementById('modal-seasons').innerText = 'Seasons: N/A';
-                    document.getElementById('modal-episodes').innerText = 'Episodes: N/A';
                 });
 
-            // 2. جلب التقييمات الخارجية الشاملة
+            // 2. جلب تقييم IMDb
             fetchExternalRatings(show.id).then(ratings => {
                 document.getElementById('modal-imdb-rating').innerText = ratings.imdb;
-                document.getElementById('modal-rt-rating').innerText = ratings.rt;
-                document.getElementById('modal-meta-rating').innerText = ratings.meta;
             });
             
             // 3. البحث عن الإعلان (Trailer)
@@ -723,12 +689,10 @@
                     if (data.results && data.results.length > 0) {
                         const recContainer = document.getElementById('rec-container');
                         recContainer.innerHTML = '';
-                        // عرض أول 10 توصيات فقط
                         data.results.slice(0, 10).forEach(recShow => {
-                            if (!recShow.poster_path) return; // تجاهل المسلسلات التي ليس لها بوستر
+                            if (!recShow.poster_path) return;
                             const recCard = document.createElement('div');
                             recCard.className = 'rec-card';
-                            // عند النقر على مسلسل مشابه، يتم فتحه مباشرة في نفس النافذة المنبثقة
                             recCard.onclick = () => openModal(recShow);
                             recCard.innerHTML = `
                                 <img class="rec-img" src="${IMG_URL + recShow.poster_path}" alt="${recShow.name}">
