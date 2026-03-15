@@ -6,9 +6,9 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📺</text></svg>">
     <title>New Shows Tracker</title>
     <style>
-        /* ----- متغيرات الألوان للوضع الفاتح (الافتراضي) ----- */
+        /* ----- متغيرات الألوان للوضع الفاتح ----- */
         :root { 
-            --bg-body: #fdfcf5;
+            --bg-body: #fdfcf5; /* لون الخلفية الفاتح */
             --bg-card: #ffffff; 
             --text-main: #1e293b; 
             --text-muted: #64748b; 
@@ -24,9 +24,9 @@
             --modal-overlay-bottom: rgba(255, 255, 255, 0.95);
         }
 
-        /* ----- متغيرات الألوان للوضع المظلم (Dark Mode) ----- */
+        /* ----- متغيرات الألوان للوضع الداكن ----- */
         [data-theme="dark"] {
-            --bg-body: #0f172a; 
+            --bg-body: #0f172a; /* لون الخلفية الداكن */
             --bg-card: #1e293b; 
             --text-main: #f8fafc; 
             --text-muted: #94a3b8; 
@@ -37,6 +37,20 @@
             /* ألوان الطبقة الزجاجية للنافذة (داكنة) */
             --modal-overlay-top: rgba(15, 23, 42, 0.70);
             --modal-overlay-bottom: rgba(15, 23, 42, 0.98);
+        }
+
+        /* ----- إضافة الخلفية الاحترافية ----- */
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.5;
+            transition: background-color 0.3s, color 0.3s;
+
+            /* الخلفية الجديدة */
+            background-color: var(--bg-body);
+            background-image: url('https://www.transparenttextures.com/patterns/az-subtle.png'); /* نمط خفي وأنيق */
+            background-repeat: repeat;
         }
         
         body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background-color: var(--bg-body); color: var(--text-main); margin: 0; padding: 0; line-height: 1.5; transition: background-color 0.3s, color 0.3s; }
