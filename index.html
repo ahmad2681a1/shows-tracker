@@ -6,20 +6,42 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📺</text></svg>">
     <title>New Shows Tracker | Light Mode</title>
     <style>
-        /* ----- متغيرات الألوان الجديدة للـ Light Mode ----- */
+        /* ----- متغيرات الألوان للوضع الفاتح (الافتراضي) ----- */
         :root { 
-            --bg-body: #fdfcf5; /* لون الخلفية الكريمي الهادئ */
+            --bg-body: #fdfcf5;
             --bg-card: #ffffff; 
             --text-main: #1e293b; 
             --text-muted: #64748b; 
             --border-light: #e2e8f0;
-            --accent-red: #e50914; /* لون زر التريلر */
-            --accent-blue: #3b82f6; /* لون زر الحلقات */
+            --accent-red: #e50914; 
+            --accent-blue: #3b82f6; 
             --imdb-yellow: #f5c518; 
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
             --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
             --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            /* ألوان الطبقة الزجاجية للنافذة (فاتحة) */
+            --modal-overlay-top: rgba(255, 255, 255, 0.60);
+            --modal-overlay-bottom: rgba(255, 255, 255, 0.90);
         }
+
+        /* ----- متغيرات الألوان للوضع المظلم (Dark Mode) ----- */
+        [data-theme="dark"] {
+            --bg-body: #0f172a; 
+            --bg-card: #1e293b; 
+            --text-main: #f8fafc; 
+            --text-muted: #94a3b8; 
+            --border-light: #334155;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.5);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.4);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.5);
+            /* ألوان الطبقة الزجاجية للنافذة (داكنة) */
+            --modal-overlay-top: rgba(15, 23, 42, 0.75);
+            --modal-overlay-bottom: rgba(15, 23, 42, 0.98);
+        }
+
+        /* ----- تصميم زر التبديل (Theme Toggle) ----- */
+        .theme-toggle { position: absolute; top: 20px; right: 20px; background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-light); padding: 8px 16px; border-radius: 25px; cursor: pointer; font-size: 1rem; box-shadow: var(--shadow-sm); transition: 0.3s; z-index: 100; display: flex; align-items: center; gap: 8px; font-weight: bold; }
+        .theme-toggle:hover { transform: scale(1.05); border-color: var(--accent-blue); }}
         
         body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background-color: var(--bg-body); color: var(--text-main); margin: 0; padding: 0; line-height: 1.5; }
         
@@ -165,6 +187,40 @@
 <body>
 
     <header>
+        <header>
+        <button id="theme-toggle" class="theme-toggle">🌙 Dark Mode</button>
+        ```
+
+### 3. تفعيل البرمجة السحرية (JavaScript)
+انزل إلى قسم البرمجة `<script>`:
+
+**أ. أولاً: برمجة زر التبديل وحفظ الاختيار:**
+أضف هذا الكود في الأعلى (تحت تعريف المتغيرات `const modal = ...` مباشرة):
+
+```javascript
+        // --- نظام التبديل بين الوضع المظلم والفاتح ---
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        
+        // استرجاع وضع المستخدم المحفوظ
+        if (currentTheme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            themeToggleBtn.innerHTML = '☀️ Light Mode';
+        }
+
+        // عند الضغط على الزر
+        themeToggleBtn.addEventListener('click', () => {
+            let theme = document.documentElement.getAttribute('data-theme');
+            if (theme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+                themeToggleBtn.innerHTML = '🌙 Dark Mode';
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                themeToggleBtn.innerHTML = '☀️ Light Mode';
+            }
+        });
         <h1>📺 New Shows Tracker</h1>
         <p>Your minimalist guide to the latest and most popular TV shows</p>
         
@@ -625,8 +681,8 @@
             const backdropUrl = show.backdrop_path ? `https://image.tmdb.org/t/p/w1280${show.backdrop_path}` : '';
             const modalContent = document.querySelector('.modal-content');
             if (backdropUrl) {
-                // دمج لون أبيض متدرج (40% من الأعلى لظهور الصورة، و 85% من الأسفل لوضوح النصوص)
-                modalContent.style.backgroundImage = `linear-gradient(to bottom, rgba(255, 255, 255, 0.40), rgba(255, 255, 255, 0.85)), url('${backdropUrl}')`;
+                // استخدام متغيرات CSS لكي تتغير الألوان بين الفاتح والداكن تلقائياً!
+                modalContent.style.backgroundImage = `linear-gradient(to bottom, var(--modal-overlay-top), var(--modal-overlay-bottom)), url('${backdropUrl}')`;
             } else {
                 modalContent.style.backgroundImage = 'none';
                 modalContent.style.backgroundColor = '#ffffff';
