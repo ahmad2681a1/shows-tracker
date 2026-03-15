@@ -77,25 +77,24 @@
 
         /* ----- Modal Design (Light Mode) ----- */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
-        .modal-content { background-color: rgba(47, 47, 47, 0.2); /* جعل الخلفية شبه شفافة */
-            padding: 30px; 
-            border-radius: 15px; 
-            max-width: 900px; 
+        .modal-content { background-color: #ffffff; 
+            padding: 35px; 
+            border-radius: 16px; 
+            max-width: 950px; 
             width: 100%; 
             position: relative; 
-            animation: fadeIn 0.3s ease-in-out; 
+            animation: fadeIn 0.3s ease-out; 
             display: flex; 
-            gap: 25px; 
+            gap: 30px; 
             flex-wrap: wrap; 
             max-height: 90vh; 
             overflow-y: auto; 
-            
-            /* إضافة تأثير الضباب والخلفية السينمائية */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); 
+            border: 1px solid var(--border-light);
+            /* إعدادات الخلفية السينمائية */
             background-size: cover;
             background-position: center;
-            backdrop-filter: blur(10px) brightness(0.6); /* ضباب خفيف وتعتيم لإبراز النصوص */
-            -webkit-backdrop-filter: blur(10px) brightness(0.6);
-            border: 1px solid rgba(255, 255, 255, 0.1); /* إطار ناعم */ }
+            background-repeat: no-repeat; }
         .close-btn { position: absolute; top: 15px; right: 20px; font-size: 30px; cursor: pointer; color: #94a3b8; transition: 0.2s; line-height: 1; }
         .close-btn:hover { color: #0f172a; }
         .modal-poster { width: 280px; border-radius: 12px; object-fit: cover; align-self: flex-start; box-shadow: var(--shadow-md); border: 1px solid var(--border-light); }
@@ -615,8 +614,16 @@
         async function openModal(show) {
             document.getElementById('modal-title').innerText = show.name;
             // جلب ووضع صورة الخلفية السينمائية (backdrop) للمسلسل المفتوح
+            // جلب صورة الخلفية السينمائية ووضع طبقة بيضاء شفافة فوقها لضمان وضوح النصوص
             const backdropUrl = show.backdrop_path ? `https://image.tmdb.org/t/p/w1280${show.backdrop_path}` : '';
-            document.querySelector('.modal-content').style.backgroundImage = `url('${backdropUrl}')`;
+            const modalContent = document.querySelector('.modal-content');
+            if (backdropUrl) {
+                // دمج لون أبيض بنسبة 85% مع صورة المسلسل
+                modalContent.style.backgroundImage = `linear-gradient(rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.95)), url('${backdropUrl}')`;
+            } else {
+                modalContent.style.backgroundImage = 'none';
+                modalContent.style.backgroundColor = '#ffffff';
+            }
             document.getElementById('modal-date').innerText = '📅 ' + (show.first_air_date || 'N/A');
             document.getElementById('modal-overview').innerText = show.overview ? show.overview : 'Overview not available.';
             
