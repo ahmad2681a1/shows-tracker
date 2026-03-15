@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>TV Shows Tracker | Modern UI</title>
+    <title>TV Shows Tracker | Premium UI</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
@@ -13,7 +13,7 @@
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#e50914", // لون نتفليكس الأحمر المعتاد كعلامة مميزة
+                        "primary": "#e50914", 
                         "primary-container": "#e50914",
                         "on-primary-container": "#ffffff",
                         "background": "#0b1326",
@@ -36,46 +36,38 @@
         .font-headline { font-family: 'Manrope', sans-serif; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .glass { background: rgba(23, 31, 51, 0.7); backdrop-filter: blur(20px); }
+        .glass { background: rgba(23, 31, 51, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.05); }
         .hero-gradient { background: linear-gradient(to top, #0b1326 0%, transparent 100%), linear-gradient(to right, #0b1326 0%, transparent 100%); }
     </style>
 </head>
 <body class="bg-background text-on-background min-h-screen flex overflow-hidden">
 
-<aside class="w-64 bg-surface-container-low flex flex-col h-full z-50 border-r border-white/5">
+<aside class="w-64 bg-surface-container-low flex flex-col h-full z-40 border-r border-white/5">
     <div class="p-8 flex items-center gap-3">
-        <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+        <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center shadow-lg shadow-primary/40">
             <span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">tv</span>
         </div>
         <span class="font-headline font-bold text-lg tracking-tight">Shows Tracker</span>
     </div>
     <nav class="flex-1 px-4 space-y-2 mt-4">
-        <a href="#" onclick="location.reload()" class="flex items-center gap-4 px-4 py-3 rounded-xl bg-primary text-white shadow-lg shadow-primary/30">
+        <a href="#" onclick="location.reload()" class="flex items-center gap-4 px-4 py-3 rounded-xl bg-primary text-white shadow-lg shadow-primary/30 hover:bg-red-700 transition">
             <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
             <span class="font-bold text-sm">Dashboard</span>
-        </a>
-        <a href="#" class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-colors">
-            <span class="material-symbols-outlined">explore</span>
-            <span class="font-bold text-sm text-gray-400">Discover</span>
-        </a>
-        <a href="#" class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-colors">
-            <span class="material-symbols-outlined">favorite</span>
-            <span class="font-bold text-sm text-gray-400">My Favorites</span>
         </a>
     </nav>
 </aside>
 
 <main class="flex-1 h-full overflow-y-auto relative bg-background scroll-smooth" id="main-scroll">
-    <header class="sticky top-0 z-40 glass px-12 py-4 flex items-center justify-between border-b border-white/5">
+    <header class="sticky top-0 z-30 glass px-12 py-4 flex items-center justify-between border-b border-white/5">
         <div class="flex-1 max-w-xl">
             <div class="relative group">
                 <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
-                <input id="search-input" class="w-full bg-surface-container-highest border-none rounded-full py-3 pl-12 pr-6 text-sm text-white focus:ring-2 focus:ring-primary outline-none transition-all placeholder-gray-500" placeholder="Search for TV shows..." type="text" onkeypress="handleSearch(event)"/>
+                <input id="search-input" class="w-full bg-surface-container-highest border border-white/5 rounded-full py-3 pl-12 pr-6 text-sm text-white focus:ring-2 focus:ring-primary outline-none transition-all placeholder-gray-500 shadow-inner" placeholder="Search for TV shows..." type="text" onkeypress="handleSearch(event)"/>
             </div>
         </div>
         <div class="flex items-center gap-6">
-            <div class="flex items-center gap-3 bg-surface-container-high pl-2 pr-4 py-1.5 rounded-full border border-white/5">
-                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-primary to-purple-600 flex items-center justify-center text-white font-bold text-xs">ME</div>
+            <div class="flex items-center gap-3 bg-surface-container-high pl-2 pr-4 py-1.5 rounded-full border border-white/5 shadow-md">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-primary to-purple-600 flex items-center justify-center text-white font-bold text-xs">VIP</div>
                 <span class="text-sm font-medium">My Profile</span>
             </div>
         </div>
@@ -89,15 +81,15 @@
             </div>
             <div class="relative z-10 max-w-3xl mt-10">
                 <div class="flex items-center gap-2 mb-6">
-                    <span class="bg-primary px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider text-white">#1 Trending</span>
-                    <span id="hero-rating" class="text-yellow-400 text-sm font-bold flex items-center gap-1"><span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span> ...</span>
+                    <span class="bg-primary px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider text-white shadow-md">#1 Trending</span>
+                    <span id="hero-rating" class="text-yellow-400 text-sm font-bold flex items-center gap-1 bg-black/40 px-3 py-1 rounded-lg backdrop-blur-md border border-white/5"></span>
                 </div>
                 <h1 id="hero-title" class="font-headline text-5xl md:text-6xl font-extrabold mb-4 leading-tight tracking-tight text-white drop-shadow-lg">Loading...</h1>
                 <p id="hero-desc" class="text-gray-300 text-lg mb-8 max-w-xl leading-relaxed drop-shadow-md line-clamp-3">Fetching the latest trending show details...</p>
                 <div class="flex items-center gap-4">
-                    <button class="bg-primary text-white px-8 py-4 rounded-full font-bold flex items-center gap-2 hover:scale-105 transition-transform shadow-lg shadow-primary/40">
-                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
-                        Watch Trailer
+                    <button id="hero-btn" class="bg-primary text-white px-8 py-4 rounded-full font-bold flex items-center gap-2 hover:scale-105 hover:bg-red-700 transition-all shadow-lg shadow-primary/40 border border-red-500/50">
+                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">info</span>
+                        Show Details & Trailer
                     </button>
                 </div>
             </div>
@@ -106,36 +98,93 @@
         <div class="px-12 -mt-10 relative z-20 space-y-16 pb-20">
             <section>
                 <div class="flex items-center justify-between mb-8">
-                    <h2 class="font-headline text-2xl font-bold tracking-tight text-white">Airing Today</h2>
+                    <h2 class="font-headline text-2xl font-bold tracking-tight text-white drop-shadow-sm">Airing Today</h2>
                 </div>
-                <div id="today-container" class="flex gap-6 overflow-x-auto hide-scrollbar pb-8 -mx-4 px-4 snap-x">
-                    </div>
+                <div id="today-container" class="flex gap-6 overflow-x-auto hide-scrollbar pb-8 -mx-4 px-4 snap-x"></div>
             </section>
 
             <section>
                 <div class="flex items-center justify-between mb-8">
-                    <h2 class="font-headline text-2xl font-bold tracking-tight text-white">Top Rated Shows</h2>
+                    <h2 class="font-headline text-2xl font-bold tracking-tight text-white drop-shadow-sm">Top Rated Shows</h2>
                 </div>
-                <div id="toprated-container" class="flex gap-6 overflow-x-auto hide-scrollbar pb-8 -mx-4 px-4 snap-x">
-                    </div>
+                <div id="toprated-container" class="flex gap-6 overflow-x-auto hide-scrollbar pb-8 -mx-4 px-4 snap-x"></div>
             </section>
         </div>
     </div>
 
     <div id="search-results-content" class="hidden px-12 py-10 pb-20">
         <h2 class="font-headline text-3xl font-bold tracking-tight text-white mb-8">Search Results: <span id="search-term" class="text-primary"></span></h2>
-        <div id="search-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
-            </div>
+        <div id="search-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6"></div>
     </div>
 
 </main>
 
+<div id="show-modal" class="hidden fixed inset-0 z-[100] bg-black/80 backdrop-blur-md justify-center items-center p-4">
+    <div id="modal-content-box" class="bg-surface-container-high rounded-3xl w-full max-w-5xl max-h-[90vh] overflow-y-auto relative border border-white/10 shadow-2xl flex flex-col md:flex-row gap-8 p-8 bg-cover bg-center transition-all" style="background-blend-mode: overlay; background-color: rgba(11, 19, 38, 0.92);">
+        
+        <button onclick="closeModal()" class="absolute top-5 right-6 text-white/50 hover:text-white text-4xl z-50 transition-colors">&times;</button>
+        
+        <img id="modal-img" class="w-full md:w-72 h-[420px] rounded-2xl object-cover shadow-2xl border border-white/10 shrink-0 z-10" src="" alt="Poster">
+        
+        <div class="flex-1 z-10">
+            <h2 id="modal-title" class="font-headline text-4xl md:text-5xl font-extrabold text-white mb-4 drop-shadow-md">Title</h2>
+            
+            <div class="flex flex-wrap gap-3 mb-6 text-sm font-medium">
+                <span id="modal-date" class="glass px-3 py-1.5 rounded-lg text-gray-200">📅 </span>
+                <span id="modal-status" class="glass px-3 py-1.5 rounded-lg text-gray-200">Status: </span>
+                <span id="modal-seasons" class="glass px-3 py-1.5 rounded-lg text-gray-200">Seasons: </span>
+            </div>
+            
+            <div class="flex gap-4 mb-6">
+                <div class="glass p-4 rounded-2xl flex-1 text-center border-t border-white/20">
+                    <p class="text-xs text-gray-400 uppercase tracking-widest mb-1 font-bold">TMDB</p>
+                    <p class="text-2xl font-black text-blue-400">⭐ <span id="modal-tmdb-rating">...</span></p>
+                </div>
+                <div class="glass p-4 rounded-2xl flex-1 text-center border-t border-white/20">
+                    <p class="text-xs text-gray-400 uppercase tracking-widest mb-1 font-bold">IMDb</p>
+                    <p class="text-2xl font-black text-yellow-500">🎬 <span id="modal-imdb-rating">...</span></p>
+                </div>
+            </div>
+            
+            <p id="modal-overview" class="text-gray-300 leading-relaxed mb-8 text-lg">Overview...</p>
+            
+            <div class="flex flex-wrap gap-4 mb-8">
+                <a id="trailer-btn" class="hidden bg-primary text-white px-8 py-3.5 rounded-xl font-bold items-center gap-2 hover:bg-red-700 transition shadow-lg shadow-primary/30" target="_blank">
+                    <span class="material-symbols-outlined">play_circle</span> Watch Trailer
+                </a>
+                <button id="favorite-btn" class="glass text-white px-8 py-3.5 rounded-xl font-bold flex items-center gap-2 hover:bg-white/10 transition">
+                    ❤️ Favorite
+                </button>
+            </div>
+
+            <div id="tracker-container" class="hidden glass p-6 rounded-2xl mb-8 border-t border-white/20">
+                 <div class="flex justify-between text-sm font-bold text-white mb-3">
+                     <span id="tracker-text">Progress</span>
+                     <span id="tracker-percent" class="text-blue-400">0%</span>
+                 </div>
+                 <div class="w-full h-3 bg-black/50 rounded-full mb-5 overflow-hidden border border-white/5">
+                     <div id="progress-fill" class="h-full bg-blue-500 transition-all duration-500 shadow-[0_0_10px_rgba(59,130,246,0.8)]" style="width: 0%"></div>
+                 </div>
+                 <div class="flex gap-3">
+                     <button id="btn-minus" class="bg-white/5 hover:bg-white/10 border border-white/10 px-5 py-2.5 rounded-xl text-white font-bold transition">-</button>
+                     <button id="btn-plus" class="flex-1 bg-blue-600 hover:bg-blue-700 border border-blue-500/50 px-5 py-2.5 rounded-xl text-white font-bold transition shadow-lg shadow-blue-600/20">✔️ +1 Episode</button>
+                     <button id="btn-all" class="bg-white/5 hover:bg-white/10 border border-white/10 px-5 py-2.5 rounded-xl text-white font-bold transition">Mark All</button>
+                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
-    // --- إعدادات API ---
+    // --- إعدادات API والتخزين ---
     const TMDB_API_KEY = 'e7be99b2666a862f16f0a6b5441c150b'; 
+    const OMDB_API_KEY = '75583472';
     const BASE_URL = 'https://api.themoviedb.org/3';
     const IMG_URL_LG = 'https://image.tmdb.org/t/p/original';
     const IMG_URL_SM = 'https://image.tmdb.org/t/p/w500';
+    
+    let imdbCache = JSON.parse(sessionStorage.getItem('imdbCache')) || {};
+    let trendingShowGlobal = null;
 
     // --- دالة مبدئية لتحميل بيانات الداشبورد ---
     async function initDashboard() {
@@ -144,11 +193,14 @@
             const trendRes = await fetch(`${BASE_URL}/trending/tv/day?api_key=${TMDB_API_KEY}`);
             const trendData = await trendRes.json();
             if(trendData.results && trendData.results.length > 0) {
-                const mainShow = trendData.results[0];
-                document.getElementById('hero-bg').src = IMG_URL_LG + mainShow.backdrop_path;
-                document.getElementById('hero-title').innerText = mainShow.name;
-                document.getElementById('hero-desc').innerText = mainShow.overview;
-                document.getElementById('hero-rating').innerHTML = `<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span> ${mainShow.vote_average.toFixed(1)} Rating`;
+                trendingShowGlobal = trendData.results[0];
+                document.getElementById('hero-bg').src = IMG_URL_LG + trendingShowGlobal.backdrop_path;
+                document.getElementById('hero-title').innerText = trendingShowGlobal.name;
+                document.getElementById('hero-desc').innerText = trendingShowGlobal.overview;
+                document.getElementById('hero-rating').innerHTML = `<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span> ${trendingShowGlobal.vote_average.toFixed(1)} Rating`;
+                
+                // تفعيل الزر في الهيرو
+                document.getElementById('hero-btn').onclick = () => openModal(trendingShowGlobal);
             }
 
             // 2. جلب المسلسلات التي تعرض اليوم
@@ -166,34 +218,36 @@
         }
     }
 
-    // --- دالة توليد كروت التصميم الزجاجي للقوائم الأفقية ---
+    // --- دالة توليد كروت التصميم الزجاجي للقوائم الأفقية (الآن تقبل النقر!) ---
     function renderHorizontalCards(shows, containerId, badgeText) {
         const container = document.getElementById(containerId);
-        container.innerHTML = ''; // تفريغ الحاوية
+        container.innerHTML = ''; 
 
         shows.forEach(show => {
             const posterPath = show.poster_path ? IMG_URL_SM + show.poster_path : 'https://via.placeholder.com/500x750?text=No+Image';
             const releaseYear = show.first_air_date ? show.first_air_date.substring(0,4) : 'N/A';
             
-            const cardHTML = `
-                <div class="min-w-[200px] w-[200px] snap-start group cursor-pointer flex flex-col">
-                    <div class="aspect-[2/3] rounded-xl overflow-hidden mb-4 relative transition-all duration-300 group-hover:-translate-y-2 group-hover:shadow-[0_20px_40px_-10px_rgba(229,9,20,0.2)] border border-white/5">
-                        <img class="w-full h-full object-cover" src="${posterPath}" alt="${show.name}" loading="lazy"/>
-                        <div class="absolute top-3 right-3 glass p-1.5 rounded-lg text-white/80">
-                            <span class="material-symbols-outlined text-base">tv</span>
-                        </div>
-                        <div class="absolute bottom-3 left-3 right-3">
-                            <span class="bg-primary/90 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded shadow-lg uppercase tracking-wider">${badgeText}</span>
-                        </div>
+            const card = document.createElement('div');
+            card.className = "min-w-[200px] w-[200px] snap-start group cursor-pointer flex flex-col";
+            card.onclick = () => openModal(show); // تم تفعيل النقر هنا!
+            
+            card.innerHTML = `
+                <div class="aspect-[2/3] rounded-xl overflow-hidden mb-4 relative transition-all duration-300 group-hover:-translate-y-2 group-hover:shadow-[0_20px_40px_-10px_rgba(229,9,20,0.2)] border border-white/5">
+                    <img class="w-full h-full object-cover" src="${posterPath}" alt="${show.name}" loading="lazy"/>
+                    <div class="absolute top-3 right-3 glass p-1.5 rounded-lg text-white/80">
+                        <span class="material-symbols-outlined text-base">tv</span>
                     </div>
-                    <h3 class="font-headline text-base font-bold text-white truncate">${show.name}</h3>
-                    <p class="text-on-surface-variant text-xs mt-1 flex items-center gap-1 font-medium">
-                        <span class="material-symbols-outlined text-yellow-500 text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
-                        ${show.vote_average.toFixed(1)} • ${releaseYear}
-                    </p>
+                    <div class="absolute bottom-3 left-3 right-3">
+                        <span class="bg-primary/90 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded shadow-lg uppercase tracking-wider">${badgeText}</span>
+                    </div>
                 </div>
+                <h3 class="font-headline text-base font-bold text-white truncate">${show.name}</h3>
+                <p class="text-on-surface-variant text-xs mt-1 flex items-center gap-1 font-medium">
+                    <span class="material-symbols-outlined text-yellow-500 text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+                    ${show.vote_average.toFixed(1)} • ${releaseYear}
+                </p>
             `;
-            container.insertAdjacentHTML('beforeend', cardHTML);
+            container.appendChild(card);
         });
     }
 
@@ -203,7 +257,6 @@
             const query = document.getElementById('search-input').value.trim();
             if (!query) return;
 
-            // إخفاء الداشبورد وإظهار قسم البحث
             document.getElementById('dashboard-content').classList.add('hidden');
             document.getElementById('search-results-content').classList.remove('hidden');
             document.getElementById('search-term').innerText = `"${query}"`;
@@ -215,29 +268,30 @@
                 const response = await fetch(`${BASE_URL}/search/tv?api_key=${TMDB_API_KEY}&language=en-US&query=${encodeURIComponent(query)}`);
                 const data = await response.json();
                 
-                grid.innerHTML = ''; // مسح رسالة التحميل
+                grid.innerHTML = ''; 
                 
                 if (data.results.length === 0) {
                     grid.innerHTML = '<div class="col-span-full text-center text-gray-400 py-10">No shows found. Try another name!</div>';
                     return;
                 }
 
-                // توليد كروت البحث
                 data.results.forEach(show => {
-                    if(!show.poster_path) return; // تجاهل المسلسلات التي بدون صور
+                    if(!show.poster_path) return; 
                     const posterPath = IMG_URL_SM + show.poster_path;
                     const releaseYear = show.first_air_date ? show.first_air_date.substring(0,4) : 'N/A';
                     
-                    const cardHTML = `
-                        <div class="group cursor-pointer flex flex-col">
-                            <div class="aspect-[2/3] rounded-xl overflow-hidden mb-3 relative transition-all duration-300 group-hover:-translate-y-2 group-hover:shadow-[0_15px_30px_-10px_rgba(229,9,20,0.3)] border border-white/5">
-                                <img class="w-full h-full object-cover" src="${posterPath}" alt="${show.name}" loading="lazy"/>
-                            </div>
-                            <h3 class="font-headline text-sm font-bold text-white truncate">${show.name}</h3>
-                            <p class="text-on-surface-variant text-xs mt-1 font-medium">${releaseYear} • ⭐ ${show.vote_average.toFixed(1)}</p>
+                    const card = document.createElement('div');
+                    card.className = "group cursor-pointer flex flex-col";
+                    card.onclick = () => openModal(show); // تم تفعيل النقر في البحث أيضاً!
+
+                    card.innerHTML = `
+                        <div class="aspect-[2/3] rounded-xl overflow-hidden mb-3 relative transition-all duration-300 group-hover:-translate-y-2 group-hover:shadow-[0_15px_30px_-10px_rgba(229,9,20,0.3)] border border-white/5">
+                            <img class="w-full h-full object-cover" src="${posterPath}" alt="${show.name}" loading="lazy"/>
                         </div>
+                        <h3 class="font-headline text-sm font-bold text-white truncate">${show.name}</h3>
+                        <p class="text-on-surface-variant text-xs mt-1 font-medium">${releaseYear} • ⭐ ${show.vote_average.toFixed(1)}</p>
                     `;
-                    grid.insertAdjacentHTML('beforeend', cardHTML);
+                    grid.appendChild(card);
                 });
 
             } catch (error) {
@@ -246,7 +300,168 @@
         }
     }
 
-    // تشغيل الداشبورد عند فتح الصفحة
+    // --- دالة جلب تقييم IMDb ---
+    async function fetchExternalRatings(tmdbId) {
+        try {
+            const extRes = await fetch(`${BASE_URL}/tv/${tmdbId}/external_ids?api_key=${TMDB_API_KEY}`);
+            const extData = await extRes.json();
+            const imdbId = extData.imdb_id;
+            if (!imdbId) return { imdb: "N/A" };
+            
+            const omdbRes = await fetch(`https://www.omdbapi.com/?i=${imdbId}&apikey=${OMDB_API_KEY}`);
+            const omdbData = await omdbRes.json();
+            
+            if (omdbData.Response === "True" && omdbData.imdbRating && omdbData.imdbRating !== "N/A") {
+                imdbCache[tmdbId] = omdbData.imdbRating;
+                sessionStorage.setItem('imdbCache', JSON.stringify(imdbCache));
+                return { imdb: `${omdbData.imdbRating}` };
+            }
+            return { imdb: "N/A" };
+        } catch (error) { return { imdb: "N/A" }; }
+    }
+
+    // --- الدالة السحرية للنافذة المنبثقة (Modal Engine) ---
+    async function openModal(show) {
+        const modal = document.getElementById('show-modal');
+        
+        // تعبئة البيانات الأساسية
+        document.getElementById('modal-title').innerText = show.name;
+        document.getElementById('modal-date').innerText = '📅 ' + (show.first_air_date || 'N/A');
+        document.getElementById('modal-overview').innerText = show.overview ? show.overview : 'Overview not available.';
+        document.getElementById('modal-status').innerText = 'Status: Loading...';
+        document.getElementById('modal-seasons').innerText = 'Seasons: Loading...';
+        document.getElementById('modal-tmdb-rating').innerText = show.vote_average ? show.vote_average.toFixed(1) : 'N/A';
+        document.getElementById('modal-imdb-rating').innerText = imdbCache[show.id] ? imdbCache[show.id] : '⏳';
+        
+        const posterPath = show.poster_path ? IMG_URL_SM + show.poster_path : 'https://via.placeholder.com/500x750?text=No+Image';
+        document.getElementById('modal-img').src = posterPath;
+        
+        const trailerBtn = document.getElementById('trailer-btn');
+        trailerBtn.classList.add('hidden');
+        trailerBtn.classList.remove('flex');
+
+        // تحديث الخلفية السينمائية
+        const backdropUrl = show.backdrop_path ? IMG_URL_LG + show.backdrop_path : '';
+        const modalContentBox = document.getElementById('modal-content-box');
+        if (backdropUrl) {
+            modalContentBox.style.backgroundImage = `url('${backdropUrl}')`;
+        } else {
+            modalContentBox.style.backgroundImage = 'none';
+        }
+
+        // إعداد المفضلة
+        let favorites = JSON.parse(localStorage.getItem('my_favorite_shows')) || [];
+        let favBtn = document.getElementById('favorite-btn');
+        let newFavBtn = favBtn.cloneNode(true);
+        favBtn.parentNode.replaceChild(newFavBtn, favBtn);
+        
+        const isFav = favorites.some(f => f.id === show.id);
+        newFavBtn.innerHTML = isFav ? '❌ Remove Favorite' : '❤️ Add to Favorites';
+        
+        newFavBtn.onclick = (e) => {
+            e.preventDefault();
+            favorites = JSON.parse(localStorage.getItem('my_favorite_shows')) || [];
+            const index = favorites.findIndex(f => f.id === show.id);
+            if (index !== -1) {
+                favorites.splice(index, 1);
+                newFavBtn.innerHTML = '❤️ Add to Favorites';
+            } else {
+                favorites.push(show);
+                newFavBtn.innerHTML = '❌ Remove Favorite';
+            }
+            localStorage.setItem('my_favorite_shows', JSON.stringify(favorites));
+        };
+
+        // إظهار النافذة (Tailwind Display)
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        document.getElementById('modal-content-box').scrollTop = 0;
+
+        // إعداد نظام التتبع (Tracker)
+        const trackerContainer = document.getElementById('tracker-container');
+        const btnPlus = document.getElementById('btn-plus');
+        const btnMinus = document.getElementById('btn-minus');
+        const btnAll = document.getElementById('btn-all');
+        trackerContainer.classList.add('hidden');
+
+        fetch(`${BASE_URL}/tv/${show.id}?api_key=${TMDB_API_KEY}&language=en-US`)
+            .then(res => res.json())
+            .then(details => {
+                document.getElementById('modal-status').innerText = 'Status: ' + (details.status || 'Unknown');
+                document.getElementById('modal-seasons').innerText = 'Seasons: ' + (details.number_of_seasons || 'N/A');
+                
+                const totalEpisodes = details.number_of_episodes || 0;
+                
+                if (totalEpisodes > 0) {
+                    trackerContainer.classList.remove('hidden');
+                    
+                    let list = JSON.parse(localStorage.getItem('my_watched_shows')) || [];
+                    let existingShow = list.find(w => w.id === show.id);
+                    let watchedEps = existingShow ? (existingShow.watched_episodes || 0) : 0;
+
+                    const updateTrackerUI = () => {
+                        let percent = Math.round((watchedEps / totalEpisodes) * 100);
+                        if(percent > 100) percent = 100;
+
+                        document.getElementById('tracker-text').innerText = `Progress: ${watchedEps} / ${totalEpisodes} Ep`;
+                        document.getElementById('tracker-percent').innerText = `${percent}%`;
+                        document.getElementById('progress-fill').style.width = `${percent}%`;
+
+                        if (watchedEps > 0) {
+                            show.watched_episodes = watchedEps;
+                            show.total_episodes = totalEpisodes;
+                            let index = list.findIndex(w => w.id === show.id);
+                            if (index > -1) list[index] = show; else list.push(show);
+                        } else {
+                            list = list.filter(w => w.id !== show.id);
+                        }
+                        localStorage.setItem('my_watched_shows', JSON.stringify(list));
+                    };
+
+                    updateTrackerUI();
+
+                    let newBtnPlus = btnPlus.cloneNode(true); btnPlus.parentNode.replaceChild(newBtnPlus, btnPlus);
+                    let newBtnMinus = btnMinus.cloneNode(true); btnMinus.parentNode.replaceChild(newBtnMinus, btnMinus);
+                    let newBtnAll = btnAll.cloneNode(true); btnAll.parentNode.replaceChild(newBtnAll, btnAll);
+
+                    newBtnPlus.onclick = () => { if(watchedEps < totalEpisodes) { watchedEps++; updateTrackerUI(); } };
+                    newBtnMinus.onclick = () => { if(watchedEps > 0) { watchedEps--; updateTrackerUI(); } };
+                    newBtnAll.onclick = () => { watchedEps = totalEpisodes; updateTrackerUI(); };
+                }
+            });
+
+        // جلب IMDb
+        fetchExternalRatings(show.id).then(ratings => {
+            document.getElementById('modal-imdb-rating').innerText = ratings.imdb;
+        });
+        
+        // جلب التريلر
+        fetch(`${BASE_URL}/tv/${show.id}/videos?api_key=${TMDB_API_KEY}`) 
+            .then(res => res.json())
+            .then(data => {
+                if (data.results && data.results.length > 0) {
+                    let trailer = data.results.find(vid => vid.site === 'YouTube' && vid.type === 'Trailer') || 
+                                  data.results.find(vid => vid.site === 'YouTube');
+                    if (trailer) {
+                        trailerBtn.href = `https://www.youtube.com/watch?v=${trailer.key}`;
+                        trailerBtn.classList.remove('hidden');
+                        trailerBtn.classList.add('flex');
+                    }
+                }
+            });
+    }
+
+    // إغلاق النافذة
+    function closeModal() { 
+        document.getElementById('show-modal').classList.add('hidden'); 
+        document.getElementById('show-modal').classList.remove('flex'); 
+    }
+    
+    window.onclick = function(event) { 
+        if (event.target == document.getElementById('show-modal')) closeModal(); 
+    }
+
+    // تشغيل الصفحة
     initDashboard();
 
 </script>
