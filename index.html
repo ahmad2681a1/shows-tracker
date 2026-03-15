@@ -614,6 +614,9 @@
 
         async function openModal(show) {
             document.getElementById('modal-title').innerText = show.name;
+            // جلب ووضع صورة الخلفية السينمائية (backdrop) للمسلسل المفتوح
+            const backdropUrl = show.backdrop_path ? `https://image.tmdb.org/t/p/w1280${show.backdrop_path}` : '';
+            document.querySelector('.modal-content').style.backgroundImage = `url('${backdropUrl}')`;
             document.getElementById('modal-date').innerText = '📅 ' + (show.first_air_date || 'N/A');
             document.getElementById('modal-overview').innerText = show.overview ? show.overview : 'Overview not available.';
             
