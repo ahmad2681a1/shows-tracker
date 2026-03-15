@@ -94,10 +94,16 @@
         .show-title { margin: 0 0 10px 0; font-size: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
         /* تنسيق كبسولات التقييمات في الكروت (الجديد) */
-        .card-meta-footer { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
-        .rating-pill { display: flex; align-items: center; gap: 5px; background-color: #1a1a1a; padding: 4px 8px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: #eee; border: 1px solid #333; }
+        .card-meta-footer { display: flex; flex-wrap: nowrap; justify-content: center; gap: 5px; }
+        .rating-pill { display: flex; align-items: center; gap: 4px; background-color: #1a1a1a; padding: 4px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; color: #eee; border: 1px solid #333; white-space: nowrap; }
         .icon-tmdb { height: 10px; }
         .icon-imdb { height: 12px; border-radius: 2px; }
+        
+        /* أكواد تصميم أزرار المشاركة الجديدة */
+        .share-row { display: flex; align-items: center; gap: 10px; margin-top: 25px; border-top: 1px solid #444; padding-top: 15px; flex-wrap: wrap; }
+        .share-label { color: #aaa; font-weight: bold; font-size: 1.1rem; }
+        .share-btn { text-decoration: none; padding: 8px 15px; border-radius: 5px; color: white; font-weight: bold; font-size: 0.95rem; transition: 0.3s; display: flex; align-items: center; gap: 5px; }
+        .share-wa { background-color: #25D366; color: black !important;} /* واتساب */
 
         /* شارة "تم المشاهدة" المصغرة والأنيقة */
         .watched-badge { position: absolute; top: 8px; right: 8px; background-color: rgba(76, 175, 80, 0.95); color: white; padding: 4px; border-radius: 4px; font-size: 0.75rem; line-height: 1; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
@@ -233,6 +239,12 @@
                     <a id="trailer-btn" class="trailer-btn" href="#" target="_blank" style="display: none;">▶ Watch Trailer</a>
                     <button id="favorite-btn" class="fav-btn">❤️ Add to Favorites</button>
                     <button id="watched-btn" class="watched-btn">✔️ Mark as Watched</button>
+                    <div class="share-row">
+                    <span class="share-label">Share:</span>
+                    <a id="share-wa" class="share-btn share-wa" target="_blank" href="#">📱 WhatsApp</a>
+                    <a id="share-tw" class="share-btn share-tw" target="_blank" href="#">🐦 X</a>
+                    <a id="share-tg" class="share-btn share-tg" target="_blank" href="#">✈️ Telegram</a>
+                </div>
                 </div>
             </div>
 
@@ -611,7 +623,14 @@
             document.getElementById('modal-img').src = posterPath;
             
             const trailerBtn = document.getElementById('trailer-btn');
-            trailerBtn.style.display = 'none'; 
+            trailerBtn.style.display = 'none';
+            // إعداد روابط المشاركة بذكاء وتضمين رابط موقعك
+            const siteUrl = encodeURIComponent("https://ahmad2681a1.github.io/shows-tracker/");
+            const shareText = encodeURIComponent(`📺 اكتشفت مسلسل "${show.name}" الرهيب!\n⭐ تقييمه: ${show.vote_average ? show.vote_average.toFixed(1) : 'N/A'}\nشوفه على موقع New Shows Tracker من هنا:\n`);
+
+            document.getElementById('share-wa').href = `https://api.whatsapp.com/send?text=${shareText}%20${siteUrl}`;
+            document.getElementById('share-tw').href = `https://twitter.com/intent/tweet?text=${shareText}&url=${siteUrl}`;
+            document.getElementById('share-tg').href = `https://t.me/share/url?url=${siteUrl}&text=${shareText}`;
             
             document.getElementById('rec-section').style.display = 'none';
             document.getElementById('rec-container').innerHTML = '';
