@@ -88,9 +88,17 @@
         .fav-btn { background-color: #333; }
         .fav-btn:hover { background-color: #555; transform: scale(1.05); }
         
-        .watched-select { background-color: #2196F3; color: white; padding: 0 10px; height: 40px; border-radius: 5px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.3s; border: none; outline: none; box-sizing: border-box; }
-        .watched-select:hover { background-color: #0b7dda; }
-        .watched-select option { background-color: #222; color: #fff; }
+        /* --- نظام تتبع الحلقات (Episode Tracker) --- */
+        .tracker-container { width: 100%; background-color: #1a1a1a; padding: 15px; border-radius: 8px; margin-top: 15px; box-sizing: border-box; border: 1px solid #333; }
+        .tracker-header { display: flex; justify-content: space-between; margin-bottom: 8px; font-weight: bold; font-size: 0.95rem; color: #ddd; }
+        .progress-bar-bg { width: 100%; height: 10px; background-color: #333; border-radius: 5px; overflow: hidden; margin-bottom: 12px; }
+        .progress-bar-fill { height: 100%; background-color: #2196F3; width: 0%; transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .tracker-controls { display: flex; gap: 8px; }
+        .trk-btn { border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; color: white; background-color: #333; transition: 0.3s; display: flex; align-items: center; justify-content: center; }
+        .trk-btn:hover { background-color: #555; }
+        .main-trk-btn { flex: 1; background-color: #2196F3; font-size: 1rem; }
+        .main-trk-btn:hover { background-color: #0b7dda; transform: scale(1.02); }
+        .badge-progress { background-color: #2196F3; } /* لون شارة التقدم على البوستر */
 
         /* Share Buttons */
         .share-row { display: flex; align-items: center; gap: 12px; margin-top: 25px; border-top: 1px solid #444; padding-top: 15px; flex-wrap: wrap; }
@@ -193,9 +201,19 @@
                 <div class="action-buttons">
                     <a id="trailer-btn" class="trailer-btn" href="#" target="_blank" style="display: none;">▶ Watch Trailer</a>
                     <button id="favorite-btn" class="fav-btn">❤️ Add to Favorites</button>
-                    <select id="watched-select" class="watched-select">
-                        <option value="0">➕ Track Progress</option>
-                    </select>
+                  <div class="tracker-container" id="tracker-container" style="display: none;">
+                    <div class="tracker-header">
+                        <span id="tracker-text">Progress: 0 / 0 Episodes</span>
+                        <span id="tracker-percent">0%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="progress-fill"></div>
+                    </div>
+                    <div class="tracker-controls">
+                        <button id="btn-minus" class="trk-btn" title="Remove 1 Episode">-</button>
+                        <button id="btn-plus" class="trk-btn main-trk-btn">✔️ +1 Episode</button>
+                        <button id="btn-all" class="trk-btn" title="Mark completely watched">Mark All</button>
+                    </div>
                 </div>
 
                 <div class="share-row">
@@ -501,10 +519,16 @@
                 const releaseYear = show.first_air_date ? show.first_air_date.substring(0,4) : 'N/A';
                 const tmdbRating = show.vote_average ? show.vote_average.toFixed(1) : 'NR';
                 
+                // شارة التقدم الذكية (نسبة مئوية)
                 const savedWatched = watchedShows.find(w => w.id === show.id);
-                let badgeText = '✔️'; 
-                if (savedWatched && savedWatched.watched_progress) {
-                    badgeText = savedWatched.watched_progress === 'all' ? '✔️ All' : `✔️ S${savedWatched.watched_progress}`;
+                let badgeHTML = '';
+                if (savedWatched && savedWatched.watched_episodes) {
+                    const percent = Math.round((savedWatched.watched_episodes / savedWatched.total_episodes) * 100);
+                    if (percent === 100) {
+                        badgeHTML = `<div class="status-badge badge-completed">✔️ 100%</div>`;
+                    } else {
+                        badgeHTML = `<div class="status-badge badge-progress">📺 ${percent}%</div>`;
+                    }
                 }
                 const badgeHTML = savedWatched ? `<div class="watched-badge">${badgeText}</div>` : '';
 
@@ -657,30 +681,75 @@
             modal.style.display = 'flex';
             document.querySelector('.modal-content').scrollTop = 0;
 
-            // --- جلب بيانات المسلسل المفصلة ---
+            // --- جلب بيانات المسلسل وتفعيل نظام تتبع الحلقات ---
             fetch(`${BASE_URL}/tv/${show.id}?api_key=${TMDB_API_KEY}&language=en-US`)
                 .then(res => res.json())
                 .then(details => {
                     document.getElementById('modal-status').innerText = 'Status: ' + (details.status || 'Unknown');
                     document.getElementById('modal-seasons').innerText = 'Seasons: ' + (details.number_of_seasons || 'N/A');
                     
-                    const seasonsCount = details.number_of_seasons || 1;
-                    let optionsHTML = `<option value="0">➕ Not Watched</option>`;
-                    for (let i = 1; i <= seasonsCount; i++) {
-                        optionsHTML += `<option value="${i}">✔️ Watched Season ${i}</option>`;
-                    }
-                    if (seasonsCount > 1) {
-                        optionsHTML += `<option value="all">✔️ Completed (${seasonsCount} Seasons)</option>`;
-                    }
-                    newWatchSelect.innerHTML = optionsHTML;
+                    const totalEpisodes = details.number_of_episodes || 0;
+                    const trackerContainer = document.getElementById('tracker-container');
                     
-                    const reCheckWatched = JSON.parse(localStorage.getItem('my_watched_shows')) || [];
-                    const reCheckShow = reCheckWatched.find(w => w.id === show.id);
-                    newWatchSelect.value = (reCheckShow && reCheckShow.watched_progress) ? reCheckShow.watched_progress : "0";
+                    if (totalEpisodes > 0) {
+                        trackerContainer.style.display = 'block'; // إظهار التراكر
+                        
+                        let list = JSON.parse(localStorage.getItem('my_watched_shows')) || [];
+                        let existingShow = list.find(w => w.id === show.id);
+                        let watchedEps = existingShow ? (existingShow.watched_episodes || 0) : 0;
+
+                        // دالة تحديث الشاشة والحفظ
+                        const updateTrackerUI = () => {
+                            let percent = Math.round((watchedEps / totalEpisodes) * 100);
+                            document.getElementById('tracker-text').innerText = `Progress: ${watchedEps} / ${totalEpisodes} Episodes`;
+                            document.getElementById('tracker-percent').innerText = `${percent}%`;
+                            document.getElementById('progress-fill').style.width = `${percent}%`;
+
+                            // حفظ البيانات
+                            if (watchedEps > 0) {
+                                show.watched_episodes = watchedEps;
+                                show.total_episodes = totalEpisodes;
+                                let index = list.findIndex(w => w.id === show.id);
+                                if (index > -1) list[index] = show;
+                                else list.push(show);
+                            } else {
+                                list = list.filter(w => w.id !== show.id);
+                            }
+                            localStorage.setItem('my_watched_shows', JSON.stringify(list));
+
+                            // تحديث البوستر بالخلفية فوراً
+                            const card = document.getElementById(`card-${show.id}`);
+                            if (card) {
+                                let oldBadge = card.querySelector('.status-badge');
+                                if (oldBadge) oldBadge.remove();
+                                
+                                if (watchedEps > 0) {
+                                    let badge = document.createElement('div');
+                                    badge.className = percent === 100 ? 'status-badge badge-completed' : 'status-badge badge-progress';
+                                    badge.innerText = percent === 100 ? '✔️ 100%' : `📺 ${percent}%`;
+                                    card.insertBefore(badge, card.firstChild);
+                                } else if (currentMode === 'watched') {
+                                    card.style.display = 'none'; // إخفاء إذا تم تصفير العداد
+                                }
+                            }
+                        };
+
+                        // تشغيل الدالة لعرض البيانات الحالية
+                        updateTrackerUI();
+
+                        // برمجة الأزرار التفاعلية
+                        document.getElementById('btn-plus').onclick = () => { if(watchedEps < totalEpisodes) { watchedEps++; updateTrackerUI(); } };
+                        document.getElementById('btn-minus').onclick = () => { if(watchedEps > 0) { watchedEps--; updateTrackerUI(); } };
+                        document.getElementById('btn-all').onclick = () => { watchedEps = totalEpisodes; updateTrackerUI(); };
+                        
+                    } else {
+                        trackerContainer.style.display = 'none'; // إخفاء إذا لم تتوفر حلقات
+                    }
                 })
                 .catch(() => {
                     document.getElementById('modal-status').innerText = 'Status: N/A';
                     document.getElementById('modal-seasons').innerText = 'Seasons: N/A';
+                    document.getElementById('tracker-container').style.display = 'none';
                 });
 
             // --- جلب تقييمات IMDb ---
