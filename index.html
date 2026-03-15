@@ -625,8 +625,8 @@
             const backdropUrl = show.backdrop_path ? `https://image.tmdb.org/t/p/w1280${show.backdrop_path}` : '';
             const modalContent = document.querySelector('.modal-content');
             if (backdropUrl) {
-                // دمج لون أبيض متدرج (60% من الأعلى لظهور الصورة، و 85% من الأسفل لوضوح النصوص)
-                modalContent.style.backgroundImage = `linear-gradient(to bottom, rgba(255, 255, 255, 0.60), rgba(255, 255, 255, 0.85)), url('${backdropUrl}')`;
+                // دمج لون أبيض متدرج (40% من الأعلى لظهور الصورة، و 85% من الأسفل لوضوح النصوص)
+                modalContent.style.backgroundImage = `linear-gradient(to bottom, rgba(255, 255, 255, 0.40), rgba(255, 255, 255, 0.85)), url('${backdropUrl}')`;
             } else {
                 modalContent.style.backgroundImage = 'none';
                 modalContent.style.backgroundColor = '#ffffff';
