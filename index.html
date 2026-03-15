@@ -581,15 +581,6 @@
                 return { imdb: "N/A", votes: "" };
             } catch (error) { return { imdb: "N/A", votes: "" }; }
         }
-        // دالة ذكية لتحويل كود الدولة إلى إيموجي العلم
-        function getFlagEmoji(countryCode) {
-            if (!countryCode) return '🌍';
-            const codePoints = countryCode
-                .toUpperCase()
-                .split('')
-                .map(char => 127397 + char.charCodeAt());
-            return String.fromCodePoint(...codePoints);
-        }
 
         async function openModal(show) {
             document.getElementById('modal-title').innerText = show.name;
@@ -598,10 +589,17 @@
             
             document.getElementById('modal-status').innerText = 'Status: Loading...';
             document.getElementById('modal-seasons').innerText = 'Seasons: Loading...';
-            // جلب رمز الدولة من قاعدة البيانات وتحويله لعلم
+            // جلب رمز الدولة، تحويله لاسم كامل، ووضع صورة حقيقية للعلم
             const countryCode = (show.origin_country && show.origin_country.length > 0) ? show.origin_country[0] : null;
-            const flag = getFlagEmoji(countryCode);
-            document.getElementById('modal-country').innerHTML = `${flag} ${countryCode || 'Unknown'}`;
+            if (countryCode) {
+                // تحويل الرمز (AR) إلى اسم الدولة الكامل (Argentina)
+                const countryName = new Intl.DisplayNames(['en'], { type: 'region' }).of(countryCode);
+                // استخدام خدمة FlagCDN لجلب صورة العلم بجودة عالية
+                const flagUrl = `https://flagcdn.com/20x15/${countryCode.toLowerCase()}.png`;
+                document.getElementById('modal-country').innerHTML = `<img src="${flagUrl}" alt="${countryCode}" style="vertical-align: middle; border-radius: 2px; margin-right: 5px;"> ${countryName}`;
+            } else {
+                document.getElementById('modal-country').innerHTML = `🌍 Unknown`;
+            }
             
             document.getElementById('modal-tmdb-rating').innerText = show.vote_average ? show.vote_average.toFixed(1) + ' / 10' : 'N/A';
             document.getElementById('modal-tmdb-votes').innerText = show.vote_count ? formatVotes(show.vote_count) : '';
