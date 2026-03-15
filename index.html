@@ -152,28 +152,25 @@
         /* Action Buttons */
         .action-buttons { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; align-items: center; }
         .trailer-btn, .fav-btn, .watched-btn { 
+            background-color: #2196F3; 
             color: white; 
-            text-decoration: none; 
-            padding: 0 15px; 
-            height: 40px; /* توحيد الطول لجميع الأزرار */
+            padding: 0 10px; 
+            height: 40px; 
             border-radius: 5px; 
             font-weight: bold; 
             font-size: 1rem; 
             cursor: pointer; 
             transition: 0.3s; 
             border: none; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-            gap: 8px; 
-            box-sizing: border-box; /* منع تمدد الأزرار */
+            outline: none;
+        }
         }
         .trailer-btn { background-color: #e50914; }
         .trailer-btn:hover { background-color: #f40612; transform: scale(1.05); }
         .fav-btn { background-color: #333; }
         .fav-btn:hover { background-color: #555; transform: scale(1.05); }
-        .watched-btn { background-color: #2196F3; }
-        .watched-btn:hover { background-color: #0b7dda; transform: scale(1.05); }
+        .watched-select:hover { background-color: #0b7dda; }
+        .watched-select option { background-color: #222; color: #fff; }
 
         .recommendations-section { width: 100%; margin-top: 30px; border-top: 1px solid #444; padding-top: 20px; }
         .recommendations-section h3 { margin-top: 0; color: #fff; }
@@ -267,7 +264,9 @@
                 <div class="action-buttons">
                     <a id="trailer-btn" class="trailer-btn" href="#" target="_blank" style="display: none;">▶ Watch Trailer</a>
                     <button id="favorite-btn" class="fav-btn">❤️ Add to Favorites</button>
-                    <button id="watched-btn" class="watched-btn">✔️ Mark as Watched</button>
+                    <select id="watched-select" class="watched-select">
+    <option value="0">➕ Track Progress</option>
+</select>
                     </div> <div class="share-row">
                     <span class="share-label">Share:</span>
                     <a id="share-wa" class="share-btn share-wa" target="_blank" href="#" title="Share on WhatsApp">
@@ -574,8 +573,13 @@
                 const releaseYear = show.first_air_date ? show.first_air_date.substring(0,4) : 'N/A';
                 const tmdbRating = show.vote_average ? show.vote_average.toFixed(1) : 'NR';
                 
-                const isWatched = watchedShows.some(w => w.id === show.id);
-                const badgeHTML = isWatched ? `<div class="watched-badge">✔️</div>` : '';
+                const savedWatched = watchedShows.find(w => w.id === show.id);
+                let badgeText = '';
+                if (savedWatched) {
+                    badgeText = savedWatched.watched_progress === 'all' ? '✔️ All' : `✔️ S${savedWatched.watched_progress}`;
+                }
+                const badgeHTML = savedWatched ? `<div class="watched-badge">${badgeText}</div>` : '';
+                
 
                 // إضافة التقييمات مع الشعارات في الكرت الخارجي
                 card.innerHTML = `
@@ -693,46 +697,48 @@
                 localStorage.setItem('my_favorite_shows', JSON.stringify(favorites));
             };
 
-            // --- معالجة زر تمت المشاهدة (تحديث فوري) ---
+            // --- إعداد قائمة "التقدم في المشاهدة" ---
             let watched = JSON.parse(localStorage.getItem('my_watched_shows')) || [];
-            let watchBtn = document.getElementById('watched-btn');
-            let newWatchBtn = watchBtn.cloneNode(true);
-            watchBtn.parentNode.replaceChild(newWatchBtn, watchBtn);
+            let watchSelect = document.getElementById('watched-select');
+            let newWatchSelect = watchSelect.cloneNode(true);
+            watchSelect.parentNode.replaceChild(newWatchSelect, watchSelect);
             
-            const isWatched = watched.some(w => w.id === show.id);
-            newWatchBtn.innerHTML = isWatched ? '❌ Unmark Watched' : '✔️ Mark as Watched';
+            // وضع خيارات مبدئية
+            newWatchSelect.innerHTML = `<option value="0">➕ Track Progress</option><option value="all">✔️ Completed</option>`;
             
-            newWatchBtn.onclick = (e) => {
-                e.preventDefault();
-                watched = JSON.parse(localStorage.getItem('my_watched_shows')) || [];
-                const index = watched.findIndex(w => w.id === show.id);
-                const card = document.getElementById(`card-${show.id}`);
-                
-                if (index !== -1) {
-                    watched.splice(index, 1);
-                    newWatchBtn.innerHTML = '✔️ Mark as Watched';
-                    // إزالة الشارة الخضراء فوراً من البوستر
-                    if (card) {
-                        const badge = card.querySelector('.watched-badge');
-                        if (badge) badge.remove();
-                    }
-                    // إخفاء الكرت فوراً إذا كنا داخل صفحة المشاهدة
-                    if (currentMode === 'watched' && card) card.style.display = 'none';
+            // دالة الحفظ والتحديث الفوري عند تغيير القائمة
+            newWatchSelect.onchange = (e) => {
+                let currentWatched = JSON.parse(localStorage.getItem('my_watched_shows')) || [];
+                const index = currentWatched.findIndex(w => w.id === show.id);
+                const val = e.target.value;
+
+                if (val === "0") {
+                    if (index !== -1) currentWatched.splice(index, 1);
                 } else {
-                    watched.push(show);
-                    newWatchBtn.innerHTML = '❌ Unmark Watched';
-                    // إضافة الشارة الخضراء للبوستر فوراً
-                    if (card && !card.querySelector('.watched-badge')) {
-                        const badge = document.createElement('div');
-                        badge.className = 'watched-badge';
-                        badge.innerText = '✔️';
-                        card.insertBefore(badge, card.firstChild);
+                    show.watched_progress = val; // حفظ رقم الموسم
+                    if (index !== -1) currentWatched[index] = show;
+                    else currentWatched.push(show);
+                }
+                localStorage.setItem('my_watched_shows', JSON.stringify(currentWatched));
+                
+                // تحديث الشارة الخضراء على البوستر فوراً
+                const card = document.getElementById(`card-${show.id}`);
+                if (card) {
+                    let badge = card.querySelector('.watched-badge');
+                    if (val === "0") {
+                        if (badge) badge.remove();
+                        if (currentMode === 'watched') card.style.display = 'none';
+                    } else {
+                        let badgeText = val === 'all' ? '✔️ All' : `✔️ S${val}`;
+                        if (!badge) {
+                            badge = document.createElement('div');
+                            badge.className = 'watched-badge';
+                            card.insertBefore(badge, card.firstChild);
+                        }
+                        badge.innerText = badgeText;
                     }
                 }
-                localStorage.setItem('my_watched_shows', JSON.stringify(watched));
-            };   
-        
-            modal.style.display = 'flex';
+            };
             document.querySelector('.modal-content').scrollTop = 0;
 
             fetch(`${BASE_URL}/tv/${show.id}?api_key=${TMDB_API_KEY}&language=en-US`)
@@ -740,6 +746,21 @@
                 .then(details => {
                     document.getElementById('modal-status').innerText = 'Status: ' + (details.status || 'Unknown');
                     document.getElementById('modal-seasons').innerText = 'Seasons: ' + (details.number_of_seasons || 'N/A');
+                    // توليد خيارات المواسم ديناميكياً بناءً على العدد الحقيقي
+                    const seasonsCount = details.number_of_seasons || 1;
+                    let optionsHTML = `<option value="0">➕ Not Watched</option>`;
+                    for (let i = 1; i <= seasonsCount; i++) {
+                        optionsHTML += `<option value="${i}">✔️ Watched Season ${i}</option>`;
+                    }
+                    if (seasonsCount > 1) {
+                        optionsHTML += `<option value="all">✔️ Completed (${seasonsCount} Seasons)</option>`;
+                    }
+                    newWatchSelect.innerHTML = optionsHTML;
+                    
+                    // استرجاع أين توقف المستخدم وعرضه
+                    const reCheckWatched = JSON.parse(localStorage.getItem('my_watched_shows')) || [];
+                    const reCheckShow = reCheckWatched.find(w => w.id === show.id);
+                    newWatchSelect.value = (reCheckShow && reCheckShow.watched_progress) ? reCheckShow.watched_progress : "0";
                 })
                 .catch(() => {
                     document.getElementById('modal-status').innerText = 'Status: N/A';
