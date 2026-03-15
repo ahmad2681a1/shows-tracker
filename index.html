@@ -8,17 +8,10 @@
     <style>
         /* ----- متغيرات الألوان الجديدة للـ Light Mode ----- */
         :root { 
-            --bg-body: #f4f6f8; 
-            --bg-card: #ffffff; 
-            --text-main: #1e293b; 
-            --text-muted: #64748b; 
-            --border-light: #e2e8f0;
-            --accent-red: #e50914; 
-            --accent-blue: #3b82f6;
-            --imdb-yellow: #f5c518; 
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
-            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
-            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            --bg-color: #fdfcf5; /* لون كريمي ناعم ومريح للعين */
+            --text-color: #ffffff; 
+            --card-bg: #2f2f2f; 
+            --imdb-color: #f5c518;
         }
         
         body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background-color: var(--bg-body); color: var(--text-main); margin: 0; padding: 0; line-height: 1.5; }
@@ -84,7 +77,25 @@
 
         /* ----- Modal Design (Light Mode) ----- */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
-        .modal-content { background-color: var(--bg-card); padding: 35px; border-radius: 16px; max-width: 950px; width: 100%; position: relative; animation: fadeIn 0.3s ease-out; display: flex; gap: 30px; flex-wrap: wrap; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border: 1px solid var(--border-light); }
+        .modal-content { background-color: rgba(47, 47, 47, 0.2); /* جعل الخلفية شبه شفافة */
+            padding: 30px; 
+            border-radius: 15px; 
+            max-width: 900px; 
+            width: 100%; 
+            position: relative; 
+            animation: fadeIn 0.3s ease-in-out; 
+            display: flex; 
+            gap: 25px; 
+            flex-wrap: wrap; 
+            max-height: 90vh; 
+            overflow-y: auto; 
+            
+            /* إضافة تأثير الضباب والخلفية السينمائية */
+            background-size: cover;
+            background-position: center;
+            backdrop-filter: blur(10px) brightness(0.6); /* ضباب خفيف وتعتيم لإبراز النصوص */
+            -webkit-backdrop-filter: blur(10px) brightness(0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1); /* إطار ناعم */ }
         .close-btn { position: absolute; top: 15px; right: 20px; font-size: 30px; cursor: pointer; color: #94a3b8; transition: 0.2s; line-height: 1; }
         .close-btn:hover { color: #0f172a; }
         .modal-poster { width: 280px; border-radius: 12px; object-fit: cover; align-self: flex-start; box-shadow: var(--shadow-md); border: 1px solid var(--border-light); }
