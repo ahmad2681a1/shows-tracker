@@ -6,69 +6,20 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📺</text></svg>">
     <title>New Shows Tracker</title>
     <style>
-        :root {
-            --bg-color: #141414;
-            --text-color: #ffffff;
-            --card-bg: #2f2f2f;
-            --imdb-color: #f5c518;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
-        }
+        :root { --bg-color: #141414; --text-color: #ffffff; --card-bg: #2f2f2f; --imdb-color: #f5c518; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 0; }
         
         /* ----- Header & Background Design ----- */
-        header {
-            text-align: center;
-            padding: 4rem 2rem;
-            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(20, 20, 20, 1)), 
-                        url('https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=2070&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
-            border-bottom: 3px solid #e50914;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-        }
+        header { text-align: center; padding: 4rem 2rem; background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(20, 20, 20, 1)), url('https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=2070&auto=format&fit=crop'); background-size: cover; background-position: center; border-bottom: 3px solid #e50914; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
         header h1, header p { text-shadow: 2px 2px 5px rgba(0,0,0,0.8); }
         header h1 { margin-top: 0; font-size: 2.5rem; }
         
         /* ----- Search & Controls ----- */
-        .controls-wrapper {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 0 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .search-container {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-        }
-        .search-container input {
-            flex: 1;
-            padding: 12px 20px;
-            border-radius: 25px;
-            border: 2px solid var(--card-bg);
-            background-color: #111;
-            color: white;
-            font-size: 1rem;
-            outline: none;
-            transition: 0.3s;
-        }
+        .controls-wrapper { max-width: 800px; margin: 20px auto; padding: 0 20px; display: flex; flex-direction: column; gap: 15px; }
+        .search-container { display: flex; justify-content: center; gap: 10px; }
+        .search-container input { flex: 1; padding: 12px 20px; border-radius: 25px; border: 2px solid var(--card-bg); background-color: #111; color: white; font-size: 1rem; outline: none; transition: 0.3s; }
         .search-container input:focus { border-color: #e50914; }
-        .search-container button {
-            background-color: #e50914;
-            border-radius: 25px;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            font-weight: bold;
-        }
+        .search-container button { background-color: #e50914; border-radius: 25px; color: white; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; }
         
         /* --- Dropdowns Row --- */
         .dropdowns-row { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
@@ -93,32 +44,12 @@
         .show-info { padding: 15px; text-align: center; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
         .show-title { margin: 0 0 10px 0; font-size: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
-        /* تنسيق كبسولات التقييمات في الكروت (الجديد) */
         .card-meta-footer { display: flex; flex-wrap: nowrap; justify-content: center; gap: 5px; }
         .rating-pill { display: flex; align-items: center; gap: 4px; background-color: #1a1a1a; padding: 4px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; color: #eee; border: 1px solid #333; white-space: nowrap; }
         .icon-tmdb { height: 10px; }
         .icon-imdb { height: 12px; border-radius: 2px; }
-        
-        /* أكواد تصميم أزرار المشاركة الدائرية بالأيقونات الأصلية */
-        .share-row { display: flex; align-items: center; gap: 12px; margin-top: 25px; border-top: 1px solid #444; padding-top: 15px; flex-wrap: wrap; }
-        .share-label { color: #aaa; font-weight: bold; font-size: 1.1rem; margin-right: 5px; }
-        .share-btn { 
-            text-decoration: none; 
-            width: 42px; 
-            height: 42px; 
-            border-radius: 50%; /* لجعل الزر دائرياً بالكامل */
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            transition: 0.3s; 
-        }
-        .share-btn svg { width: 22px; height: 22px; fill: white; } /* تنسيق الأيقونات (SVG) */
-        .share-wa { background-color: #25D366; } /* لون واتساب */
-        .share-tw { background-color: #000000; border: 1px solid #444; } /* لون إكس */
-        .share-btn:hover { transform: scale(1.15); filter: brightness(1.1); }
 
-        /* شارة "تم المشاهدة" المصغرة والأنيقة */
-        .watched-badge { position: absolute; top: 8px; right: 8px; background-color: rgba(76, 175, 80, 0.95); color: white; padding: 4px; border-radius: 4px; font-size: 0.75rem; line-height: 1; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+        .watched-badge { position: absolute; top: 8px; right: 8px; background-color: rgba(76, 175, 80, 0.95); color: white; padding: 4px 6px; border-radius: 4px; font-size: 0.8rem; line-height: 1; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.5); font-weight: bold; }
 
         /* --- Skeleton Loaders --- */
         .skeleton { background: linear-gradient(90deg, #333 25%, #444 50%, #333 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
@@ -138,7 +69,7 @@
         .modal-poster { width: 280px; border-radius: 10px; object-fit: cover; align-self: flex-start; }
         .modal-details { flex: 1; min-width: 300px; }
         .modal-details h2 { margin-top: 0; margin-bottom: 5px; color: #fff; font-size: 2rem; }
-        .modal-meta-info { color: #aaa; font-size: 0.95rem; margin-bottom: 15px; display: flex; gap: 15px; flex-wrap: wrap; }
+        .modal-meta-info { color: #aaa; font-size: 0.95rem; margin-bottom: 15px; display: flex; gap: 15px; flex-wrap: wrap; align-items: center;}
         .meta-badge { background-color: #444; padding: 4px 10px; border-radius: 5px; color: #fff; font-weight: bold; }
         
         .ratings-box { background-color: #1a1a1a; padding: 15px; border-radius: 8px; margin: 15px 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; }
@@ -151,26 +82,24 @@
         
         /* Action Buttons */
         .action-buttons { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; align-items: center; }
-        .trailer-btn, .fav-btn, .watched-btn { 
-            background-color: #2196F3; 
-            color: white; 
-            padding: 0 10px; 
-            height: 40px; 
-            border-radius: 5px; 
-            font-weight: bold; 
-            font-size: 1rem; 
-            cursor: pointer; 
-            transition: 0.3s; 
-            border: none; 
-            outline: none;
-        }
-        }
+        .trailer-btn, .fav-btn { color: white; text-decoration: none; padding: 0 15px; height: 40px; border-radius: 5px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.3s; border: none; display: flex; align-items: center; justify-content: center; gap: 8px; box-sizing: border-box; }
         .trailer-btn { background-color: #e50914; }
         .trailer-btn:hover { background-color: #f40612; transform: scale(1.05); }
         .fav-btn { background-color: #333; }
         .fav-btn:hover { background-color: #555; transform: scale(1.05); }
+        
+        .watched-select { background-color: #2196F3; color: white; padding: 0 10px; height: 40px; border-radius: 5px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.3s; border: none; outline: none; box-sizing: border-box; }
         .watched-select:hover { background-color: #0b7dda; }
         .watched-select option { background-color: #222; color: #fff; }
+
+        /* Share Buttons */
+        .share-row { display: flex; align-items: center; gap: 12px; margin-top: 25px; border-top: 1px solid #444; padding-top: 15px; flex-wrap: wrap; }
+        .share-label { color: #aaa; font-weight: bold; font-size: 1.1rem; margin-right: 5px; }
+        .share-btn { text-decoration: none; width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+        .share-btn svg { width: 22px; height: 22px; fill: white; }
+        .share-wa { background-color: #25D366; }
+        .share-tw { background-color: #000000; border: 1px solid #444; }
+        .share-btn:hover { transform: scale(1.15); filter: brightness(1.1); }
 
         .recommendations-section { width: 100%; margin-top: 30px; border-top: 1px solid #444; padding-top: 20px; }
         .recommendations-section h3 { margin-top: 0; color: #fff; }
@@ -265,17 +194,19 @@
                     <a id="trailer-btn" class="trailer-btn" href="#" target="_blank" style="display: none;">▶ Watch Trailer</a>
                     <button id="favorite-btn" class="fav-btn">❤️ Add to Favorites</button>
                     <select id="watched-select" class="watched-select">
-    <option value="0">➕ Track Progress</option>
-</select>
-                    </div> <div class="share-row">
+                        <option value="0">➕ Track Progress</option>
+                    </select>
+                </div>
+
+                <div class="share-row">
                     <span class="share-label">Share:</span>
                     <a id="share-wa" class="share-btn share-wa" target="_blank" href="#" title="Share on WhatsApp">
                         <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
-                    </a>
-                    <a id="share-tw" class="share-btn share-tw" target="_blank" href="#" title="Share on X">
-                        <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                    </a>
-                </div>          
+                        </a>
+                        <a id="share-tw" class="share-btn share-tw" target="_blank" href="#" title="Share on X">
+                            <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                        </a>
+                    </div>
             </div>
 
             <div class="recommendations-section" id="rec-section" style="display: none;">
@@ -302,7 +233,7 @@
         let isLoading = false;
         let hasMorePages = true;
         
-        // التخزين المؤقت (Cache) لمنع تكرار طلبات IMDb المفرطة
+        // التخزين المؤقت لـ IMDb
         let imdbCache = JSON.parse(sessionStorage.getItem('imdbCache')) || {};
 
         function formatVotes(votesStr) {
@@ -520,7 +451,6 @@
             }
         });
 
-        // جلب تقييم IMDb في الخلفية بدون تجميد الموقع
         async function fetchIMDbForCard(tmdbId) {
             const span = document.getElementById(`card-imdb-${tmdbId}`);
             if (!span) return;
@@ -555,9 +485,7 @@
                 if(document.getElementById(`card-imdb-${tmdbId}`)) {
                     document.getElementById(`card-imdb-${tmdbId}`).innerText = rating;
                 }
-            } catch (error) {
-                // Ignore silent errors for cards
-            }
+            } catch (error) { }
         }
 
         function displayShows(showsToDisplay) {
@@ -567,21 +495,19 @@
                 const card = document.createElement('div');
                 card.className = 'show-card';
                 card.id = `card-${show.id}`;
-                card.onclick = () => openModal(show); // هذا السطر كان يتعطل بسبب الخطأ
+                card.onclick = () => openModal(show);
                 
                 const posterPath = show.poster_path ? IMG_URL + show.poster_path : 'https://via.placeholder.com/500x750?text=No+Image';
                 const releaseYear = show.first_air_date ? show.first_air_date.substring(0,4) : 'N/A';
                 const tmdbRating = show.vote_average ? show.vote_average.toFixed(1) : 'NR';
                 
-                // معالجة مشكلة undefined بذكاء
                 const savedWatched = watchedShows.find(w => w.id === show.id);
-                let badgeText = '✔️'; // القيمة الافتراضية للمسلسلات القديمة
+                let badgeText = '✔️'; 
                 if (savedWatched && savedWatched.watched_progress) {
                     badgeText = savedWatched.watched_progress === 'all' ? '✔️ All' : `✔️ S${savedWatched.watched_progress}`;
                 }
                 const badgeHTML = savedWatched ? `<div class="watched-badge">${badgeText}</div>` : '';
 
-                // إضافة التقييمات مع الشعارات في الكرت الخارجي
                 card.innerHTML = `
                     ${badgeHTML}
                     <img src="${posterPath}" alt="${show.name}" class="show-image" loading="lazy">
@@ -602,14 +528,10 @@
                 `;
                 grid.appendChild(card);
                 
-                // جلب تقييم IMDb في الخلفية إذا لم يكن موجوداً في الـ Cache
-                if (!imdbCache[show.id]) {
-                    fetchIMDbForCard(show.id);
-                }
+                if (!imdbCache[show.id]) fetchIMDbForCard(show.id);
             });
         }
 
-        // --- دوال النافذة المنبثقة (Modal) ---
         async function fetchExternalRatings(tmdbId) {
             try {
                 const extRes = await fetch(`${BASE_URL}/tv/${tmdbId}/external_ids?api_key=${TMDB_API_KEY}`);
@@ -621,7 +543,6 @@
                 const omdbData = await omdbRes.json();
                 
                 if (omdbData.Response === "True" && omdbData.imdbRating && omdbData.imdbRating !== "N/A") {
-                    // تحديث الـ Cache أيضاً عند الفتح
                     imdbCache[tmdbId] = omdbData.imdbRating;
                     sessionStorage.setItem('imdbCache', JSON.stringify(imdbCache));
                     return { imdb: `${omdbData.imdbRating} / 10`, votes: omdbData.imdbVotes };
@@ -637,12 +558,10 @@
             
             document.getElementById('modal-status').innerText = 'Status: Loading...';
             document.getElementById('modal-seasons').innerText = 'Seasons: Loading...';
-            // جلب رمز الدولة، تحويله لاسم كامل، ووضع صورة حقيقية للعلم
+
             const countryCode = (show.origin_country && show.origin_country.length > 0) ? show.origin_country[0] : null;
             if (countryCode) {
-                // تحويل الرمز (AR) إلى اسم الدولة الكامل (Argentina)
                 const countryName = new Intl.DisplayNames(['en'], { type: 'region' }).of(countryCode);
-                // استخدام خدمة FlagCDN لجلب صورة العلم بجودة عالية
                 const flagUrl = `https://flagcdn.com/20x15/${countryCode.toLowerCase()}.png`;
                 document.getElementById('modal-country').innerHTML = `<img src="${flagUrl}" alt="${countryCode}" style="vertical-align: middle; border-radius: 2px; margin-right: 5px;"> ${countryName}`;
             } else {
@@ -659,18 +578,12 @@
             document.getElementById('modal-img').src = posterPath;
             
             const trailerBtn = document.getElementById('trailer-btn');
-            trailerBtn.style.display = 'none';
-            // إعداد روابط المشاركة بذكاء وتضمين رابط موقعك
-            const siteUrl = encodeURIComponent("https://ahmad2681a1.github.io/shows-tracker/");
-            const shareText = encodeURIComponent(`📺 اكتشفت مسلسل "${show.name}" الرهيب!\n⭐ تقييمه: ${show.vote_average ? show.vote_average.toFixed(1) : 'N/A'}\nلتفاصيل أكثر قم نظرة على موقع New Shows Tracker من هنا:\n`);
-
-            document.getElementById('share-wa').href = `https://api.whatsapp.com/send?text=${shareText}%20${siteUrl}`;
-            document.getElementById('share-tw').href = `https://twitter.com/intent/tweet?text=${shareText}&url=${siteUrl}`;
+            trailerBtn.style.display = 'none'; 
             
             document.getElementById('rec-section').style.display = 'none';
             document.getElementById('rec-container').innerHTML = '';
 
-            // --- معالجة زر المفضلة (تحديث فوري) ---
+            // --- إعداد زر المفضلة ---
             let favorites = JSON.parse(localStorage.getItem('my_favorite_shows')) || [];
             let favBtn = document.getElementById('favorite-btn');
             let newFavBtn = favBtn.cloneNode(true);
@@ -683,11 +596,9 @@
                 e.preventDefault();
                 favorites = JSON.parse(localStorage.getItem('my_favorite_shows')) || [];
                 const index = favorites.findIndex(f => f.id === show.id);
-                
                 if (index !== -1) {
                     favorites.splice(index, 1);
                     newFavBtn.innerHTML = '❤️ Add to Favorites';
-                    // إخفاء الكرت فوراً وبسلاسة إذا كنا داخل صفحة المفضلة
                     const card = document.getElementById(`card-${show.id}`);
                     if (currentMode === 'favorites' && card) card.style.display = 'none';
                 } else {
@@ -697,16 +608,13 @@
                 localStorage.setItem('my_favorite_shows', JSON.stringify(favorites));
             };
 
-            // --- إعداد قائمة "التقدم في المشاهدة" ---
-            let watched = JSON.parse(localStorage.getItem('my_watched_shows')) || [];
+            // --- إعداد قائمة التقدم بالمشاهدة ---
             let watchSelect = document.getElementById('watched-select');
             let newWatchSelect = watchSelect.cloneNode(true);
             watchSelect.parentNode.replaceChild(newWatchSelect, watchSelect);
             
-            // وضع خيارات مبدئية
             newWatchSelect.innerHTML = `<option value="0">➕ Track Progress</option><option value="all">✔️ Completed</option>`;
             
-            // دالة الحفظ والتحديث الفوري عند تغيير القائمة
             newWatchSelect.onchange = (e) => {
                 let currentWatched = JSON.parse(localStorage.getItem('my_watched_shows')) || [];
                 const index = currentWatched.findIndex(w => w.id === show.id);
@@ -715,13 +623,12 @@
                 if (val === "0") {
                     if (index !== -1) currentWatched.splice(index, 1);
                 } else {
-                    show.watched_progress = val; // حفظ رقم الموسم
+                    show.watched_progress = val;
                     if (index !== -1) currentWatched[index] = show;
                     else currentWatched.push(show);
                 }
                 localStorage.setItem('my_watched_shows', JSON.stringify(currentWatched));
                 
-                // تحديث الشارة الخضراء على البوستر فوراً
                 const card = document.getElementById(`card-${show.id}`);
                 if (card) {
                     let badge = card.querySelector('.watched-badge');
@@ -739,14 +646,24 @@
                     }
                 }
             };
+
+            // --- أزرار المشاركة ---
+            const siteUrl = encodeURIComponent("https://ahmad2681a1.github.io/shows-tracker/");
+            const shareText = encodeURIComponent(`📺 اكتشفت مسلسل "${show.name}" الرهيب!\n⭐ تقييمه: ${show.vote_average ? show.vote_average.toFixed(1) : 'N/A'}\nشوفه على موقع New Shows Tracker من هنا:\n`);
+            document.getElementById('share-wa').href = `https://api.whatsapp.com/send?text=${shareText}%20${siteUrl}`;
+            document.getElementById('share-tw').href = `https://twitter.com/intent/tweet?text=${shareText}&url=${siteUrl}`;
+
+            // --- إظهار النافذة ---
+            modal.style.display = 'flex';
             document.querySelector('.modal-content').scrollTop = 0;
 
+            // --- جلب بيانات المسلسل المفصلة ---
             fetch(`${BASE_URL}/tv/${show.id}?api_key=${TMDB_API_KEY}&language=en-US`)
                 .then(res => res.json())
                 .then(details => {
                     document.getElementById('modal-status').innerText = 'Status: ' + (details.status || 'Unknown');
                     document.getElementById('modal-seasons').innerText = 'Seasons: ' + (details.number_of_seasons || 'N/A');
-                    // توليد خيارات المواسم ديناميكياً بناءً على العدد الحقيقي
+                    
                     const seasonsCount = details.number_of_seasons || 1;
                     let optionsHTML = `<option value="0">➕ Not Watched</option>`;
                     for (let i = 1; i <= seasonsCount; i++) {
@@ -757,7 +674,6 @@
                     }
                     newWatchSelect.innerHTML = optionsHTML;
                     
-                    // استرجاع أين توقف المستخدم وعرضه
                     const reCheckWatched = JSON.parse(localStorage.getItem('my_watched_shows')) || [];
                     const reCheckShow = reCheckWatched.find(w => w.id === show.id);
                     newWatchSelect.value = (reCheckShow && reCheckShow.watched_progress) ? reCheckShow.watched_progress : "0";
@@ -767,14 +683,15 @@
                     document.getElementById('modal-seasons').innerText = 'Seasons: N/A';
                 });
 
+            // --- جلب تقييمات IMDb ---
             fetchExternalRatings(show.id).then(ratings => {
                 document.getElementById('modal-imdb-rating').innerText = ratings.imdb;
                 document.getElementById('modal-imdb-votes').innerText = ratings.votes ? formatVotes(ratings.votes) : '';
-                // تحديث الكرت الخارجي أيضاً إذا كان مرئياً
                 const cardImdbSpan = document.getElementById(`card-imdb-${show.id}`);
                 if(cardImdbSpan) cardImdbSpan.innerText = imdbCache[show.id];
             });
             
+            // --- جلب العرض الدعائي ---
             fetch(`${BASE_URL}/tv/${show.id}/videos?api_key=${TMDB_API_KEY}`) 
                 .then(res => res.json())
                 .then(data => {
@@ -787,9 +704,9 @@
                             trailerBtn.style.display = 'inline-flex';
                         }
                     }
-                })
-                .catch(err => console.log("Trailer error:", err));
+                });
                 
+            // --- جلب التوصيات ---
             fetch(`${BASE_URL}/tv/${show.id}/recommendations?api_key=${TMDB_API_KEY}&language=en-US`)
                 .then(res => res.json())
                 .then(data => {
@@ -800,7 +717,7 @@
                             if (!recShow.poster_path) return;
                             const recCard = document.createElement('div');
                             recCard.className = 'rec-card';
-                            recCard.onclick = () => openModal(recShow);
+                            recCard.onclick = () => { closeModal(); openModal(recShow); };
                             recCard.innerHTML = `
                                 <img class="rec-img" src="${IMG_URL + recShow.poster_path}" alt="${recShow.name}" loading="lazy">
                                 <div class="rec-title">${recShow.name}</div>
@@ -809,8 +726,7 @@
                         });
                         if (recContainer.innerHTML !== '') document.getElementById('rec-section').style.display = 'block';
                     }
-                })
-                .catch(err => console.log("Recs error:", err));
+                });
         }
 
         function closeModal() { modal.style.display = 'none'; }
