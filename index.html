@@ -628,10 +628,10 @@
             // الخيارات الأربعة العالمية
             newWatchSelect.innerHTML = `
                 <option value="none">➕ Add to List...</option>
-                <option value="watching">⏳ Watching (أتابعه)</option>
-                <option value="completed">✔️ Completed (أنهيته)</option>
-                <option value="plan">🗓️ Plan to Watch (سأشاهده)</option>
-                <option value="dropped">🛑 Dropped (توقفت)</option>
+                <option value="watching">⏳ Watching </option>
+                <option value="completed">✔️ Watched </option>
+                <option value="plan">🗓️ Plan to Watch </option>
+                <option value="dropped">🛑 Dropped </option>
             `;
             
             // استرجاع الحالة المحفوظة سابقاً
@@ -670,7 +670,7 @@
                         let badge = document.createElement('div');
                         let text, className;
                         if(val === 'watching') { text = '⏳ Watching'; className = 'badge-watching'; }
-                        if(val === 'completed') { text = '✔️ Completed'; className = 'badge-completed'; }
+                        if(val === 'completed') { text = '✔️ Watched'; className = 'badge-watched'; }
                         if(val === 'plan') { text = '🗓️ Plan'; className = 'badge-plan'; }
                         if(val === 'dropped') { text = '🛑 Dropped'; className = 'badge-dropped'; }
 
