@@ -210,6 +210,7 @@
                     <span id="modal-date">📅 Release Date: Loading...</span>
                     <span id="modal-status" class="meta-badge">Status: Loading...</span>
                     <span id="modal-seasons" class="meta-badge">Seasons: Loading...</span>
+                    <span id="modal-country" class="meta-badge">🌍 Origin: Loading...</span>
                 </div>
                 
                 <div class="ratings-box">
@@ -580,6 +581,15 @@
                 return { imdb: "N/A", votes: "" };
             } catch (error) { return { imdb: "N/A", votes: "" }; }
         }
+        // دالة ذكية لتحويل كود الدولة إلى إيموجي العلم
+        function getFlagEmoji(countryCode) {
+            if (!countryCode) return '🌍';
+            const codePoints = countryCode
+                .toUpperCase()
+                .split('')
+                .map(char => 127397 + char.charCodeAt());
+            return String.fromCodePoint(...codePoints);
+        }
 
         async function openModal(show) {
             document.getElementById('modal-title').innerText = show.name;
@@ -588,6 +598,10 @@
             
             document.getElementById('modal-status').innerText = 'Status: Loading...';
             document.getElementById('modal-seasons').innerText = 'Seasons: Loading...';
+            // جلب رمز الدولة من قاعدة البيانات وتحويله لعلم
+            const countryCode = (show.origin_country && show.origin_country.length > 0) ? show.origin_country[0] : null;
+            const flag = getFlagEmoji(countryCode);
+            document.getElementById('modal-country').innerHTML = `${flag} ${countryCode || 'Unknown'}`;
             
             document.getElementById('modal-tmdb-rating').innerText = show.vote_average ? show.vote_average.toFixed(1) + ' / 10' : 'N/A';
             document.getElementById('modal-tmdb-votes').innerText = show.vote_count ? formatVotes(show.vote_count) : '';
