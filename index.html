@@ -4,129 +4,152 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📺</text></svg>">
-    <title>New Shows Tracker</title>
+    <title>New Shows Tracker | Light Mode</title>
     <style>
-        :root { --bg-color: #141414; --text-color: #ffffff; --card-bg: #2f2f2f; --imdb-color: #f5c518; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 0; }
+        /* ----- متغيرات الألوان الجديدة للـ Light Mode ----- */
+        :root { 
+            --bg-body: #f4f6f8; 
+            --bg-card: #ffffff; 
+            --text-main: #1e293b; 
+            --text-muted: #64748b; 
+            --border-light: #e2e8f0;
+            --accent-red: #e50914; 
+            --accent-blue: #3b82f6;
+            --imdb-yellow: #f5c518; 
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
         
-        /* ----- Header & Background Design ----- */
-        header { text-align: center; padding: 4rem 2rem; background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(20, 20, 20, 1)), url('https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=2070&auto=format&fit=crop'); background-size: cover; background-position: center; border-bottom: 3px solid #e50914; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        header h1, header p { text-shadow: 2px 2px 5px rgba(0,0,0,0.8); }
-        header h1 { margin-top: 0; font-size: 2.5rem; }
+        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background-color: var(--bg-body); color: var(--text-main); margin: 0; padding: 0; line-height: 1.5; }
+        
+        /* ----- Header Design (Clean White) ----- */
+        header { text-align: center; padding: 3rem 2rem; background: #ffffff; border-bottom: 1px solid var(--border-light); box-shadow: var(--shadow-sm); }
+        header h1 { margin-top: 0; font-size: 2.5rem; color: var(--text-main); font-weight: 800; letter-spacing: -1px; }
+        header p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 1.5rem; }
         
         /* ----- Search & Controls ----- */
-        .controls-wrapper { max-width: 800px; margin: 20px auto; padding: 0 20px; display: flex; flex-direction: column; gap: 15px; }
+        .controls-wrapper { max-width: 800px; margin: 0 auto; padding: 0 20px; display: flex; flex-direction: column; gap: 15px; }
         .search-container { display: flex; justify-content: center; gap: 10px; }
-        .search-container input { flex: 1; padding: 12px 20px; border-radius: 25px; border: 2px solid var(--card-bg); background-color: #111; color: white; font-size: 1rem; outline: none; transition: 0.3s; }
-        .search-container input:focus { border-color: #e50914; }
-        .search-container button { background-color: #e50914; border-radius: 25px; color: white; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; }
+        .search-container input { flex: 1; padding: 12px 20px; border-radius: 25px; border: 1px solid var(--border-light); background-color: #f8fafc; color: var(--text-main); font-size: 1rem; outline: none; transition: 0.3s; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02); }
+        .search-container input:focus { border-color: var(--accent-red); background-color: #ffffff; box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.1); }
+        .search-container button { background-color: var(--accent-red); border-radius: 25px; color: white; border: none; padding: 10px 25px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .search-container button:hover { background-color: #cc0812; }
         
         /* --- Dropdowns Row --- */
-        .dropdowns-row { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
-        .sort-container, .genre-container { display: flex; align-items: center; background-color: var(--card-bg); padding: 5px 15px; border-radius: 25px; border: 1px solid #555; }
-        .sort-container select, .genre-container select { background-color: transparent; color: white; border: none; font-size: 1rem; outline: none; cursor: pointer; padding: 5px; }
-        select option { background-color: #222222; color: #ffffff; }
-
+        .dropdowns-row { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
+        .sort-container, .genre-container { display: flex; align-items: center; background-color: #ffffff; padding: 6px 15px; border-radius: 25px; border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); transition: 0.3s; }
+        .sort-container:hover, .genre-container:hover { border-color: #cbd5e1; }
+        .sort-container label, .genre-container label { color: var(--text-muted); font-weight: 600; margin-right: 8px; font-size: 0.9rem; }
+        .sort-container select, .genre-container select { background-color: transparent; color: var(--text-main); border: none; font-size: 0.95rem; font-weight: 500; outline: none; cursor: pointer; }
+        
         /* --- Network Filters --- */
-        .filters { display: flex; justify-content: center; gap: 10px; padding: 20px; flex-wrap: wrap; }
-        button.network-btn { background-color: var(--card-bg); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; transition: 0.3s; font-weight: bold; }
-        button.network-btn:hover, button.network-btn.active { background-color: #e50914; }
-        .fav-filter-btn { background-color: #FFD700 !important; color: #000 !important; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .fav-filter-btn:hover, .fav-filter-btn.active { background-color: #e5c100 !important; }
-        .watched-filter-btn { background-color: #4CAF50 !important; color: white !important; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .watched-filter-btn:hover, .watched-filter-btn.active { background-color: #45a049 !important; }
+        .filters { display: flex; justify-content: center; gap: 10px; padding: 25px 20px 10px; flex-wrap: wrap; }
+        button.network-btn { background-color: #ffffff; color: var(--text-muted); border: 1px solid var(--border-light); padding: 8px 18px; border-radius: 20px; cursor: pointer; transition: 0.3s; font-weight: 600; box-shadow: var(--shadow-sm); }
+        button.network-btn:hover { border-color: var(--accent-red); color: var(--accent-red); }
+        button.network-btn.active { background-color: var(--accent-red); color: white; border-color: var(--accent-red); }
+        
+        .fav-filter-btn { background-color: #fffbeb !important; color: #b45309 !important; border: 1px solid #fde68a !important; padding: 8px 18px; border-radius: 20px; font-weight: 600; cursor: pointer; transition: 0.3s; box-shadow: var(--shadow-sm); }
+        .fav-filter-btn:hover, .fav-filter-btn.active { background-color: #fef3c7 !important; border-color: #fbbf24 !important; }
+        
+        .watched-filter-btn { background-color: #f0fdf4 !important; color: #166534 !important; border: 1px solid #bbf7d0 !important; padding: 8px 18px; border-radius: 20px; font-weight: 600; cursor: pointer; transition: 0.3s; box-shadow: var(--shadow-sm); }
+        .watched-filter-btn:hover, .watched-filter-btn.active { background-color: #dcfce7 !important; border-color: #86efac !important; }
 
         /* --- Grid & Cards --- */
-        .shows-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; padding: 20px; max-width: 1200px; margin: 0 auto; }
-        .show-card { background-color: var(--card-bg); border-radius: 10px; overflow: hidden; transition: transform 0.3s; position: relative; cursor: pointer; display: flex; flex-direction: column; }
-        .show-card:hover { transform: scale(1.05); box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 2; }
-        .show-image { width: 100%; height: 300px; object-fit: cover; background-color: #444; }
+        .shows-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 25px; padding: 20px; max-width: 1250px; margin: 0 auto; }
+        .show-card { background-color: var(--bg-card); border-radius: 12px; border: 1px solid var(--border-light); overflow: hidden; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s; position: relative; cursor: pointer; display: flex; flex-direction: column; box-shadow: var(--shadow-sm); }
+        .show-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); z-index: 2; border-color: #cbd5e1; }
+        .show-image { width: 100%; height: 320px; object-fit: cover; background-color: #e2e8f0; border-bottom: 1px solid var(--border-light); }
         .show-info { padding: 15px; text-align: center; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .show-title { margin: 0 0 10px 0; font-size: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .show-title { margin: 0 0 10px 0; font-size: 1.05rem; font-weight: 700; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
-        .card-meta-footer { display: flex; flex-wrap: nowrap; justify-content: center; gap: 5px; }
-        .rating-pill { display: flex; align-items: center; gap: 4px; background-color: #1a1a1a; padding: 4px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; color: #eee; border: 1px solid #333; white-space: nowrap; }
+        /* Pills inside card */
+        .card-meta-footer { display: flex; flex-wrap: nowrap; justify-content: center; gap: 6px; }
+        .rating-pill { display: flex; align-items: center; gap: 4px; background-color: #f1f5f9; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); border: 1px solid var(--border-light); white-space: nowrap; }
         .icon-tmdb { height: 10px; }
         .icon-imdb { height: 12px; border-radius: 2px; }
 
         /* شارة التتبع على البوستر */
-        .watched-badge { position: absolute; top: 8px; right: 8px; color: white; padding: 4px 6px; border-radius: 4px; font-size: 0.8rem; line-height: 1; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.5); font-weight: bold; }
+        .watched-badge { position: absolute; top: 10px; right: 10px; color: white; padding: 4px 8px; border-radius: 6px; font-size: 0.8rem; line-height: 1; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.2); font-weight: bold; text-shadow: 0 1px 1px rgba(0,0,0,0.3); }
 
-        /* --- Skeleton Loaders --- */
-        .skeleton { background: linear-gradient(90deg, #333 25%, #444 50%, #333 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+        /* --- Skeleton Loaders (Light Mode) --- */
+        .skeleton { background: linear-gradient(90deg, #e2e8f0 25%, #f8fafc 50%, #e2e8f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
         @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-        .skeleton-card { background-color: var(--card-bg); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; }
-        .skeleton-img { width: 100%; height: 300px; }
+        .skeleton-card { background-color: var(--bg-card); border-radius: 12px; border: 1px solid var(--border-light); overflow: hidden; display: flex; flex-direction: column; }
+        .skeleton-img { width: 100%; height: 320px; }
         .skeleton-info { padding: 15px; display: flex; flex-direction: column; gap: 10px; align-items: center; }
         .skeleton-text { height: 18px; border-radius: 4px; width: 80%; }
         .skeleton-text-small { height: 14px; border-radius: 4px; width: 100%; }
-        .loading-message { text-align: center; color: #aaa; padding: 20px; font-size: 1.2rem; grid-column: 1 / -1; }
+        .loading-message { text-align: center; color: var(--text-muted); padding: 40px; font-size: 1.2rem; grid-column: 1 / -1; font-weight: 500; }
 
-        /* ----- Modal Design ----- */
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.85); justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
-        .modal-content { background-color: var(--card-bg); padding: 30px; border-radius: 15px; max-width: 900px; width: 100%; position: relative; animation: fadeIn 0.3s ease-in-out; display: flex; gap: 25px; flex-wrap: wrap; max-height: 90vh; overflow-y: auto; }
-        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 35px; cursor: pointer; color: #aaa; transition: color 0.3s; }
-        .close-btn:hover { color: #fff; }
-        .modal-poster { width: 280px; border-radius: 10px; object-fit: cover; align-self: flex-start; }
+        /* ----- Modal Design (Light Mode) ----- */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
+        .modal-content { background-color: var(--bg-card); padding: 35px; border-radius: 16px; max-width: 950px; width: 100%; position: relative; animation: fadeIn 0.3s ease-out; display: flex; gap: 30px; flex-wrap: wrap; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border: 1px solid var(--border-light); }
+        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 30px; cursor: pointer; color: #94a3b8; transition: 0.2s; line-height: 1; }
+        .close-btn:hover { color: #0f172a; }
+        .modal-poster { width: 280px; border-radius: 12px; object-fit: cover; align-self: flex-start; box-shadow: var(--shadow-md); border: 1px solid var(--border-light); }
         .modal-details { flex: 1; min-width: 300px; }
-        .modal-details h2 { margin-top: 0; margin-bottom: 5px; color: #fff; font-size: 2rem; }
-        .modal-meta-info { color: #aaa; font-size: 0.95rem; margin-bottom: 15px; display: flex; gap: 15px; flex-wrap: wrap; align-items: center;}
-        .meta-badge { background-color: #444; padding: 4px 10px; border-radius: 5px; color: #fff; font-weight: bold; }
+        .modal-details h2 { margin-top: 0; margin-bottom: 10px; color: var(--text-main); font-size: 2.2rem; font-weight: 800; letter-spacing: -0.5px; }
         
-        .ratings-box { background-color: #1a1a1a; padding: 15px; border-radius: 8px; margin: 15px 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; }
-        .rating-item { display: flex; flex-direction: column; align-items: center; text-align: center; background-color: #222; padding: 15px; border-radius: 8px; }
-        .rating-label { font-size: 0.9rem; color: #aaa; margin-bottom: 8px; letter-spacing: 1px; text-transform: uppercase;}
-        .rating-value { font-size: 1.4rem; font-weight: bold; }
-        .rating-votes { font-size: 0.9rem; color: #888; margin-top: 5px; font-weight: normal; }
-        .modal-overview { line-height: 1.6; color: #ddd; font-size: 1.05rem; }
+        .modal-meta-info { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;}
+        .meta-badge { background-color: #f1f5f9; border: 1px solid var(--border-light); padding: 4px 10px; border-radius: 6px; color: #475569; font-weight: 600; }
+        
+        .ratings-box { background-color: #f8fafc; padding: 15px; border-radius: 10px; border: 1px solid var(--border-light); margin: 20px 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; }
+        .rating-item { display: flex; flex-direction: column; align-items: center; text-align: center; background-color: #ffffff; padding: 15px; border-radius: 8px; border: 1px solid var(--border-light); box-shadow: 0 1px 2px rgba(0,0,0,0.02); }
+        .rating-label { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; letter-spacing: 1px; text-transform: uppercase; font-weight: 700;}
+        .rating-value { font-size: 1.5rem; font-weight: 800; color: var(--text-main); }
+        .rating-votes { font-size: 0.85rem; color: #94a3b8; margin-top: 5px; font-weight: 500; }
+        
+        .modal-overview { line-height: 1.7; color: #475569; font-size: 1.05rem; }
         
         /* Action Buttons */
-        .action-buttons { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; align-items: center; }
-        .trailer-btn, .fav-btn { color: white; text-decoration: none; padding: 0 15px; height: 40px; border-radius: 5px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.3s; border: none; display: flex; align-items: center; justify-content: center; gap: 8px; box-sizing: border-box; }
-        .trailer-btn { background-color: #e50914; }
-        .trailer-btn:hover { background-color: #f40612; transform: scale(1.05); }
-        .fav-btn { background-color: #333; }
-        .fav-btn:hover { background-color: #555; transform: scale(1.05); }
+        .action-buttons { display: flex; gap: 12px; margin-top: 25px; flex-wrap: wrap; align-items: center; }
+        .trailer-btn, .fav-btn { text-decoration: none; padding: 0 18px; height: 42px; border-radius: 8px; font-weight: bold; font-size: 0.95rem; cursor: pointer; transition: 0.2s; border: none; display: flex; align-items: center; justify-content: center; gap: 8px; box-sizing: border-box; }
+        .trailer-btn { background-color: var(--accent-red); color: white; box-shadow: 0 4px 6px rgba(229, 9, 20, 0.2); }
+        .trailer-btn:hover { background-color: #cc0812; transform: translateY(-2px); box-shadow: 0 6px 8px rgba(229, 9, 20, 0.3); }
+        .fav-btn { background-color: #ffffff; color: var(--text-main); border: 1px solid #cbd5e1; box-shadow: var(--shadow-sm); }
+        .fav-btn:hover { background-color: #f8fafc; border-color: #94a3b8; transform: translateY(-2px); }
 
-        /* --- نظام تتبع الحلقات (Episode Tracker) --- */
-        .tracker-container { width: 100%; background-color: #1a1a1a; padding: 15px; border-radius: 8px; margin-top: 15px; box-sizing: border-box; border: 1px solid #333; }
-        .tracker-header { display: flex; justify-content: space-between; margin-bottom: 8px; font-weight: bold; font-size: 0.95rem; color: #ddd; }
-        .progress-bar-bg { width: 100%; height: 10px; background-color: #333; border-radius: 5px; overflow: hidden; margin-bottom: 12px; }
-        .progress-bar-fill { height: 100%; background-color: #2196F3; width: 0%; transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        .tracker-controls { display: flex; gap: 8px; }
-        .trk-btn { border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; color: white; background-color: #333; transition: 0.3s; display: flex; align-items: center; justify-content: center; }
-        .trk-btn:hover { background-color: #555; }
-        .main-trk-btn { flex: 1; background-color: #2196F3; font-size: 1rem; }
-        .main-trk-btn:hover { background-color: #0b7dda; transform: scale(1.02); }
+        /* --- نظام تتبع الحلقات (Episode Tracker - Light) --- */
+        .tracker-container { width: 100%; background-color: #f8fafc; padding: 18px; border-radius: 10px; margin-top: 20px; box-sizing: border-box; border: 1px solid var(--border-light); }
+        .tracker-header { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: 700; font-size: 0.95rem; color: var(--text-main); }
+        .progress-bar-bg { width: 100%; height: 12px; background-color: #e2e8f0; border-radius: 6px; overflow: hidden; margin-bottom: 15px; box-shadow: inset 0 1px 2px rgba(0,0,0,0.05); }
+        .progress-bar-fill { height: 100%; background-color: var(--accent-blue); width: 0%; transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 6px; }
+        .tracker-controls { display: flex; gap: 10px; }
+        .trk-btn { border: 1px solid var(--border-light); padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: 700; color: #475569; background-color: #ffffff; transition: 0.2s; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); }
+        .trk-btn:hover { background-color: #f1f5f9; color: var(--text-main); }
+        .main-trk-btn { flex: 1; background-color: var(--accent-blue); color: white; border: none; font-size: 1rem; box-shadow: 0 4px 6px rgba(59, 130, 246, 0.2); }
+        .main-trk-btn:hover { background-color: #2563eb; color: white; transform: translateY(-1px); box-shadow: 0 6px 8px rgba(59, 130, 246, 0.3); }
 
         /* Share Buttons */
-        .share-row { display: flex; align-items: center; gap: 12px; margin-top: 25px; border-top: 1px solid #444; padding-top: 15px; flex-wrap: wrap; }
-        .share-label { color: #aaa; font-weight: bold; font-size: 1.1rem; margin-right: 5px; }
-        .share-btn { text-decoration: none; width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
-        .share-btn svg { width: 22px; height: 22px; fill: white; }
+        .share-row { display: flex; align-items: center; gap: 12px; margin-top: 25px; border-top: 1px solid var(--border-light); padding-top: 20px; flex-wrap: wrap; }
+        .share-label { color: var(--text-muted); font-weight: 700; font-size: 1.05rem; margin-right: 5px; }
+        .share-btn { text-decoration: none; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: 0.2s; box-shadow: var(--shadow-sm); }
+        .share-btn svg { width: 20px; height: 20px; fill: white; }
         .share-wa { background-color: #25D366; }
-        .share-tw { background-color: #000000; border: 1px solid #444; }
-        .share-btn:hover { transform: scale(1.15); filter: brightness(1.1); }
+        .share-tw { background-color: #0f1419; }
+        .share-btn:hover { transform: scale(1.1); box-shadow: var(--shadow-md); }
 
-        .recommendations-section { width: 100%; margin-top: 30px; border-top: 1px solid #444; padding-top: 20px; }
-        .recommendations-section h3 { margin-top: 0; color: #fff; }
-        .rec-container { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px; scrollbar-width: thin; scrollbar-color: #e50914 #222; }
+        .recommendations-section { width: 100%; margin-top: 35px; border-top: 1px solid var(--border-light); padding-top: 25px; }
+        .recommendations-section h3 { margin-top: 0; color: var(--text-main); font-weight: 800; font-size: 1.4rem; }
+        .rec-container { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px; scrollbar-width: thin; scrollbar-color: #cbd5e1 #f8fafc; }
         .rec-container::-webkit-scrollbar { height: 8px; }
-        .rec-container::-webkit-scrollbar-track { background: #222; border-radius: 10px; }
-        .rec-container::-webkit-scrollbar-thumb { background: #e50914; border-radius: 10px; }
-        .rec-card { min-width: 140px; width: 140px; cursor: pointer; transition: 0.3s; }
-        .rec-card:hover { transform: scale(1.05); }
-        .rec-img { width: 100%; height: 210px; object-fit: cover; border-radius: 8px; }
-        .rec-title { font-size: 0.9rem; text-align: center; margin-top: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #ddd; }
+        .rec-container::-webkit-scrollbar-track { background: #f8fafc; border-radius: 10px; }
+        .rec-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .rec-container::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .rec-card { min-width: 140px; width: 140px; cursor: pointer; transition: 0.2s; }
+        .rec-card:hover { transform: translateY(-5px); }
+        .rec-img { width: 100%; height: 210px; object-fit: cover; border-radius: 8px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-light); }
+        .rec-title { font-size: 0.9rem; font-weight: 600; text-align: center; margin-top: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-main); }
 
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
     <header>
         <h1>📺 New Shows Tracker</h1>
-        <p>Your quick guide to the latest and most popular TV shows</p>
+        <p>Your minimalist guide to the latest and most popular TV shows</p>
         
         <div class="controls-wrapper">
             <div class="search-container">
@@ -136,7 +159,7 @@
             
             <div class="dropdowns-row">
                 <div class="sort-container">
-                    <label for="sort-select" style="color: #aaa; font-weight: bold; margin-right: 5px;">Sort:</label>
+                    <label for="sort-select">Sort:</label>
                     <select id="sort-select" onchange="applyFilters()">
                         <option value="popularity.desc">Most Popular</option>
                         <option value="first_air_date.desc">Newest Release</option>
@@ -144,7 +167,7 @@
                     </select>
                 </div>
                 <div class="genre-container">
-                    <label for="genre-select" style="color: #aaa; font-weight: bold; margin-right: 5px;">Genre:</label>
+                    <label for="genre-select">Genre:</label>
                     <select id="genre-select" onchange="applyFilters()">
                         <option value="">All Genres</option>
                     </select>
@@ -175,7 +198,7 @@
                 <h2 id="modal-title">Show Title</h2>
                 
                 <div class="modal-meta-info">
-                    <span id="modal-date">📅 Release Date: Loading...</span>
+                    <span id="modal-date" class="meta-badge">📅 Loading...</span>
                     <span id="modal-status" class="meta-badge">Status: Loading...</span>
                     <span id="modal-seasons" class="meta-badge">Seasons: Loading...</span>
                     <span id="modal-country" class="meta-badge">🌍 Origin: Loading...</span>
@@ -187,7 +210,7 @@
                         <span class="rating-value">⭐ <span id="modal-tmdb-rating">...</span></span>
                         <span id="modal-tmdb-votes" class="rating-votes"></span>
                     </div>
-                    <div class="rating-item" style="color: var(--imdb-color);">
+                    <div class="rating-item" style="color: #d97706;">
                         <span class="rating-label">IMDb Rating</span> 
                         <span class="rating-value">🎬 <span id="modal-imdb-rating">...</span></span>
                         <span id="modal-imdb-votes" class="rating-votes"></span>
@@ -218,18 +241,18 @@
                 </div>
 
                 <div class="share-row">
-                    <span class="share-label">Share:</span>
-                    <a id="share-wa" class="share-btn share-wa" target="_blank" href="#" title="Share on WhatsApp">
+                    <span class="share-label">Share on:</span>
+                    <a id="share-wa" class="share-btn share-wa" target="_blank" href="#" title="WhatsApp">
                         <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
                     </a>
-                    <a id="share-tw" class="share-btn share-tw" target="_blank" href="#" title="Share on X">
+                    <a id="share-tw" class="share-btn share-tw" target="_blank" href="#" title="X">
                         <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                     </a>
                 </div>
             </div>
 
             <div class="recommendations-section" id="rec-section" style="display: none;">
-                <h3>You Might Also Like</h3>
+                <h3>Similar Shows</h3>
                 <div class="rec-container" id="rec-container"></div>
             </div>
         </div>
@@ -252,7 +275,6 @@
         let isLoading = false;
         let hasMorePages = true;
         
-        // التخزين المؤقت لـ IMDb
         let imdbCache = JSON.parse(sessionStorage.getItem('imdbCache')) || {};
 
         function formatVotes(votesStr) {
@@ -347,7 +369,7 @@
                 if (data.results.length === 0 && page === 1) grid.innerHTML = '<div class="loading-message">No shows found for this filter.</div>';
             } catch (error) {
                 removeSkeletons();
-                if (page === 1) grid.innerHTML = `<div class="loading-message" style="color: red;">${error.message}</div>`;
+                if (page === 1) grid.innerHTML = `<div class="loading-message" style="color: #e50914;">${error.message}</div>`;
             }
             isLoading = false;
         }
@@ -396,7 +418,7 @@
                 hasMorePages = data.page < data.total_pages;
             } catch (error) {
                 removeSkeletons();
-                if (page === 1) grid.innerHTML = `<div class="loading-message" style="color: red;">${error.message}</div>`;
+                if (page === 1) grid.innerHTML = `<div class="loading-message" style="color: #e50914;">${error.message}</div>`;
             }
             isLoading = false;
         }
@@ -520,21 +542,20 @@
                 const releaseYear = show.first_air_date ? show.first_air_date.substring(0,4) : 'N/A';
                 const tmdbRating = show.vote_average ? show.vote_average.toFixed(1) : 'NR';
                 
-                // شارة التقدم الذكية (نسبة مئوية) والتوافق مع المسلسلات القديمة المحفوظة
                 const savedWatched = watchedShows.find(w => w.id === show.id);
                 let badgeHTML = '';
                 if (savedWatched && savedWatched.watched_episodes > 0) {
                     const total = savedWatched.total_episodes || 1;
                     const percent = Math.round((savedWatched.watched_episodes / total) * 100);
                     if (percent >= 100) {
-                        badgeHTML = `<div class="watched-badge" style="background-color: #4CAF50;">✔️ 100%</div>`;
+                        badgeHTML = `<div class="watched-badge" style="background-color: #10b981;">✔️ 100%</div>`;
                     } else {
-                        badgeHTML = `<div class="watched-badge" style="background-color: #2196F3;">📺 ${percent}%</div>`;
+                        badgeHTML = `<div class="watched-badge" style="background-color: #3b82f6;">📺 ${percent}%</div>`;
                     }
                 } else if (savedWatched && (savedWatched.watch_status === 'completed' || savedWatched.watched_progress === 'all')) {
-                    badgeHTML = `<div class="watched-badge" style="background-color: #4CAF50;">✔️ Completed</div>`;
+                    badgeHTML = `<div class="watched-badge" style="background-color: #10b981;">✔️ Completed</div>`;
                 } else if (savedWatched) {
-                    badgeHTML = `<div class="watched-badge" style="background-color: #4CAF50;">✔️ Watched</div>`;
+                    badgeHTML = `<div class="watched-badge" style="background-color: #10b981;">✔️ Watched</div>`;
                 }
 
                 card.innerHTML = `
@@ -582,8 +603,8 @@
 
         async function openModal(show) {
             document.getElementById('modal-title').innerText = show.name;
-            document.getElementById('modal-date').innerText = '📅 Release Date: ' + (show.first_air_date || 'N/A');
-            document.getElementById('modal-overview').innerText = show.overview ? show.overview : 'Sorry, no overview available for this show.';
+            document.getElementById('modal-date').innerText = '📅 ' + (show.first_air_date || 'N/A');
+            document.getElementById('modal-overview').innerText = show.overview ? show.overview : 'Overview not available.';
             
             document.getElementById('modal-status').innerText = 'Status: Loading...';
             document.getElementById('modal-seasons').innerText = 'Seasons: Loading...';
@@ -639,7 +660,7 @@
 
             // --- أزرار المشاركة ---
             const siteUrl = encodeURIComponent("https://ahmad2681a1.github.io/shows-tracker/");
-            const shareText = encodeURIComponent(`📺 اكتشفت مسلسل "${show.name}" الرهيب!\n⭐ تقييمه: ${show.vote_average ? show.vote_average.toFixed(1) : 'N/A'}\nشوفه على موقع New Shows Tracker من هنا:\n`);
+            const shareText = encodeURIComponent(`📺 I just discovered "${show.name}"!\n⭐ Rating: ${show.vote_average ? show.vote_average.toFixed(1) : 'N/A'}\nCheck it out here:\n`);
             document.getElementById('share-wa').href = `https://api.whatsapp.com/send?text=${shareText}%20${siteUrl}`;
             document.getElementById('share-tw').href = `https://twitter.com/intent/tweet?text=${shareText}&url=${siteUrl}`;
 
@@ -653,10 +674,8 @@
             const btnMinus = document.getElementById('btn-minus');
             const btnAll = document.getElementById('btn-all');
             
-            // إخفاء التراكر مبدئياً حتى نتأكد من وجود حلقات
             trackerContainer.style.display = 'none';
 
-            // جلب بيانات المسلسل بالتفصيل
             fetch(`${BASE_URL}/tv/${show.id}?api_key=${TMDB_API_KEY}&language=en-US`)
                 .then(res => res.json())
                 .then(details => {
@@ -674,13 +693,12 @@
 
                         const updateTrackerUI = () => {
                             let percent = Math.round((watchedEps / totalEpisodes) * 100);
-                            if(percent > 100) percent = 100; // منع تجاوز 100%
+                            if(percent > 100) percent = 100;
 
                             document.getElementById('tracker-text').innerText = `Progress: ${watchedEps} / ${totalEpisodes} Episodes`;
                             document.getElementById('tracker-percent').innerText = `${percent}%`;
                             document.getElementById('progress-fill').style.width = `${percent}%`;
 
-                            // حفظ في LocalStorage
                             if (watchedEps > 0) {
                                 show.watched_episodes = watchedEps;
                                 show.total_episodes = totalEpisodes;
@@ -692,7 +710,6 @@
                             }
                             localStorage.setItem('my_watched_shows', JSON.stringify(list));
 
-                            // التحديث الفوري للبوستر في الخلفية
                             const card = document.getElementById(`card-${show.id}`);
                             if (card) {
                                 let oldBadge = card.querySelector('.watched-badge');
@@ -701,7 +718,7 @@
                                 if (watchedEps > 0) {
                                     let badge = document.createElement('div');
                                     badge.className = 'watched-badge';
-                                    badge.style.backgroundColor = percent === 100 ? '#4CAF50' : '#2196F3';
+                                    badge.style.backgroundColor = percent === 100 ? '#10b981' : '#3b82f6';
                                     badge.innerText = percent === 100 ? '✔️ 100%' : `📺 ${percent}%`;
                                     card.insertBefore(badge, card.firstChild);
                                 } else if (currentMode === 'watched') {
@@ -710,10 +727,8 @@
                             }
                         };
 
-                        // تشغيل التحديث فوراً عند الفتح
                         updateTrackerUI();
 
-                        // إزالة الأحداث السابقة من الأزرار حتى لا تتضاعف النقرات
                         let newBtnPlus = btnPlus.cloneNode(true);
                         btnPlus.parentNode.replaceChild(newBtnPlus, btnPlus);
                         
@@ -723,7 +738,6 @@
                         let newBtnAll = btnAll.cloneNode(true);
                         btnAll.parentNode.replaceChild(newBtnAll, btnAll);
 
-                        // ربط الأزرار الجديدة بوظائفها
                         newBtnPlus.onclick = () => { if(watchedEps < totalEpisodes) { watchedEps++; updateTrackerUI(); } };
                         newBtnMinus.onclick = () => { if(watchedEps > 0) { watchedEps--; updateTrackerUI(); } };
                         newBtnAll.onclick = () => { watchedEps = totalEpisodes; updateTrackerUI(); };
