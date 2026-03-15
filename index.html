@@ -149,8 +149,25 @@
 
         .modal-overview { line-height: 1.6; color: #ddd; font-size: 1.05rem; }
         
-        .action-buttons { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
-        .trailer-btn, .fav-btn, .watched-btn { color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: 0.3s; border: none; display: flex; align-items: center; gap: 8px; }
+        /* Action Buttons */
+        .action-buttons { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; align-items: center; }
+        .trailer-btn, .fav-btn, .watched-btn { 
+            color: white; 
+            text-decoration: none; 
+            padding: 0 15px; 
+            height: 40px; /* توحيد الطول لجميع الأزرار */
+            border-radius: 5px; 
+            font-weight: bold; 
+            font-size: 1rem; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            border: none; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            gap: 8px; 
+            box-sizing: border-box; /* منع تمدد الأزرار */
+        }
         .trailer-btn { background-color: #e50914; }
         .trailer-btn:hover { background-color: #f40612; transform: scale(1.05); }
         .fav-btn { background-color: #333; }
@@ -551,6 +568,7 @@
             showsToDisplay.forEach(show => {
                 const card = document.createElement('div');
                 card.className = 'show-card';
+                card.id = `card-${show.id}`;
                 card.onclick = () => openModal(show);
                 
                 const posterPath = show.poster_path ? IMG_URL + show.poster_path : 'https://via.placeholder.com/500x750?text=No+Image';
@@ -649,7 +667,7 @@
             document.getElementById('rec-section').style.display = 'none';
             document.getElementById('rec-container').innerHTML = '';
 
-            // --- معالجة زر المفضلة ---
+            // --- معالجة زر المفضلة (تحديث فوري) ---
             let favorites = JSON.parse(localStorage.getItem('my_favorite_shows')) || [];
             let favBtn = document.getElementById('favorite-btn');
             let newFavBtn = favBtn.cloneNode(true);
@@ -661,13 +679,22 @@
             newFavBtn.onclick = (e) => {
                 e.preventDefault();
                 favorites = JSON.parse(localStorage.getItem('my_favorite_shows')) || [];
-                if (favorites.some(f => f.id === show.id)) favorites = favorites.filter(f => f.id !== show.id);
-                else favorites.push(show);
+                const index = favorites.findIndex(f => f.id === show.id);
+                
+                if (index !== -1) {
+                    favorites.splice(index, 1);
+                    newFavBtn.innerHTML = '❤️ Add to Favorites';
+                    // إخفاء الكرت فوراً وبسلاسة إذا كنا داخل صفحة المفضلة
+                    const card = document.getElementById(`card-${show.id}`);
+                    if (currentMode === 'favorites' && card) card.style.display = 'none';
+                } else {
+                    favorites.push(show);
+                    newFavBtn.innerHTML = '❌ Remove Favorite';
+                }
                 localStorage.setItem('my_favorite_shows', JSON.stringify(favorites));
-                if (currentMode === 'favorites') showFavorites(document.querySelector('.fav-filter-btn'));
             };
 
-            // --- معالجة زر تمت المشاهدة ---
+            // --- معالجة زر تمت المشاهدة (تحديث فوري) ---
             let watched = JSON.parse(localStorage.getItem('my_watched_shows')) || [];
             let watchBtn = document.getElementById('watched-btn');
             let newWatchBtn = watchBtn.cloneNode(true);
@@ -679,17 +706,33 @@
             newWatchBtn.onclick = (e) => {
                 e.preventDefault();
                 watched = JSON.parse(localStorage.getItem('my_watched_shows')) || [];
-                if (watched.some(w => w.id === show.id)) watched = watched.filter(w => w.id !== show.id);
-                else watched.push(show);
-                localStorage.setItem('my_watched_shows', JSON.stringify(watched));
+                const index = watched.findIndex(w => w.id === show.id);
+                const card = document.getElementById(`card-${show.id}`);
                 
-                if (currentMode === 'watched') showWatched(document.querySelector('.watched-filter-btn'));
-                else {
-                    const cards = document.querySelectorAll('.show-card');
-                    applyFilters(); 
+                if (index !== -1) {
+                    watched.splice(index, 1);
+                    newWatchBtn.innerHTML = '✔️ Mark as Watched';
+                    // إزالة الشارة الخضراء فوراً من البوستر
+                    if (card) {
+                        const badge = card.querySelector('.watched-badge');
+                        if (badge) badge.remove();
+                    }
+                    // إخفاء الكرت فوراً إذا كنا داخل صفحة المشاهدة
+                    if (currentMode === 'watched' && card) card.style.display = 'none';
+                } else {
+                    watched.push(show);
+                    newWatchBtn.innerHTML = '❌ Unmark Watched';
+                    // إضافة الشارة الخضراء للبوستر فوراً
+                    if (card && !card.querySelector('.watched-badge')) {
+                        const badge = document.createElement('div');
+                        badge.className = 'watched-badge';
+                        badge.innerText = '✔️';
+                        card.insertBefore(badge, card.firstChild);
+                    }
                 }
-            };
-
+                localStorage.setItem('my_watched_shows', JSON.stringify(watched));
+            };   
+        
             modal.style.display = 'flex';
             document.querySelector('.modal-content').scrollTop = 0;
 
