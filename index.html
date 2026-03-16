@@ -166,7 +166,20 @@
         .rec-img { width: 100%; height: 210px; object-fit: cover; border-radius: 8px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-light); }
         .rec-title { font-size: 0.9rem; font-weight: 600; text-align: center; margin-top: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-main); }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } 
+        /* --- تصميم قسم الذكاء الاصطناعي (AI Recommendations) --- */
+        .ai-filter-btn { background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important; color: white !important; border: none; padding: 8px 18px; border-radius: 20px; font-weight: 600; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4); border: 1px solid #8b5cf6; }
+        .ai-filter-btn:hover { transform: scale(1.05); filter: brightness(1.1); box-shadow: 0 6px 20px rgba(139, 92, 246, 0.6); }
+        
+        .ai-section { display: none; max-width: 1250px; margin: 20px auto; padding: 30px; background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(139, 92, 246, 0.1)); border-radius: 15px; border: 1px solid rgba(139, 92, 246, 0.3); box-shadow: inset 0 0 20px rgba(139, 92, 246, 0.1); }
+        .ai-header { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; color: var(--text-main); font-size: 1.5rem; font-weight: 800; }
+        .ai-icon { font-size: 2rem; background: -webkit-linear-gradient(#3b82f6, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: pulse 2s infinite alternate; }
+        .ai-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
+        
+        .ai-loading { text-align: center; color: var(--text-main); font-weight: bold; padding: 40px; display: flex; flex-direction: column; align-items: center; gap: 15px; font-size: 1.1rem; }
+        .ai-spinner { width: 50px; height: 50px; border: 5px solid rgba(139, 92, 246, 0.2); border-top-color: #8b5cf6; border-radius: 50%; animation: spin 1s linear infinite; }
+        
+        @keyframes pulse { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
     </style>
 </head>
 <body>
@@ -210,6 +223,20 @@
         <button class="network-btn" onclick="fetchShows('2739', this, 1)">Disney+</button>
         <button class="fav-filter-btn" onclick="showFavorites(this)">⭐ My Favorites</button>
         <button class="watched-filter-btn" onclick="showWatched(this)">✔️ Watched Shows</button>
+        <button class="ai-filter-btn" onclick="generateAIRecommendations()">✨ Ask AI (Gemini)</button>
+    </div>
+    
+    <div id="ai-section" class="ai-section">
+        <div class="ai-header">
+            <span class="material-symbols-outlined ai-icon">auto_awesome</span>
+            <span>Gemini AI Recommendations</span>
+        </div>
+        <div id="ai-loading" class="ai-loading">
+            <div class="ai-spinner"></div>
+            <span>Gemini is analyzing your taste... Please wait ⏳</span>
+        </div>
+        <div id="ai-grid" class="ai-grid"></div>
+        
     </div>
 
     <div class="shows-grid" id="shows-grid"></div>
@@ -300,6 +327,7 @@
 
         const TMDB_API_KEY = 'e7be99b2666a862f16f0a6b5441c150b'; 
         const OMDB_API_KEY = '75583472';
+        const GEMINI_API_KEY = 'AIzaSyCxAWEYWDIQXLW4E_wX8i_D1QfPyaZiiTU'; 
         const BASE_URL = 'https://api.themoviedb.org/3';
         const IMG_URL = 'https://image.tmdb.org/t/p/w500';
         
@@ -369,6 +397,8 @@
         }
 
         async function fetchShows(networkId, btnElement, page = 1) {
+            document.getElementById('ai-section').style.display = 'none';
+            document.getElementById('shows-grid').style.display = 'grid';
             if (isLoading) return;
             isLoading = true;
             currentMode = 'network';
@@ -414,6 +444,8 @@
         }
 
         async function performSearch(page = 1) {
+            document.getElementById('ai-section').style.display = 'none';
+            document.getElementById('shows-grid').style.display = 'grid';
             if (isLoading) return;
             isLoading = true;
             currentMode = 'search';
@@ -465,6 +497,8 @@
         function handleKeyPress(event) { if (event.key === 'Enter') performSearch(1); }
 
         function showFavorites(btnElement) {
+            document.getElementById('ai-section').style.display = 'none';
+            document.getElementById('shows-grid').style.display = 'grid';
             currentMode = 'favorites';
             document.getElementById('search-input').value = '';
             hasMorePages = false; 
@@ -494,6 +528,8 @@
         }
 
         function showWatched(btnElement) {
+            document.getElementById('ai-section').style.display = 'none';
+            document.getElementById('shows-grid').style.display = 'grid';
             currentMode = 'watched';
             document.getElementById('search-input').value = '';
             hasMorePages = false; 
@@ -863,6 +899,7 @@
         window.onclick = function(event) { if (event.target == modal) closeModal(); }
 
         fetchShows('213', document.querySelector('.filters button.active'), 1);
+        
     </script>
 </body>
 </html>
