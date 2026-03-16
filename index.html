@@ -176,6 +176,21 @@
         .rec-title { font-size: 0.9rem; font-weight: 600; text-align: center; margin-top: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-main); }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* --- تصميم كروت المواسم الجديد --- */
+        .seasons-section-title { width: 100%; border-top: 1px solid var(--border-light); padding-top: 20px; margin-top: 10px; font-size: 1.1rem; font-weight: 800; color: var(--text-main); }
+        .seasons-container { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px; scrollbar-width: thin; scrollbar-color: var(--border-light) transparent; }
+        .season-card { min-width: 130px; width: 130px; display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; }
+        .season-poster-box { position: relative; width: 100%; height: 195px; border-radius: 8px; overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--border-light); }
+        .season-poster { width: 100%; height: 100%; object-fit: cover; }
+        /* الشريط السفلي الغامق داخل الصورة */
+        .season-action-bar { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(15, 23, 42, 0.95); display: flex; align-items: center; justify-content: space-between; padding: 6px 10px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .season-check-btn { background: none; border: none; color: #64748b; cursor: pointer; padding: 0; display: flex; align-items: center; transition: 0.2s; outline: none; }
+        .season-check-btn:hover { color: #ffffff; transform: scale(1.1); }
+        /* لون الصح البنفسجي/الأزرق عند المشاهدة */
+        .season-check-btn.watched { color: #8b5cf6; } 
+        .season-ep-count { color: #cbd5e1; font-size: 0.75rem; font-weight: bold; }
+        .season-info { text-align: center; }
+        .season-name { font-size: 0.9rem; font-weight: 700; color: var(--text-main); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     </style>
 </head>
 <body>
@@ -261,19 +276,10 @@
                     <button id="favorite-btn" class="fav-btn">❤️ Add to Favorites</button>
                 </div>
 
-                <div class="tracker-container" id="tracker-container" style="display: none;">
-                    <div class="tracker-header">
-                        <span id="tracker-text">Progress: 0 / 0 Episodes</span>
-                        <span id="tracker-percent">0%</span>
-                    </div>
-                    <div class="progress-bar-bg">
-                        <div class="progress-bar-fill" id="progress-fill"></div>
-                    </div>
-                    <div class="tracker-controls">
-                        <button id="btn-minus" class="trk-btn" title="Remove 1 Episode">-</button>
-                        <button id="btn-plus" class="trk-btn main-trk-btn">✔️ +1 Episode</button>
-                        <button id="btn-all" class="trk-btn" title="Mark completely watched">Mark All</button>
-                    </div>
+                <div id="seasons-tracker-container" style="display: none; width: 100%;">
+                    <div class="seasons-section-title">Seasons</div>
+                    <div id="seasons-list" class="seasons-container">
+                        </div>
                 </div>
 
                 <div class="share-row">
@@ -760,65 +766,91 @@
                         ).join('');
                     }
 
-                    const totalEpisodes = details.number_of_episodes || 0;
+                    // --- نظام تتبع المواسم المنفصلة الجديد ---
+                    const seasonsTrackerContainer = document.getElementById('seasons-tracker-container');
+                    const seasonsList = document.getElementById('seasons-list');
+                    seasonsList.innerHTML = ''; // تفريغ المواسم القديمة
                     
-                    if (totalEpisodes > 0) {
-                        trackerContainer.style.display = 'block'; 
+                    if (details.seasons && details.seasons.length > 0) {
+                        seasonsTrackerContainer.style.display = 'block';
                         
+                        // استرجاع المواسم التي تمت مشاهدتها من التخزين
                         let list = JSON.parse(localStorage.getItem('my_watched_shows')) || [];
                         let existingShow = list.find(w => w.id === show.id);
-                        let watchedEps = existingShow ? (existingShow.watched_episodes || 0) : 0;
+                        let watchedSeasons = existingShow && existingShow.watched_seasons ? existingShow.watched_seasons : [];
 
-                        const updateTrackerUI = () => {
-                            let percent = Math.round((watchedEps / totalEpisodes) * 100);
-                            if(percent > 100) percent = 100;
+                        details.seasons.forEach(season => {
+                            // جلب صورة الموسم (أو صورة المسلسل كبديل)
+                            const poster = season.poster_path ? IMG_URL + season.poster_path : (show.poster_path ? IMG_URL + show.poster_path : 'https://via.placeholder.com/130x195?text=No+Poster');
+                            const isWatched = watchedSeasons.includes(season.season_number);
+                            
+                            const seasonCard = document.createElement('div');
+                            seasonCard.className = 'season-card';
+                            seasonCard.innerHTML = `
+                                <div class="season-poster-box">
+                                    <img src="${poster}" class="season-poster" alt="${season.name}" loading="lazy">
+                                    <div class="season-action-bar">
+                                        <button class="season-check-btn ${isWatched ? 'watched' : ''}" data-season="${season.season_number}" title="Mark Season as Watched">
+                                            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' ${isWatched ? '1' : '0'}; font-size: 22px;">check_circle</span>
+                                        </button>
+                                        <span class="season-ep-count">${season.episode_count} Ep</span>
+                                    </div>
+                                </div>
+                                <div class="season-info">
+                                    <p class="season-name">${season.name}</p>
+                                </div>
+                            `;
+                            seasonsList.appendChild(seasonCard);
+                        });
 
-                            document.getElementById('tracker-text').innerText = `Progress: ${watchedEps} / ${totalEpisodes} Episodes`;
-                            document.getElementById('tracker-percent').innerText = `${percent}%`;
-                            document.getElementById('progress-fill').style.width = `${percent}%`;
-
-                            if (watchedEps > 0) {
-                                show.watched_episodes = watchedEps;
-                                show.total_episodes = totalEpisodes;
-                                let index = list.findIndex(w => w.id === show.id);
-                                if (index > -1) list[index] = show;
-                                else list.push(show);
-                            } else {
-                                list = list.filter(w => w.id !== show.id);
-                            }
-                            localStorage.setItem('my_watched_shows', JSON.stringify(list));
-
-                            const card = document.getElementById(`card-${show.id}`);
-                            if (card) {
-                                let oldBadge = card.querySelector('.watched-badge');
-                                if (oldBadge) oldBadge.remove();
+                        // تفعيل أزرار الصح لكل موسم
+                        seasonsList.querySelectorAll('.season-check-btn').forEach(btn => {
+                            btn.onclick = (e) => {
+                                const seasonNum = parseInt(btn.getAttribute('data-season'));
+                                const isCurrentlyWatched = btn.classList.contains('watched');
                                 
-                                if (watchedEps > 0) {
-                                    let badge = document.createElement('div');
-                                    badge.className = 'watched-badge';
-                                    badge.style.backgroundColor = percent === 100 ? '#10b981' : '#3b82f6';
-                                    badge.innerText = percent === 100 ? '✔️ 100%' : `📺 ${percent}%`;
-                                    card.insertBefore(badge, card.firstChild);
-                                } else if (currentMode === 'watched') {
-                                    card.style.display = 'none';
+                                if (isCurrentlyWatched) {
+                                    watchedSeasons = watchedSeasons.filter(s => s !== seasonNum);
+                                    btn.classList.remove('watched');
+                                    btn.querySelector('span').style.fontVariationSettings = "'FILL' 0";
+                                } else {
+                                    watchedSeasons.push(seasonNum);
+                                    btn.classList.add('watched');
+                                    btn.querySelector('span').style.fontVariationSettings = "'FILL' 1";
                                 }
-                            }
-                        };
+                                
+                                // حفظ البيانات
+                                let currentList = JSON.parse(localStorage.getItem('my_watched_shows')) || [];
+                                let idx = currentList.findIndex(w => w.id === show.id);
+                                show.watched_seasons = watchedSeasons;
+                                
+                                if (watchedSeasons.length > 0) {
+                                    if (idx > -1) currentList[idx] = show;
+                                    else currentList.push(show);
+                                } else {
+                                    currentList = currentList.filter(w => w.id !== show.id);
+                                }
+                                localStorage.setItem('my_watched_shows', JSON.stringify(currentList));
 
-                        updateTrackerUI();
-
-                        let newBtnPlus = btnPlus.cloneNode(true);
-                        btnPlus.parentNode.replaceChild(newBtnPlus, btnPlus);
-                        
-                        let newBtnMinus = btnMinus.cloneNode(true);
-                        btnMinus.parentNode.replaceChild(newBtnMinus, btnMinus);
-                        
-                        let newBtnAll = btnAll.cloneNode(true);
-                        btnAll.parentNode.replaceChild(newBtnAll, btnAll);
-
-                        newBtnPlus.onclick = () => { if(watchedEps < totalEpisodes) { watchedEps++; updateTrackerUI(); } };
-                        newBtnMinus.onclick = () => { if(watchedEps > 0) { watchedEps--; updateTrackerUI(); } };
-                        newBtnAll.onclick = () => { watchedEps = totalEpisodes; updateTrackerUI(); };
+                                // تحديث شارة البوستر الخارجي
+                                const card = document.getElementById(`card-${show.id}`);
+                                if (card) {
+                                    let oldBadge = card.querySelector('.watched-badge');
+                                    if (oldBadge) oldBadge.remove();
+                                    if (watchedSeasons.length > 0) {
+                                        let badge = document.createElement('div');
+                                        badge.className = 'watched-badge';
+                                        badge.style.backgroundColor = '#8b5cf6'; // لون بنفسجي ليتناسب مع أيقونة المشاهدة
+                                        badge.innerText = `✔️ S: ${watchedSeasons.length}`;
+                                        card.insertBefore(badge, card.firstChild);
+                                    } else if (currentMode === 'watched') {
+                                        card.style.display = 'none';
+                                    }
+                                }
+                            };
+                        });
+                    } else {
+                        seasonsTrackerContainer.style.display = 'none';
                     }
                 })
                 .catch(() => {
