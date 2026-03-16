@@ -898,7 +898,7 @@
         function closeModal() { modal.style.display = 'none'; }
         window.onclick = function(event) { if (event.target == modal) closeModal(); }
 
-        // --- دالة محرك الذكاء الاصطناعي (Gemini) ---
+        // --- دالة محرك الذكاء الاصطناعي (Gemini) المطورة لاكتشاف الأخطاء ---
         async function generateAIRecommendations() {
             document.getElementById('shows-grid').style.display = 'none';
             document.getElementById('search-input').value = '';
@@ -924,7 +924,6 @@
             }
 
             const showNames = [...favorites, ...watched].map(s => s.name).slice(0, 15);
-            
             const prompt = `I watch and like these TV shows: ${showNames.join(', ')}. Recommend exactly 5 similar but different TV shows that I might like. Return ONLY a valid JSON array of strings containing the exact show names, like ["Show A", "Show B"]. Do not write any markdown, intro, or outro.`;
 
             try {
@@ -934,11 +933,28 @@
                     body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
                 });
 
+                // إذا رفضت جوجل الطلب (مثلاً المفتاح غير مفعل)
+                if (!response.ok) {
+                    const errData = await response.json();
+                    throw new Error(`Google API Rejected: ${errData.error.message}`);
+                }
+
                 const data = await response.json();
-                let textResult = data.candidates[0].content.parts[0].text;
                 
+                // إذا حجب الذكاء الاصطناعي الرد لأسباب أمنية
+                if (!data.candidates || data.candidates.length === 0) {
+                    throw new Error('Gemini blocked the request or returned an empty response.');
+                }
+
+                let textResult = data.candidates[0].content.parts[0].text;
                 textResult = textResult.replace(/```json/gi, '').replace(/```/g, '').trim();
-                const recommendedNames = JSON.parse(textResult);
+                
+                let recommendedNames;
+                try {
+                    recommendedNames = JSON.parse(textResult);
+                } catch (parseError) {
+                    throw new Error(`Gemini returned invalid format. What it sent: ${textResult}`);
+                }
 
                 let aiShows = [];
                 for (const name of recommendedNames) {
@@ -980,7 +996,11 @@
             } catch (error) {
                 console.error('Gemini API Error:', error);
                 aiLoading.style.display = 'none';
-                aiGrid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; color:#e50914; font-size:1.2rem;">Oops! Gemini AI is currently unavailable.</div>';
+                // الآن سيظهر لك الخطأ الحقيقي باللون الأحمر!
+                aiGrid.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align:center; color:#e50914; font-size:1.1rem; padding: 20px; background: rgba(229,9,20,0.1); border-radius: 10px; border: 1px solid #e50914;">
+                        <b>⚠️ Error Details:</b><br><br> ${error.message}
+                    </div>`;
             }
         }
 
