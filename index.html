@@ -19,7 +19,6 @@
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
             --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
             --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
-            /* ألوان الطبقة الزجاجية للنافذة (فاتحة) */
             --modal-overlay-top: rgba(255, 255, 255, 0.60);
             --modal-overlay-bottom: rgba(255, 255, 255, 0.95);
         }
@@ -34,7 +33,6 @@
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.5);
             --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.4);
             --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.5);
-            /* ألوان الطبقة الزجاجية للنافذة (داكنة) */
             --modal-overlay-top: rgba(15, 23, 42, 0.70);
             --modal-overlay-bottom: rgba(15, 23, 42, 0.98);
         }
@@ -51,16 +49,13 @@
             color: var(--text-main);
         }
         
-        /* ----- Theme Toggle Button ----- */
         .theme-toggle { position: absolute; top: 20px; right: 20px; background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-light); padding: 8px 16px; border-radius: 25px; cursor: pointer; font-size: 1rem; box-shadow: var(--shadow-sm); transition: 0.3s; z-index: 100; display: flex; align-items: center; gap: 8px; font-weight: bold; }
         .theme-toggle:hover { transform: scale(1.05); border-color: var(--accent-blue); }
 
-        /* ----- Header Design ----- */
         header { text-align: center; padding: 3rem 2rem; background: var(--bg-card); border-bottom: 1px solid var(--border-light); box-shadow: var(--shadow-sm); position: relative; transition: background-color 0.3s; }
         header h1 { margin-top: 0; font-size: 2.5rem; color: var(--text-main); font-weight: 800; letter-spacing: -1px; }
         header p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 1.5rem; }
         
-        /* ----- Search & Controls ----- */
         .controls-wrapper { max-width: 800px; margin: 0 auto; padding: 0 20px; display: flex; flex-direction: column; gap: 15px; }
         .search-container { display: flex; justify-content: center; gap: 10px; }
         .search-container input { flex: 1; padding: 12px 20px; border-radius: 25px; border: 1px solid var(--border-light); background-color: var(--bg-body); color: var(--text-main); font-size: 1rem; outline: none; transition: 0.3s; }
@@ -68,7 +63,6 @@
         .search-container button { background-color: var(--accent-red); border-radius: 25px; color: white; border: none; padding: 10px 25px; cursor: pointer; font-weight: bold; transition: 0.3s; }
         .search-container button:hover { background-color: #cc0812; }
         
-        /* --- Dropdowns Row --- */
         .dropdowns-row { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
         .sort-container, .genre-container { display: flex; align-items: center; background-color: var(--bg-card); padding: 6px 15px; border-radius: 25px; border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); transition: 0.3s; }
         .sort-container:hover, .genre-container:hover { border-color: var(--accent-blue); }
@@ -76,7 +70,6 @@
         .sort-container select, .genre-container select { background-color: transparent; color: var(--text-main); border: none; font-size: 0.95rem; font-weight: 500; outline: none; cursor: pointer; }
         .sort-container select option, .genre-container select option { background-color: var(--bg-card); color: var(--text-main); }
         
-        /* --- Network Filters --- */
         .filters { display: flex; justify-content: center; gap: 10px; padding: 25px 20px 10px; flex-wrap: wrap; }
         button.network-btn { background-color: var(--bg-card); color: var(--text-muted); border: 1px solid var(--border-light); padding: 8px 18px; border-radius: 20px; cursor: pointer; transition: 0.3s; font-weight: 600; box-shadow: var(--shadow-sm); }
         button.network-btn:hover { border-color: var(--accent-red); color: var(--accent-red); }
@@ -87,7 +80,6 @@
         .watched-filter-btn { background-color: #dcfce7 !important; color: #166534 !important; border: 1px solid #86efac !important; padding: 8px 18px; border-radius: 20px; font-weight: 600; cursor: pointer; transition: 0.3s; box-shadow: var(--shadow-sm); }
         .watched-filter-btn.active { background-color: #bbf7d0 !important; }
 
-        /* --- Grid & Cards --- */
         .shows-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 25px; padding: 20px; max-width: 1250px; margin: 0 auto; }
         .show-card { background-color: var(--bg-card); border-radius: 12px; border: 1px solid var(--border-light); overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; position: relative; cursor: pointer; display: flex; flex-direction: column; box-shadow: var(--shadow-sm); }
         .show-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); z-index: 2; border-color: var(--accent-blue); }
@@ -101,7 +93,6 @@
         .icon-imdb { height: 12px; border-radius: 2px; }
         .watched-badge { position: absolute; top: 10px; right: 10px; color: white; padding: 4px 8px; border-radius: 6px; font-size: 0.8rem; line-height: 1; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.2); font-weight: bold; text-shadow: 0 1px 1px rgba(0,0,0,0.3); }
 
-        /* --- Skeleton Loaders --- */
         .skeleton { background: linear-gradient(90deg, var(--border-light) 25%, var(--bg-body) 50%, var(--border-light) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
         @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
         .skeleton-card { background-color: var(--bg-card); border-radius: 12px; border: 1px solid var(--border-light); overflow: hidden; display: flex; flex-direction: column; }
@@ -111,7 +102,6 @@
         .skeleton-text-small { height: 14px; border-radius: 4px; width: 100%; }
         .loading-message { text-align: center; color: var(--text-muted); padding: 40px; font-size: 1.2rem; grid-column: 1 / -1; font-weight: 500; }
 
-        /* ----- Modal Design ----- */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
         .modal-content { background-color: var(--bg-card); padding: 35px; border-radius: 16px; max-width: 950px; width: 100%; position: relative; animation: fadeIn 0.3s ease-out; display: flex; gap: 30px; flex-wrap: wrap; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); border: 1px solid var(--border-light); background-size: cover; background-position: center; background-repeat: no-repeat; }
         .close-btn { position: absolute; top: 15px; right: 20px; font-size: 30px; cursor: pointer; color: var(--text-muted); transition: 0.2s; line-height: 1; z-index: 10;}
@@ -123,11 +113,9 @@
         .modal-meta-info { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;}
         .meta-badge { background-color: var(--bg-body); border: 1px solid var(--border-light); padding: 4px 10px; border-radius: 6px; color: var(--text-main); font-weight: 600; }
         
-        /* 1. تصميم كبسولات التصنيف (Genres) */
         .modal-genres { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; width: 100%; }
         .genre-pill { background-color: var(--bg-body); border: 1px solid var(--border-light); padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; color: var(--text-main); box-shadow: var(--shadow-sm); }
 
-        /* 2. تصميم صندوق التقييمات المصغر والأنيق */
         .ratings-box { background-color: var(--bg-body); padding: 12px; border-radius: 10px; border: 1px solid var(--border-light); margin: 15px 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; }
         .rating-item { display: flex; flex-direction: column; align-items: center; text-align: center; background-color: var(--bg-card); padding: 10px; border-radius: 8px; border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); }
         .rating-label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px; letter-spacing: 1px; text-transform: uppercase; font-weight: 700;}
@@ -136,7 +124,6 @@
         
         .modal-overview { line-height: 1.7; color: var(--text-main); font-size: 1.05rem; margin-top: 15px; }
         
-        /* Action Buttons */
         .action-buttons { display: flex; gap: 12px; margin-top: 25px; flex-wrap: wrap; align-items: center; }
         .trailer-btn, .fav-btn { text-decoration: none; padding: 0 18px; height: 42px; border-radius: 8px; font-weight: bold; font-size: 0.95rem; cursor: pointer; transition: 0.2s; border: none; display: flex; align-items: center; justify-content: center; gap: 8px; box-sizing: border-box; }
         .trailer-btn { background-color: var(--accent-red); color: white; box-shadow: 0 4px 6px rgba(229, 9, 20, 0.2); }
@@ -144,18 +131,20 @@
         .fav-btn { background-color: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); }
         .fav-btn:hover { background-color: var(--bg-body); border-color: var(--accent-blue); transform: translateY(-2px); }
 
-        /* --- نظام تتبع الحلقات --- */
-        .tracker-container { width: 100%; background-color: var(--bg-body); padding: 18px; border-radius: 10px; margin-top: 20px; box-sizing: border-box; border: 1px solid var(--border-light); z-index: 2;}
-        .tracker-header { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: 700; font-size: 0.95rem; color: var(--text-main); }
-        .progress-bar-bg { width: 100%; height: 12px; background-color: var(--border-light); border-radius: 6px; overflow: hidden; margin-bottom: 15px; box-shadow: inset 0 1px 2px rgba(0,0,0,0.05); }
-        .progress-bar-fill { height: 100%; background-color: var(--accent-blue); width: 0%; transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 6px; }
-        .tracker-controls { display: flex; gap: 10px; }
-        .trk-btn { border: 1px solid var(--border-light); padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: 700; color: var(--text-main); background-color: var(--bg-card); transition: 0.2s; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); }
-        .trk-btn:hover { background-color: var(--bg-body); color: var(--text-main); }
-        .main-trk-btn { flex: 1; background-color: var(--accent-blue); color: white; border: none; font-size: 1rem; box-shadow: 0 4px 6px rgba(59, 130, 246, 0.2); }
-        .main-trk-btn:hover { background-color: #2563eb; color: white; transform: translateY(-1px); box-shadow: 0 6px 8px rgba(59, 130, 246, 0.3); }
+        /* --- تصميم كروت المواسم الجديد --- */
+        .seasons-section-title { width: 100%; border-top: 1px solid var(--border-light); padding-top: 20px; margin-top: 10px; font-size: 1.1rem; font-weight: 800; color: var(--text-main); }
+        .seasons-container { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px; scrollbar-width: thin; scrollbar-color: var(--border-light) transparent; }
+        .season-card { min-width: 130px; width: 130px; display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; }
+        .season-poster-box { position: relative; width: 100%; height: 195px; border-radius: 8px; overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--border-light); }
+        .season-poster { width: 100%; height: 100%; object-fit: cover; }
+        .season-action-bar { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(15, 23, 42, 0.95); display: flex; align-items: center; justify-content: space-between; padding: 6px 10px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .season-check-btn { background: none; border: none; color: #64748b; cursor: pointer; padding: 0; display: flex; align-items: center; transition: 0.2s; outline: none; }
+        .season-check-btn:hover { color: #ffffff; transform: scale(1.1); }
+        .season-check-btn.watched { color: #8b5cf6; } 
+        .season-ep-count { color: #cbd5e1; font-size: 0.75rem; font-weight: bold; }
+        .season-info { text-align: center; }
+        .season-name { font-size: 0.9rem; font-weight: 700; color: var(--text-main); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* Share Buttons */
         .share-row { display: flex; align-items: center; gap: 12px; margin-top: 25px; border-top: 1px solid var(--border-light); padding-top: 20px; flex-wrap: wrap; z-index: 2;}
         .share-label { color: var(--text-muted); font-weight: 700; font-size: 1.05rem; margin-right: 5px; }
         .share-btn { text-decoration: none; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: 0.2s; box-shadow: var(--shadow-sm); }
@@ -176,21 +165,6 @@
         .rec-title { font-size: 0.9rem; font-weight: 600; text-align: center; margin-top: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-main); }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        /* --- تصميم كروت المواسم الجديد --- */
-        .seasons-section-title { width: 100%; border-top: 1px solid var(--border-light); padding-top: 20px; margin-top: 10px; font-size: 1.1rem; font-weight: 800; color: var(--text-main); }
-        .seasons-container { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px; scrollbar-width: thin; scrollbar-color: var(--border-light) transparent; }
-        .season-card { min-width: 130px; width: 130px; display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; }
-        .season-poster-box { position: relative; width: 100%; height: 195px; border-radius: 8px; overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--border-light); }
-        .season-poster { width: 100%; height: 100%; object-fit: cover; }
-        /* الشريط السفلي الغامق داخل الصورة */
-        .season-action-bar { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(15, 23, 42, 0.95); display: flex; align-items: center; justify-content: space-between; padding: 6px 10px; border-top: 1px solid rgba(255,255,255,0.1); }
-        .season-check-btn { background: none; border: none; color: #64748b; cursor: pointer; padding: 0; display: flex; align-items: center; transition: 0.2s; outline: none; }
-        .season-check-btn:hover { color: #ffffff; transform: scale(1.1); }
-        /* لون الصح البنفسجي/الأزرق عند المشاهدة */
-        .season-check-btn.watched { color: #8b5cf6; } 
-        .season-ep-count { color: #cbd5e1; font-size: 0.75rem; font-weight: bold; }
-        .season-info { text-align: center; }
-        .season-name { font-size: 0.9rem; font-weight: 700; color: var(--text-main); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     </style>
 </head>
 <body>
@@ -301,7 +275,6 @@
     </div>
 
     <script>
-        // --- نظام التبديل بين الوضع المظلم والفاتح ---
         const themeToggleBtn = document.getElementById('theme-toggle');
         const currentTheme = localStorage.getItem('theme') || 'light';
         
@@ -608,17 +581,13 @@
                 
                 const savedWatched = watchedShows.find(w => w.id === show.id);
                 let badgeHTML = '';
-                if (savedWatched && savedWatched.watched_episodes > 0) {
-                    const total = savedWatched.total_episodes || 1;
-                    const percent = Math.round((savedWatched.watched_episodes / total) * 100);
-                    if (percent >= 100) {
-                        badgeHTML = `<div class="watched-badge" style="background-color: #10b981;">✔️ 100%</div>`;
-                    } else {
-                        badgeHTML = `<div class="watched-badge" style="background-color: #3b82f6;">📺 ${percent}%</div>`;
-                    }
+                // تحديث الشارة لتتوافق مع نظام المواسم
+                if (savedWatched && savedWatched.watched_seasons && savedWatched.watched_seasons.length > 0) {
+                    badgeHTML = `<div class="watched-badge" style="background-color: #8b5cf6;">✔️ S: ${savedWatched.watched_seasons.length}</div>`;
+                } else if (savedWatched && savedWatched.watched_episodes > 0) {
+                    // توافق مع الكود القديم إن وجد
+                    badgeHTML = `<div class="watched-badge" style="background-color: #3b82f6;">📺 Tracked</div>`;
                 } else if (savedWatched && (savedWatched.watch_status === 'completed' || savedWatched.watched_progress === 'all' || savedWatched.watched_progress === '0')) {
-                    badgeHTML = `<div class="watched-badge" style="background-color: #10b981;">✔️ Watched</div>`;
-                } else if (savedWatched) {
                     badgeHTML = `<div class="watched-badge" style="background-color: #10b981;">✔️ Watched</div>`;
                 }
 
@@ -688,7 +657,6 @@
             document.getElementById('modal-imdb-rating').innerText = imdbCache[show.id] ? imdbCache[show.id] + ' / 10' : '⏳';
             document.getElementById('modal-imdb-votes').innerText = '';
             
-            // تفريغ كبسولات التصنيفات القديمة
             document.getElementById('modal-genres').innerHTML = '';
 
             const posterPath = show.poster_path ? IMG_URL + show.poster_path : 'https://via.placeholder.com/500x750?text=No+Image';
@@ -700,7 +668,6 @@
             document.getElementById('rec-section').style.display = 'none';
             document.getElementById('rec-container').innerHTML = '';
 
-            // --- جلب صورة الخلفية السينمائية والتعامل مع الوضع الليلي/النهاري ---
             const backdropUrl = show.backdrop_path ? `https://image.tmdb.org/t/p/w1280${show.backdrop_path}` : '';
             const modalContentBox = document.getElementById('modal-content-box');
             if (backdropUrl) {
@@ -709,7 +676,6 @@
                 modalContentBox.style.backgroundImage = 'none';
             }
 
-            // --- إعداد زر المفضلة ---
             let favorites = JSON.parse(localStorage.getItem('my_favorite_shows')) || [];
             let favBtn = document.getElementById('favorite-btn');
             let newFavBtn = favBtn.cloneNode(true);
@@ -734,31 +700,23 @@
                 localStorage.setItem('my_favorite_shows', JSON.stringify(favorites));
             };
 
-            // --- أزرار المشاركة ---
             const siteUrl = encodeURIComponent("https://ahmad2681a1.github.io/shows-tracker/");
             const shareText = encodeURIComponent(`📺 I just discovered "${show.name}"!\n⭐ Rating: ${show.vote_average ? show.vote_average.toFixed(1) : 'N/A'}\nCheck it out here:\n`);
             document.getElementById('share-wa').href = `https://api.whatsapp.com/send?text=${shareText}%20${siteUrl}`;
             document.getElementById('share-tw').href = `https://twitter.com/intent/tweet?text=${shareText}&url=${siteUrl}`;
 
-            // --- إظهار النافذة ---
             modal.style.display = 'flex';
             document.querySelector('.modal-content').scrollTop = 0;
 
-            // --- إعداد نظام تتبع الحلقات التفاعلي وجلب التصنيفات ---
-            const trackerContainer = document.getElementById('tracker-container');
-            const btnPlus = document.getElementById('btn-plus');
-            const btnMinus = document.getElementById('btn-minus');
-            const btnAll = document.getElementById('btn-all');
-            
-            trackerContainer.style.display = 'none';
-
+            // جلب بيانات المسلسل المفصلة + المواسم
             fetch(`${BASE_URL}/tv/${show.id}?api_key=${TMDB_API_KEY}&language=en-US`)
                 .then(res => res.json())
                 .then(details => {
+                    // 1. تحديث الحالة والمواسم
                     document.getElementById('modal-status').innerText = 'Status: ' + (details.status || 'Unknown');
                     document.getElementById('modal-seasons').innerText = 'Seasons: ' + (details.number_of_seasons || 'N/A');
                     
-                    // --- توليد كبسولات التصنيفات (Genres) ---
+                    // 2. تحديث التصنيفات (Genres)
                     const genresContainer = document.getElementById('modal-genres');
                     if (details.genres && details.genres.length > 0) {
                         genresContainer.innerHTML = details.genres.map(g => 
@@ -766,21 +724,21 @@
                         ).join('');
                     }
 
-                    // --- نظام تتبع المواسم المنفصلة الجديد ---
+                    // 3. نظام تتبع المواسم المنفصلة الجديد
                     const seasonsTrackerContainer = document.getElementById('seasons-tracker-container');
                     const seasonsList = document.getElementById('seasons-list');
-                    seasonsList.innerHTML = ''; // تفريغ المواسم القديمة
+                    seasonsList.innerHTML = ''; 
                     
-                    if (details.seasons && details.seasons.length > 0) {
+                    let validSeasons = details.seasons ? details.seasons.filter(s => s.episode_count > 0) : [];
+
+                    if (validSeasons.length > 0) {
                         seasonsTrackerContainer.style.display = 'block';
                         
-                        // استرجاع المواسم التي تمت مشاهدتها من التخزين
                         let list = JSON.parse(localStorage.getItem('my_watched_shows')) || [];
                         let existingShow = list.find(w => w.id === show.id);
                         let watchedSeasons = existingShow && existingShow.watched_seasons ? existingShow.watched_seasons : [];
 
-                        details.seasons.forEach(season => {
-                            // جلب صورة الموسم (أو صورة المسلسل كبديل)
+                        validSeasons.forEach(season => {
                             const poster = season.poster_path ? IMG_URL + season.poster_path : (show.poster_path ? IMG_URL + show.poster_path : 'https://via.placeholder.com/130x195?text=No+Poster');
                             const isWatched = watchedSeasons.includes(season.season_number);
                             
@@ -803,7 +761,6 @@
                             seasonsList.appendChild(seasonCard);
                         });
 
-                        // تفعيل أزرار الصح لكل موسم
                         seasonsList.querySelectorAll('.season-check-btn').forEach(btn => {
                             btn.onclick = (e) => {
                                 const seasonNum = parseInt(btn.getAttribute('data-season'));
@@ -819,7 +776,6 @@
                                     btn.querySelector('span').style.fontVariationSettings = "'FILL' 1";
                                 }
                                 
-                                // حفظ البيانات
                                 let currentList = JSON.parse(localStorage.getItem('my_watched_shows')) || [];
                                 let idx = currentList.findIndex(w => w.id === show.id);
                                 show.watched_seasons = watchedSeasons;
@@ -832,7 +788,6 @@
                                 }
                                 localStorage.setItem('my_watched_shows', JSON.stringify(currentList));
 
-                                // تحديث شارة البوستر الخارجي
                                 const card = document.getElementById(`card-${show.id}`);
                                 if (card) {
                                     let oldBadge = card.querySelector('.watched-badge');
@@ -840,7 +795,7 @@
                                     if (watchedSeasons.length > 0) {
                                         let badge = document.createElement('div');
                                         badge.className = 'watched-badge';
-                                        badge.style.backgroundColor = '#8b5cf6'; // لون بنفسجي ليتناسب مع أيقونة المشاهدة
+                                        badge.style.backgroundColor = '#8b5cf6';
                                         badge.innerText = `✔️ S: ${watchedSeasons.length}`;
                                         card.insertBefore(badge, card.firstChild);
                                     } else if (currentMode === 'watched') {
@@ -853,12 +808,12 @@
                         seasonsTrackerContainer.style.display = 'none';
                     }
                 })
-                .catch(() => {
+                .catch((err) => {
+                    console.error("Error fetching details:", err);
                     document.getElementById('modal-status').innerText = 'Status: N/A';
                     document.getElementById('modal-seasons').innerText = 'Seasons: N/A';
                 });
 
-            // --- جلب تقييمات IMDb ---
             fetchExternalRatings(show.id).then(ratings => {
                 document.getElementById('modal-imdb-rating').innerText = ratings.imdb;
                 document.getElementById('modal-imdb-votes').innerText = ratings.votes ? formatVotes(ratings.votes) : '';
@@ -866,7 +821,6 @@
                 if(cardImdbSpan) cardImdbSpan.innerText = imdbCache[show.id];
             });
             
-            // --- جلب العرض الدعائي ---
             fetch(`${BASE_URL}/tv/${show.id}/videos?api_key=${TMDB_API_KEY}`) 
                 .then(res => res.json())
                 .then(data => {
@@ -881,7 +835,6 @@
                     }
                 });
                 
-            // --- جلب التوصيات ---
             fetch(`${BASE_URL}/tv/${show.id}/recommendations?api_key=${TMDB_API_KEY}&language=en-US`)
                 .then(res => res.json())
                 .then(data => {
