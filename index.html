@@ -6,9 +6,9 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📺</text></svg>">
     <title>New Shows Tracker</title>
     <style>
-        /* ----- متغيرات الألوان للوضع الفاتح ----- */
+        /* ----- متغيرات الألوان للوضع الفاتح (الافتراضي) ----- */
         :root { 
-            --bg-body: #fdfcf5; /* لون الخلفية الفاتح */
+            --bg-body: #fdfcf5;
             --bg-card: #ffffff; 
             --text-main: #1e293b; 
             --text-muted: #64748b; 
@@ -24,9 +24,9 @@
             --modal-overlay-bottom: rgba(255, 255, 255, 0.95);
         }
 
-        /* ----- متغيرات الألوان للوضع الداكن ----- */
+        /* ----- متغيرات الألوان للوضع المظلم (Dark Mode) ----- */
         [data-theme="dark"] {
-            --bg-body: #0f172a; /* لون الخلفية الداكن */
+            --bg-body: #0f172a; 
             --bg-card: #1e293b; 
             --text-main: #f8fafc; 
             --text-muted: #94a3b8; 
@@ -38,22 +38,18 @@
             --modal-overlay-top: rgba(15, 23, 42, 0.70);
             --modal-overlay-bottom: rgba(15, 23, 42, 0.98);
         }
-
-        /* ----- إضافة الخلفية الاحترافية ----- */
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            margin: 0;
-            padding: 0;
-            line-height: 1.5;
-            transition: background-color 0.3s, color 0.3s;
-
-            /* الخلفية الجديدة */
-            background-color: var(--bg-body);
-            background-image: url('https://www.transparenttextures.com/patterns/az-subtle.png'); /* نمط خفي وأنيق */
-            background-repeat: repeat;
-        }
         
-        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background-color: var(--bg-body); color: var(--text-main); margin: 0; padding: 0; line-height: 1.5; transition: background-color 0.3s, color 0.3s; }
+        body { 
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            line-height: 1.5; 
+            transition: background-color 0.3s, color 0.3s;
+            background-color: var(--bg-body);
+            background-image: url('https://www.transparenttextures.com/patterns/az-subtle.png');
+            background-repeat: repeat;
+            color: var(--text-main);
+        }
         
         /* ----- Theme Toggle Button ----- */
         .theme-toggle { position: absolute; top: 20px; right: 20px; background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-light); padding: 8px 16px; border-radius: 25px; cursor: pointer; font-size: 1rem; box-shadow: var(--shadow-sm); transition: 0.3s; z-index: 100; display: flex; align-items: center; gap: 8px; font-weight: bold; }
@@ -124,15 +120,21 @@
         .modal-details { flex: 1; min-width: 300px; z-index: 2;}
         .modal-details h2 { margin-top: 0; margin-bottom: 10px; color: var(--text-main); font-size: 2.2rem; font-weight: 800; letter-spacing: -0.5px; }
         
-        .modal-meta-info { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;}
+        .modal-meta-info { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;}
         .meta-badge { background-color: var(--bg-body); border: 1px solid var(--border-light); padding: 4px 10px; border-radius: 6px; color: var(--text-main); font-weight: 600; }
         
-        .ratings-box { background-color: var(--bg-body); padding: 15px; border-radius: 10px; border: 1px solid var(--border-light); margin: 20px 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; }
-        .rating-item { display: flex; flex-direction: column; align-items: center; text-align: center; background-color: var(--bg-card); padding: 15px; border-radius: 8px; border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); }
-        .rating-label { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; letter-spacing: 1px; text-transform: uppercase; font-weight: 700;}
-        .rating-value { font-size: 1.5rem; font-weight: 800; color: var(--text-main); }
-        .rating-votes { font-size: 0.85rem; color: var(--text-muted); margin-top: 5px; font-weight: 500; }
-        .modal-overview { line-height: 1.7; color: var(--text-main); font-size: 1.05rem; }
+        /* 1. تصميم كبسولات التصنيف (Genres) */
+        .modal-genres { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; width: 100%; }
+        .genre-pill { background-color: var(--bg-body); border: 1px solid var(--border-light); padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; color: var(--text-main); box-shadow: var(--shadow-sm); }
+
+        /* 2. تصميم صندوق التقييمات المصغر والأنيق */
+        .ratings-box { background-color: var(--bg-body); padding: 12px; border-radius: 10px; border: 1px solid var(--border-light); margin: 15px 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; }
+        .rating-item { display: flex; flex-direction: column; align-items: center; text-align: center; background-color: var(--bg-card); padding: 10px; border-radius: 8px; border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); }
+        .rating-label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px; letter-spacing: 1px; text-transform: uppercase; font-weight: 700;}
+        .rating-value { font-size: 1.2rem; font-weight: 800; color: var(--text-main); }
+        .rating-votes { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; font-weight: 500; }
+        
+        .modal-overview { line-height: 1.7; color: var(--text-main); font-size: 1.05rem; margin-top: 15px; }
         
         /* Action Buttons */
         .action-buttons { display: flex; gap: 12px; margin-top: 25px; flex-wrap: wrap; align-items: center; }
@@ -236,14 +238,16 @@
                     <span id="modal-country" class="meta-badge">🌍 Origin: Loading...</span>
                 </div>
                 
+                <div id="modal-genres" class="modal-genres"></div>
+                
                 <div class="ratings-box">
                     <div class="rating-item" style="color: #01b4e4;">
-                        <span class="rating-label">TMDB Rating</span> 
+                        <span class="rating-label">TMDB</span> 
                         <span class="rating-value">⭐ <span id="modal-tmdb-rating">...</span></span>
                         <span id="modal-tmdb-votes" class="rating-votes"></span>
                     </div>
                     <div class="rating-item" style="color: #d97706;">
-                        <span class="rating-label">IMDb Rating</span> 
+                        <span class="rating-label">IMDb</span> 
                         <span class="rating-value">🎬 <span id="modal-imdb-rating">...</span></span>
                         <span id="modal-imdb-votes" class="rating-votes"></span>
                     </div>
@@ -677,6 +681,9 @@
 
             document.getElementById('modal-imdb-rating').innerText = imdbCache[show.id] ? imdbCache[show.id] + ' / 10' : '⏳';
             document.getElementById('modal-imdb-votes').innerText = '';
+            
+            // تفريغ كبسولات التصنيفات القديمة
+            document.getElementById('modal-genres').innerHTML = '';
 
             const posterPath = show.poster_path ? IMG_URL + show.poster_path : 'https://via.placeholder.com/500x750?text=No+Image';
             document.getElementById('modal-img').src = posterPath;
@@ -731,7 +738,7 @@
             modal.style.display = 'flex';
             document.querySelector('.modal-content').scrollTop = 0;
 
-            // --- إعداد نظام تتبع الحلقات التفاعلي ---
+            // --- إعداد نظام تتبع الحلقات التفاعلي وجلب التصنيفات ---
             const trackerContainer = document.getElementById('tracker-container');
             const btnPlus = document.getElementById('btn-plus');
             const btnMinus = document.getElementById('btn-minus');
@@ -745,6 +752,14 @@
                     document.getElementById('modal-status').innerText = 'Status: ' + (details.status || 'Unknown');
                     document.getElementById('modal-seasons').innerText = 'Seasons: ' + (details.number_of_seasons || 'N/A');
                     
+                    // --- توليد كبسولات التصنيفات (Genres) ---
+                    const genresContainer = document.getElementById('modal-genres');
+                    if (details.genres && details.genres.length > 0) {
+                        genresContainer.innerHTML = details.genres.map(g => 
+                            `<span class="genre-pill">${g.name}</span>`
+                        ).join('');
+                    }
+
                     const totalEpisodes = details.number_of_episodes || 0;
                     
                     if (totalEpisodes > 0) {
