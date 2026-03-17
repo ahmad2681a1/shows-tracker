@@ -867,10 +867,11 @@
                 const cardImdbSpan = document.getElementById(`card-imdb-${show.id}`);
                 if(cardImdbSpan) cardImdbSpan.innerText = imdbCache[show.id];
 
-                // تفعيل زر Stremio عبر ربطه برمز الـ ID الحقيقي (مثل: tt0944947)
+                // تفعيل زر Stremio
                 const stremioBtn = document.getElementById('stremio-btn');
                 if (ratings.id) {
-                    stremioBtn.href = `stremio://detail/series/${ratings.id}`;
+                    // التعديل هنا: إضافة 3 شرطات (///) وتكرار الـ ID مرتين
+                    stremioBtn.href = `stremio:///detail/series/${ratings.id}/${ratings.id}`;
                     stremioBtn.style.display = 'inline-flex';
                 } else {
                     stremioBtn.style.display = 'none';
