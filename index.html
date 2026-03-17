@@ -646,7 +646,7 @@
                 const card = document.createElement('div');
                 card.className = 'show-card';
                 card.id = `card-${show.id}`;
-                card.onclick = () => openModal(show);
+                card.onclick = () => openMocard.onclick = () => window.location.href = 'details.html?id=' + show.id;dal(show);
                 
                 const posterPath = show.poster_path ? IMG_URL + show.poster_path : 'https://via.placeholder.com/500x750?text=No+Image';
                 const releaseYear = show.first_air_date ? show.first_air_date.substring(0,4) : 'N/A';
