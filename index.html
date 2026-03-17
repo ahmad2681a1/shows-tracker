@@ -174,6 +174,62 @@
         .rec-title { font-size: 0.9rem; font-weight: 600; text-align: center; margin-top: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-main); }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* --- توافق الموقع مع الجوال (Mobile Responsive) --- */
+        @media (max-width: 600px) {
+            /* عرض كرتين في الصف بدلاً من كرت واحد ضخم */
+            .shows-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); 
+                gap: 12px;
+                padding: 10px;
+            }
+            /* تصغير ارتفاع الصورة ليتناسب مع الكرت الجديد */
+            .show-image {
+                height: 230px; 
+            }
+            .show-title {
+                font-size: 0.9rem;
+            }
+            .rating-pill {
+                padding: 3px 6px;
+                font-size: 0.65rem;
+            }
+            /* ترتيب الفلاتر وأزرار الشبكات لكي لا تخرج عن الشاشة */
+            .filters {
+                gap: 6px;
+                padding: 15px 10px 5px;
+            }
+            button.network-btn, .fav-filter-btn, .watched-filter-btn, .ai-filter-btn {
+                padding: 6px 10px;
+                font-size: 0.75rem;
+            }
+            /* تصغير العنوان وزر الوضع الليلي */
+            header { padding: 3.5rem 1rem 2rem; }
+            header h1 { font-size: 1.8rem; }
+            .theme-toggle { top: 10px; right: 10px; padding: 5px 10px; font-size: 0.8rem; }
+            
+            /* ترتيب النافذة المنبثقة (Modal) لتبدو رائعة على الجوال */
+            .modal-content {
+                padding: 20px;
+                gap: 15px;
+                flex-direction: column;
+                align-items: center;
+            }
+            .modal-poster {
+                width: 160px;
+                margin: 0 auto;
+            }
+            .modal-details h2 {
+                font-size: 1.6rem;
+                text-align: center;
+            }
+            .modal-meta-info {
+                justify-content: center;
+            }
+            .action-buttons {
+                justify-content: center;
+            }
+            .stremio-btn { margin-left: 0; width: 100%; justify-content: center; margin-top: 10px;}
+        }
     </style>
 </head>
 <body>
