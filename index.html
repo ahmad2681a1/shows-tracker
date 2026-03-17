@@ -212,7 +212,8 @@
             .modal-genres { justify-content: center; }
             .genre-pill { font-size: 0.7rem; padding: 3px 10px; }
             
-            .ratings-box { grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; margin: 10px 0; }
+            .ratings-box { grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 8px; margin: 10px 0; }
+            .rating-value { font-size: 0.95rem; }
             .rating-value { font-size: 1rem; }
             
             .modal-overview { font-size: 0.9rem; text-align: center; margin-top: 10px; }
@@ -304,13 +305,26 @@
                 <div class="ratings-box">
                     <div class="rating-item" style="color: #01b4e4;">
                         <span class="rating-label">TMDB</span> 
-                        <span class="rating-value">⭐ <span id="modal-tmdb-rating">...</span></span>
-                        <span id="modal-tmdb-votes" class="rating-votes"></span>
+                        <span class="rating-value" style="display: flex; align-items: center; gap: 6px;">
+                            <img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_square_1-5bdc75aaebeb75dc7ae79426ddd9be3b2be1e342510f8202baf6bffa71d7f5c4.svg" alt="TMDB" style="height: 14px;">
+                            <span id="modal-tmdb-rating">...</span>
+                        </span>
                     </div>
+                    
                     <div class="rating-item" style="color: #d97706;">
                         <span class="rating-label">IMDb</span> 
-                        <span class="rating-value">🎬 <span id="modal-imdb-rating">...</span></span>
-                        <span id="modal-imdb-votes" class="rating-votes"></span>
+                        <span class="rating-value" style="display: flex; align-items: center; gap: 6px;">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg" alt="IMDb" style="height: 16px; border-radius: 2px;">
+                            <span id="modal-imdb-rating">...</span>
+                        </span>
+                    </div>
+                    
+                    <div class="rating-item" style="color: #ed1c24;">
+                        <span class="rating-label">Trakt</span> 
+                        <span class="rating-value" style="display: flex; align-items: center; gap: 6px;">
+                            <img src="https://cdn.simpleicons.org/trakt/ed1c24" alt="Trakt" style="height: 16px;">
+                            <span id="modal-trakt-rating">...</span>
+                        </span>
                     </div>
                 </div>
 
@@ -352,6 +366,7 @@
     <script>
         const TMDB_API_KEY = 'e7be99b2666a862f16f0a6b5441c150b'; 
         const OMDB_API_KEY = '75583472';
+        const TRAKT_CLIENT_ID = '7357626e48140b10327a133e653fda5d2c73fd27ab8af345c3c9a18584c171ad';  
         const BASE_URL = 'https://api.themoviedb.org/3';
         const IMG_URL = 'https://image.tmdb.org/t/p/w500';
 
@@ -728,6 +743,38 @@
 
             document.getElementById('modal-imdb-rating').innerText = imdbCache[show.id] ? imdbCache[show.id] + ' / 10' : '⏳';
             document.getElementById('modal-imdb-votes').innerText = '';
+            
+            document.getElementById('modal-trakt-rating').innerText = '⏳';
+
+        fetch(`${BASE_URL}/tv/${show.id}/external_ids?api_key=${TMDB_API_KEY}`)
+            .then(res => res.json())
+            .then(extData => {
+                const imdbId = extData.imdb_id;
+                
+                if (imdbId) {
+                    fetch(`https://api.trakt.tv/shows/${imdbId}/ratings`, {
+                        headers: {
+                            "Content-Type": "application/json",
+                            "trakt-api-version": "2",
+                            "trakt-api-key": TRAKT_CLIENT_ID
+                        }
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data && data.rating) {
+                            document.getElementById('modal-trakt-rating').innerText = data.rating.toFixed(1) + ' / 10';
+                        } else {
+                            document.getElementById('modal-trakt-rating').innerText = 'N/A';
+                        }
+                    })
+                    .catch(err => {
+                        console.error("Trakt API Error:", err);
+                        document.getElementById('modal-trakt-rating').innerText = 'Error';
+                    });
+                } else {
+                    document.getElementById('modal-trakt-rating').innerText = 'N/A';
+                }
+            });
             
             document.getElementById('modal-genres').innerHTML = '';
 
