@@ -177,9 +177,8 @@
         .rec-title { font-size: 0.9rem; font-weight: 600; text-align: center; margin-top: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-main); }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        /* --- توافق الموقع مع الجوال (Mobile Responsive) المحسن --- */
+        /* --- توافق الموقع مع الجوال (Mobile Responsive) المحسن والمصلح --- */
         @media (max-width: 600px) {
-            /* تعديل كروت المسلسلات لتصبح كرتين في الصف */
             .shows-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; padding: 10px; }
             .show-image { height: 230px; }
             .show-title { font-size: 0.9rem; }
@@ -190,18 +189,18 @@
             header h1 { font-size: 1.8rem; }
             .theme-toggle { top: 10px; right: 10px; padding: 5px 10px; font-size: 0.8rem; }
             
-            /* --- إصلاح النافذة المنبثقة (Modal) بالكامل --- */
             .modal { padding: 10px; }
             .modal-content { 
                 padding: 20px 15px; 
                 gap: 15px; 
                 flex-direction: column; 
                 align-items: center; 
-                overflow-x: hidden; /* منع التمدد الجانبي المخرب للتصميم */
+                width: 100%;
+                box-sizing: border-box;
+                /* تم إزالة الكود المسبب للمشكلة ليعود السحب للعمل بحرية! */
             }
             .modal-poster { width: 140px; margin: 0 auto; }
             
-            /* تجاوز الحجم المخصص للكمبيوتر لكي لا تخرج التفاصيل عن الشاشة */
             .modal-details { 
                 min-width: 100%; 
                 width: 100%; 
@@ -213,29 +212,29 @@
             .modal-genres { justify-content: center; }
             .genre-pill { font-size: 0.7rem; padding: 3px 10px; }
             
-            /* تصغير صندوق التقييمات */
             .ratings-box { grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; margin: 10px 0; }
             .rating-value { font-size: 1rem; }
             
-            /* تصغير القصة وتوسيطها */
             .modal-overview { font-size: 0.9rem; text-align: center; margin-top: 10px; }
             
-            /* أزرار المفضلة والتريلر */
             .action-buttons { justify-content: center; }
             .trailer-btn, .fav-btn { font-size: 0.85rem; padding: 0 12px; height: 38px; }
             
-            /* ترتيب أزرار المشاركة وستريميو بشكل عمودي أنيق للجوال */
-            .share-row { 
-                justify-content: center; 
-                flex-direction: column; 
-                gap: 15px; 
-                text-align: center;
+            .share-row { justify-content: center; flex-direction: column; gap: 15px; text-align: center; }
+            .stremio-btn { margin: 0; width: 100%; justify-content: center; box-sizing: border-box; }
+
+            /* تأكيد تفعيل السحب (Scroll) الأفقي الناعم للمواسم والتوصيات */
+            .seasons-container, .rec-container {
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch;
+                width: 100%;
+                padding-bottom: 15px;
             }
-            .stremio-btn { 
-                margin: 0; 
-                width: 100%; 
-                justify-content: center; 
-                box-sizing: border-box; 
+            
+            /* منع خروج حاوية المواسم عن حجم الشاشة */
+            #seasons-tracker-container, .recommendations-section {
+                max-width: 100%;
+                overflow: hidden;
             }
         }
     </style>
