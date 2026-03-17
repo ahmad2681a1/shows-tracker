@@ -182,6 +182,10 @@
         .rec-title { font-size: 0.9rem; font-weight: 600; text-align: center; margin-top: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-main); }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* --- تصميم زر Stremio --- */
+        .stremio-btn { background-color: #8A5A9E; color: white; text-decoration: none; padding: 0 18px; height: 40px; border-radius: 20px; display: flex; align-items: center; gap: 8px; font-weight: bold; font-size: 0.95rem; transition: 0.3s; margin-left: auto; box-shadow: 0 4px 10px rgba(138, 90, 158, 0.3); border: 1px solid #724885; }
+        .stremio-btn:hover { transform: scale(1.05); background-color: #6a3e7a; color: white; box-shadow: 0 6px 15px rgba(138, 90, 158, 0.5); }
+        
     </style>
 </head>
 <body>
@@ -292,6 +296,10 @@
                     </a>
                     <a id="share-tw" class="share-btn share-tw" target="_blank" href="#" title="X">
                         <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    </a>
+                    <a id="stremio-btn" class="stremio-btn" href="#" title="Play on Stremio" style="display: none;">
+                        <span class="material-symbols-outlined">play_circle</span>
+                        Open in Stremio
                     </a>
                 </div>
             </div>
@@ -852,11 +860,23 @@
                     document.getElementById('modal-seasons').innerText = 'Seasons: N/A';
                 });
 
+            // --- جلب تقييمات IMDb وربط زر تشغيل Stremio ---
             fetchExternalRatings(show.id).then(ratings => {
                 document.getElementById('modal-imdb-rating').innerText = ratings.imdb;
                 document.getElementById('modal-imdb-votes').innerText = ratings.votes ? formatVotes(ratings.votes) : '';
                 const cardImdbSpan = document.getElementById(`card-imdb-${show.id}`);
                 if(cardImdbSpan) cardImdbSpan.innerText = imdbCache[show.id];
+
+                // تفعيل زر Stremio عبر ربطه برمز الـ IMDb
+                const stremioBtn = document.getElementById('stremio-btn');
+                if (ratings.imdb && ratings.imdb !== "N/A") {
+                    // هذا الرابط (stremio://) سيقوم بفتح تطبيق Stremio مباشرة على جهازك!
+                    stremioBtn.href = `stremio://detail/series/${ratings.imdb}`;
+                    stremioBtn.style.display = 'inline-flex';
+                } else {
+                    // إخفاء الزر إذا كان المسلسل غير مدعوم
+                    stremioBtn.style.display = 'none';
+                }
             });
             
             fetch(`${BASE_URL}/tv/${show.id}/videos?api_key=${TMDB_API_KEY}`) 
