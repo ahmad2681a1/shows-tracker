@@ -669,8 +669,8 @@
             try {
                 const extRes = await fetch(`${BASE_URL}/tv/${tmdbId}/external_ids?api_key=${TMDB_API_KEY}`);
                 const extData = await extRes.json();
-                const imdbId = extData.imdb_id;
-                if (!imdbId) return { imdb: "N/A", votes: "" };
+                const imdbId = extData.imdb_id; // هذا هو المعرف الصحيح الذي يحتاجه Stremio
+                if (!imdbId) return { imdb: "N/A", votes: "", id: null };
                 
                 const omdbRes = await fetch(`https://www.omdbapi.com/?i=${imdbId}&apikey=${OMDB_API_KEY}`);
                 const omdbData = await omdbRes.json();
@@ -678,10 +678,10 @@
                 if (omdbData.Response === "True" && omdbData.imdbRating && omdbData.imdbRating !== "N/A") {
                     imdbCache[tmdbId] = omdbData.imdbRating;
                     sessionStorage.setItem('imdbCache', JSON.stringify(imdbCache));
-                    return { imdb: `${omdbData.imdbRating} / 10`, votes: omdbData.imdbVotes };
+                    return { imdb: `${omdbData.imdbRating} / 10`, votes: omdbData.imdbVotes, id: imdbId };
                 }
-                return { imdb: "N/A", votes: "" };
-            } catch (error) { return { imdb: "N/A", votes: "" }; }
+                return { imdb: "N/A", votes: "", id: imdbId };
+            } catch (error) { return { imdb: "N/A", votes: "", id: null }; }
         }
 
         async function openModal(show) {
