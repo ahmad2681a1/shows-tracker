@@ -596,3 +596,50 @@ const TMDB_API_KEY = 'e7be99b2666a862f16f0a6b5441c150b';
         window.onclick = function(event) { if (event.target == modal) closeModal(); }
 
         fetchShows('213', document.querySelector('.filters button.active'), 1);
+
+        function exportData() {
+            const data = {
+                favorites: JSON.parse(localStorage.getItem('tvFavorites')) || [],
+                watched: JSON.parse(localStorage.getItem('tvWatched')) || []
+            };
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data, null, 2));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "shows_tracker_backup.json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const contents = e.target.result;
+                    const data = JSON.parse(contents);
+                    
+                    let imported = false;
+                    if (data.favorites && Array.isArray(data.favorites)) {
+                        localStorage.setItem('tvFavorites', JSON.stringify(data.favorites));
+                        imported = true;
+                    }
+                    if (data.watched && Array.isArray(data.watched)) {
+                        localStorage.setItem('tvWatched', JSON.stringify(data.watched));
+                        imported = true;
+                    }
+                    
+                    if (imported) {
+                        alert('Data successfully imported! The page will now reload.');
+                        location.reload();
+                    } else {
+                        alert('Invalid file format. Ensure the file is a valid backup JSON.');
+                    }
+                } catch (error) {
+                    alert('Error reading the file. Ensure it is a valid JSON.');
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }

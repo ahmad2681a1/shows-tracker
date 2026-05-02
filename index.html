@@ -16,7 +16,12 @@
 <body>
 
     <header>
-        <button id="theme-toggle" class="theme-toggle">🌙 Dark Mode</button>
+        <div class="header-actions">
+            <button id="theme-toggle" class="header-btn">🌙 Dark Mode</button>
+            <button id="export-btn" class="header-btn" onclick="exportData()" title="Backup Data">💾 Export</button>
+            <button id="import-btn" class="header-btn" onclick="document.getElementById('import-file').click()" title="Restore Data">📂 Import</button>
+            <input type="file" id="import-file" style="display: none;" accept=".json" onchange="importData(event)">
+        </div>
         <h1>📺 New Shows Tracker</h1>
         <p>Your minimalist guide to the latest and most popular TV shows</p>
         
