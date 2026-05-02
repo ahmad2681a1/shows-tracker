@@ -64,6 +64,7 @@
         [data-theme="dark"] .theme-icon { filter: invert(1); }
         [data-theme="dark"] .prime-logo { filter: brightness(0) invert(1); }
         [data-theme="dark"] .peacock-logo { filter: brightness(0) invert(1); }
+        [data-theme="dark"] .disney-logo { filter: brightness(0) invert(1); }
         button.network-btn:hover { border-color: var(--accent-red); color: var(--accent-red); }
         button.network-btn.active { background-color: var(--accent-red); color: white; border-color: var(--accent-red); }
         button.network-btn.active img { filter: brightness(0) invert(1); }
