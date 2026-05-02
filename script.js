@@ -65,6 +65,7 @@ const TMDB_API_KEY = 'e7be99b2666a862f16f0a6b5441c150b';
             else if (currentMode === 'search') performSearch(1);
             else if (currentMode === 'favorites') showFavorites(document.querySelector('.fav-filter-btn'));
             else if (currentMode === 'watched') showWatched(document.querySelector('.watched-filter-btn'));
+            else if (currentMode === 'upcoming') showUpcoming(document.querySelector('.filters button.active'), 1);
         }
 
         function showSkeletons(count = 20, clearGrid = false) {
@@ -242,11 +243,62 @@ const TMDB_API_KEY = 'e7be99b2666a862f16f0a6b5441c150b';
             displayShows(watched);
         }
 
+        async function showUpcoming(btnElement, page = 1) {
+            if (isLoading) return;
+            isLoading = true;
+            currentMode = 'upcoming';
+            currentPage = page;
+
+            if (page === 1) {
+                document.getElementById('search-input').value = '';
+                hasMorePages = true;
+                showSkeletons(20, true);
+                if (btnElement) {
+                    document.querySelectorAll('.filters button').forEach(btn => btn.classList.remove('active'));
+                    btnElement.classList.add('active');
+                }
+            } else {
+                showSkeletons(8, false);
+            }
+
+            const sortValue = document.getElementById('sort-select').value;
+            const genreValue = document.getElementById('genre-select').value;
+            
+            let extraParams = '';
+            if (genreValue) extraParams += `&with_genres=${genreValue}`;
+
+            let sortBy = 'popularity.desc';
+            if (sortValue === 'first_air_date.desc') sortBy = 'first_air_date.desc';
+            else if (sortValue === 'vote_average.desc') sortBy = 'vote_average.desc';
+
+            const today = new Date().toISOString().split('T')[0];
+            const futureDate = new Date();
+            futureDate.setMonth(futureDate.getMonth() + 3);
+            const maxDate = futureDate.toISOString().split('T')[0];
+
+            try {
+                const response = await fetch(`${BASE_URL}/discover/tv?api_key=${TMDB_API_KEY}&language=en-US&sort_by=${sortBy}&first_air_date.gte=${today}&first_air_date.lte=${maxDate}${extraParams}&page=${page}`);
+                if (!response.ok) throw new Error('Connection error.');
+                const data = await response.json();
+                
+                removeSkeletons();
+                displayShows(data.results);
+                
+                hasMorePages = data.page < data.total_pages;
+                if (data.results.length === 0 && page === 1) grid.innerHTML = '<div class="loading-message">No upcoming shows found.</div>';
+            } catch (error) {
+                removeSkeletons();
+                if (page === 1) grid.innerHTML = `<div class="loading-message" style="color: var(--accent-red);">${error.message}</div>`;
+            }
+            isLoading = false;
+        }
+
         window.addEventListener('scroll', () => {
             if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500) {
                 if (!isLoading && hasMorePages) {
                     if (currentMode === 'network') fetchShows(currentNetwork, null, currentPage + 1);
                     else if (currentMode === 'search') performSearch(currentPage + 1);
+                    else if (currentMode === 'upcoming') showUpcoming(null, currentPage + 1);
                 }
             }
         });
