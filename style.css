@@ -1,0 +1,210 @@
+/* ----- متغيرات الألوان للوضع الفاتح (الافتراضي) ----- */
+        :root { 
+            --bg-body: #fdfcf5;
+            --bg-card: #ffffff; 
+            --text-main: #1e293b; 
+            --text-muted: #64748b; 
+            --border-light: #e2e8f0;
+            --accent-red: #e50914; 
+            --accent-blue: #3b82f6; 
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+            --modal-overlay-top: rgba(255, 255, 255, 0.60);
+            --modal-overlay-bottom: rgba(255, 255, 255, 0.95);
+        }
+
+        /* ----- متغيرات الألوان للوضع المظلم (Dark Mode) ----- */
+        [data-theme="dark"] {
+            --bg-body: #0f172a; 
+            --bg-card: #1e293b; 
+            --text-main: #f8fafc; 
+            --text-muted: #94a3b8; 
+            --border-light: #334155;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.5);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.5);
+            --modal-overlay-top: rgba(15, 23, 42, 0.70);
+            --modal-overlay-bottom: rgba(15, 23, 42, 0.98);
+        }
+        
+        body { 
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            line-height: 1.5; 
+            transition: background-color 0.3s, color 0.3s;
+            background-color: var(--bg-body);
+            background-image: url('https://www.transparenttextures.com/patterns/az-subtle.png');
+            background-repeat: repeat;
+            color: var(--text-main);
+        }
+        
+        .theme-toggle { position: absolute; top: 20px; right: 20px; background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-light); padding: 8px 16px; border-radius: 25px; cursor: pointer; font-size: 1rem; box-shadow: var(--shadow-sm); transition: 0.3s; z-index: 100; display: flex; align-items: center; gap: 8px; font-weight: bold; }
+        .theme-toggle:hover { transform: scale(1.05); border-color: var(--accent-blue); }
+
+        header { text-align: center; padding: 3rem 2rem; background: var(--bg-card); border-bottom: 1px solid var(--border-light); box-shadow: var(--shadow-sm); position: relative; transition: background-color 0.3s; }
+        header h1 { margin-top: 0; font-size: 2.5rem; color: var(--text-main); font-weight: 800; letter-spacing: -1px; }
+        header p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 1.5rem; }
+        
+        .controls-wrapper { max-width: 800px; margin: 0 auto; padding: 0 20px; display: flex; flex-direction: column; gap: 15px; }
+        .search-container { display: flex; justify-content: center; gap: 10px; }
+        .search-container input { flex: 1; padding: 12px 20px; border-radius: 25px; border: 1px solid var(--border-light); background-color: var(--bg-body); color: var(--text-main); font-size: 1rem; outline: none; transition: 0.3s; }
+        .search-container input:focus { border-color: var(--accent-red); box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.1); }
+        .search-container button { background-color: var(--accent-red); border-radius: 25px; color: white; border: none; padding: 10px 25px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .search-container button:hover { background-color: #cc0812; }
+        
+        .dropdowns-row { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
+        .sort-container, .genre-container { display: flex; align-items: center; background-color: var(--bg-card); padding: 6px 15px; border-radius: 25px; border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); transition: 0.3s; }
+        .sort-container:hover, .genre-container:hover { border-color: var(--accent-blue); }
+        .sort-container label, .genre-container label { color: var(--text-muted); font-weight: 600; margin-right: 8px; font-size: 0.9rem; }
+        .sort-container select, .genre-container select { background-color: transparent; color: var(--text-main); border: none; font-size: 0.95rem; font-weight: 500; outline: none; cursor: pointer; }
+        .sort-container select option, .genre-container select option { background-color: var(--bg-card); color: var(--text-main); }
+        
+        .filters { display: flex; justify-content: center; gap: 10px; padding: 25px 20px 10px; flex-wrap: wrap; }
+        button.network-btn { background-color: var(--bg-card); color: var(--text-muted); border: 1px solid var(--border-light); padding: 8px 18px; border-radius: 20px; cursor: pointer; transition: 0.3s; font-weight: 600; box-shadow: var(--shadow-sm); }
+        button.network-btn:hover { border-color: var(--accent-red); color: var(--accent-red); }
+        button.network-btn.active { background-color: var(--accent-red); color: white; border-color: var(--accent-red); }
+        
+        .fav-filter-btn { background-color: #fef3c7 !important; color: #b45309 !important; border: 1px solid #fbbf24 !important; padding: 8px 18px; border-radius: 20px; font-weight: 600; cursor: pointer; transition: 0.3s; box-shadow: var(--shadow-sm); }
+        .fav-filter-btn.active { background-color: #fde68a !important; }
+        .watched-filter-btn { background-color: #dcfce7 !important; color: #166534 !important; border: 1px solid #86efac !important; padding: 8px 18px; border-radius: 20px; font-weight: 600; cursor: pointer; transition: 0.3s; box-shadow: var(--shadow-sm); }
+        .watched-filter-btn.active { background-color: #bbf7d0 !important; }
+
+        /* --- Grid & Cards --- */
+        .shows-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 25px; padding: 20px; max-width: 1250px; margin: 0 auto; }
+        .show-card { background-color: var(--bg-card); border-radius: 12px; border: 1px solid var(--border-light); overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; position: relative; cursor: pointer; display: flex; flex-direction: column; box-shadow: var(--shadow-sm); }
+        .show-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); z-index: 2; border-color: var(--accent-blue); }
+        .show-image { width: 100%; height: 320px; object-fit: cover; background-color: var(--border-light); border-bottom: 1px solid var(--border-light); }
+        .show-info { padding: 15px; text-align: center; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .show-title { margin: 0 0 10px 0; font-size: 1.05rem; font-weight: 700; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        
+        .card-meta-footer { display: flex; flex-wrap: nowrap; justify-content: center; gap: 6px; }
+        .rating-pill { display: flex; align-items: center; gap: 4px; background-color: var(--bg-body); padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); border: 1px solid var(--border-light); white-space: nowrap; }
+        .icon-tmdb { height: 10px; }
+        .icon-imdb { height: 12px; border-radius: 2px; }
+        .watched-badge { position: absolute; top: 10px; right: 10px; color: white; padding: 4px 8px; border-radius: 6px; font-size: 0.8rem; line-height: 1; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.2); font-weight: bold; text-shadow: 0 1px 1px rgba(0,0,0,0.3); }
+
+        .skeleton { background: linear-gradient(90deg, var(--border-light) 25%, var(--bg-body) 50%, var(--border-light) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        .skeleton-card { background-color: var(--bg-card); border-radius: 12px; border: 1px solid var(--border-light); overflow: hidden; display: flex; flex-direction: column; }
+        .skeleton-img { width: 100%; height: 320px; }
+        .skeleton-info { padding: 15px; display: flex; flex-direction: column; gap: 10px; align-items: center; }
+        .skeleton-text { height: 18px; border-radius: 4px; width: 80%; }
+        .skeleton-text-small { height: 14px; border-radius: 4px; width: 100%; }
+        .loading-message { text-align: center; color: var(--text-muted); padding: 40px; font-size: 1.2rem; grid-column: 1 / -1; font-weight: 500; }
+
+        /* ----- Modal Design ----- */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
+        .modal-content { background-color: var(--bg-card); padding: 35px; border-radius: 16px; max-width: 950px; width: 100%; position: relative; animation: fadeIn 0.3s ease-out; display: flex; gap: 30px; flex-wrap: wrap; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); border: 1px solid var(--border-light); background-size: cover; background-position: center; background-repeat: no-repeat; }
+        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 30px; cursor: pointer; color: var(--text-muted); transition: 0.2s; line-height: 1; z-index: 10;}
+        .close-btn:hover { color: var(--text-main); }
+        .modal-poster { width: 280px; border-radius: 12px; object-fit: cover; align-self: flex-start; box-shadow: var(--shadow-md); border: 1px solid var(--border-light); z-index: 2;}
+        .modal-details { flex: 1; min-width: 300px; z-index: 2;}
+        .modal-details h2 { margin-top: 0; margin-bottom: 10px; color: var(--text-main); font-size: 2.2rem; font-weight: 800; letter-spacing: -0.5px; }
+        
+        .modal-meta-info { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;}
+        .meta-badge { background-color: var(--bg-body); border: 1px solid var(--border-light); padding: 4px 10px; border-radius: 6px; color: var(--text-main); font-weight: 600; }
+        
+        .modal-genres { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; width: 100%; }
+        .genre-pill { background-color: var(--bg-body); border: 1px solid var(--border-light); padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; color: var(--text-main); box-shadow: var(--shadow-sm); }
+
+        .ratings-box { background-color: var(--bg-body); padding: 12px; border-radius: 10px; border: 1px solid var(--border-light); margin: 15px 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; }
+        .rating-item { display: flex; flex-direction: column; align-items: center; text-align: center; background-color: var(--bg-card); padding: 10px; border-radius: 8px; border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); }
+        .rating-label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px; letter-spacing: 1px; text-transform: uppercase; font-weight: 700;}
+        .rating-value { font-size: 1.2rem; font-weight: 800; color: var(--text-main); }
+        .rating-votes { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; font-weight: 500; }
+        
+        .modal-overview { line-height: 1.7; color: var(--text-main); font-size: 1.05rem; margin-top: 15px; }
+        
+        .action-buttons { display: flex; gap: 12px; margin-top: 25px; flex-wrap: wrap; align-items: center; }
+        .trailer-btn, .fav-btn { text-decoration: none; padding: 0 18px; height: 42px; border-radius: 8px; font-weight: bold; font-size: 0.95rem; cursor: pointer; transition: 0.2s; border: none; display: flex; align-items: center; justify-content: center; gap: 8px; box-sizing: border-box; }
+        .trailer-btn { background-color: var(--accent-red); color: white; box-shadow: 0 4px 6px rgba(229, 9, 20, 0.2); }
+        .trailer-btn:hover { background-color: #cc0812; transform: translateY(-2px); box-shadow: 0 6px 8px rgba(229, 9, 20, 0.3); }
+        .fav-btn { background-color: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); }
+        .fav-btn:hover { background-color: var(--bg-body); border-color: var(--accent-blue); transform: translateY(-2px); }
+
+        /* --- تصميم كروت المواسم --- */
+        .seasons-section-title { width: 100%; border-top: 1px solid var(--border-light); padding-top: 20px; margin-top: 10px; font-size: 1.1rem; font-weight: 800; color: var(--text-main); }
+        .seasons-container { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px; scrollbar-width: thin; scrollbar-color: var(--border-light) transparent; }
+        .season-card { min-width: 130px; width: 130px; display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; }
+        .season-poster-box { position: relative; width: 100%; height: 195px; border-radius: 8px; overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--border-light); }
+        .season-poster { width: 100%; height: 100%; object-fit: cover; }
+        .season-action-bar { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(15, 23, 42, 0.95); display: flex; align-items: center; justify-content: space-between; padding: 6px 10px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .season-check-btn { background: none; border: none; color: #64748b; cursor: pointer; padding: 0; display: flex; align-items: center; transition: 0.2s; outline: none; }
+        .season-check-btn:hover { color: #ffffff; transform: scale(1.1); }
+        .season-check-btn.watched { color: #8b5cf6; } 
+        .season-ep-count { color: #cbd5e1; font-size: 0.75rem; font-weight: bold; }
+        .season-info { text-align: center; }
+        .season-name { font-size: 0.9rem; font-weight: 700; color: var(--text-main); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        /* --- أزرار المشاركة وزر Stremio --- */
+        .share-row { display: flex; align-items: center; gap: 12px; margin-top: 25px; border-top: 1px solid var(--border-light); padding-top: 20px; flex-wrap: wrap; z-index: 2;}
+        .share-label { color: var(--text-muted); font-weight: 700; font-size: 1.05rem; margin-right: 5px; }
+        .share-btn { text-decoration: none; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: 0.2s; box-shadow: var(--shadow-sm); }
+        .share-btn svg { width: 20px; height: 20px; fill: white; }
+        .share-wa { background-color: #25D366; }
+        .share-tw { background-color: #0f1419; }
+        .share-btn:hover { transform: scale(1.1); box-shadow: var(--shadow-md); }
+        
+        .stremio-btn { background-color: #8A5A9E; color: white; text-decoration: none; padding: 0 18px; height: 40px; border-radius: 20px; display: flex; align-items: center; gap: 8px; font-weight: bold; font-size: 0.95rem; transition: 0.3s; box-shadow: 0 4px 10px rgba(138, 90, 158, 0.3); border: 1px solid #724885; }
+        .stremio-btn:hover { transform: scale(1.05); background-color: #6a3e7a; color: white; box-shadow: 0 6px 15px rgba(138, 90, 158, 0.5); }
+
+        .recommendations-section { width: 100%; margin-top: 35px; border-top: 1px solid var(--border-light); padding-top: 25px; z-index: 2;}
+        .recommendations-section h3 { margin-top: 0; color: var(--text-main); font-weight: 800; font-size: 1.4rem; }
+        .rec-container { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px; scrollbar-width: thin; scrollbar-color: var(--border-light) var(--bg-body); }
+        .rec-container::-webkit-scrollbar { height: 8px; }
+        .rec-container::-webkit-scrollbar-track { background: var(--bg-body); border-radius: 10px; }
+        .rec-container::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 10px; }
+        .rec-card { min-width: 140px; width: 140px; cursor: pointer; transition: 0.2s; }
+        .rec-card:hover { transform: translateY(-5px); }
+        .rec-img { width: 100%; height: 210px; object-fit: cover; border-radius: 8px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-light); }
+        .rec-title { font-size: 0.9rem; font-weight: 600; text-align: center; margin-top: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-main); }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- توافق الموقع مع الجوال (Mobile Responsive) المحسن --- */
+        @media (max-width: 600px) {
+            .shows-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; padding: 10px; }
+            .show-image { height: 230px; }
+            .show-title { font-size: 0.9rem; }
+            .rating-pill { padding: 3px 6px; font-size: 0.65rem; }
+            .filters { gap: 6px; padding: 15px 10px 5px; }
+            button.network-btn, .fav-filter-btn, .watched-filter-btn { padding: 6px 10px; font-size: 0.75rem; }
+            header { padding: 3.5rem 1rem 2rem; }
+            header h1 { font-size: 1.8rem; }
+            .theme-toggle { top: 10px; right: 10px; padding: 5px 10px; font-size: 0.8rem; }
+            
+            .modal { padding: 10px; }
+            .modal-content { 
+                padding: 20px 15px; gap: 15px; flex-direction: column; align-items: center; 
+                width: 100%; box-sizing: border-box; 
+            }
+            .modal-poster { width: 140px; margin: 0 auto; }
+            
+            .modal-details { min-width: 100%; width: 100%; box-sizing: border-box; }
+            .modal-details h2 { font-size: 1.4rem; text-align: center; line-height: 1.2; }
+            .modal-meta-info { justify-content: center; font-size: 0.8rem; }
+            .meta-badge { padding: 3px 8px; font-size: 0.75rem; }
+            .modal-genres { justify-content: center; }
+            .genre-pill { font-size: 0.7rem; padding: 3px 10px; }
+            
+            .ratings-box { grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 8px; margin: 10px 0; }
+            .rating-value { font-size: 0.9rem; }
+            .rating-label { font-size: 0.65rem; }
+            .rating-votes { font-size: 0.65rem; margin-top: 2px; }
+            
+            .modal-overview { font-size: 0.9rem; text-align: center; margin-top: 10px; }
+            
+            .action-buttons { justify-content: center; }
+            .trailer-btn, .fav-btn { font-size: 0.85rem; padding: 0 12px; height: 38px; }
+            
+            .share-row { justify-content: center; flex-direction: column; gap: 15px; text-align: center; }
+            .stremio-btn { margin: 0; width: 100%; justify-content: center; box-sizing: border-box; }
+
+            .seasons-container, .rec-container {
+                overflow-x: auto !important; -webkit-overflow-scrolling: touch; width: 100%; padding-bottom: 15px;
+            }
+            
+            #seasons-tracker-container, .recommendations-section {
+                max-width: 100%; overflow: hidden;
+            }
+        }
