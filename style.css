@@ -64,6 +64,8 @@
         [data-theme="dark"] .theme-icon { filter: invert(1); }
         button.network-btn:hover { border-color: var(--accent-red); color: var(--accent-red); }
         button.network-btn.active { background-color: var(--accent-red); color: white; border-color: var(--accent-red); }
+        button.network-btn.active img { filter: brightness(0) invert(1); }
+        button.network-btn.active span { color: white !important; }
         
         .fav-filter-btn { background-color: #fef3c7 !important; color: #b45309 !important; border: 1px solid #fbbf24 !important; padding: 8px 18px; border-radius: 20px; font-weight: 600; cursor: pointer; transition: 0.3s; box-shadow: var(--shadow-sm); }
         .fav-filter-btn.active { background-color: #fde68a !important; }
