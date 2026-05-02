@@ -46,12 +46,24 @@
     </header>
 
     <div class="filters" id="filters">
-        <button class="network-btn active" onclick="fetchShows('213', this, 1)">Netflix</button>
-        <button class="network-btn" onclick="fetchShows('1024', this, 1)">Amazon Prime</button>
-        <button class="network-btn" onclick="fetchShows('49', this, 1)">HBO</button>
-        <button class="network-btn" onclick="fetchShows('2552', this, 1)">Apple TV+</button>
-        <button class="network-btn" onclick="fetchShows('453', this, 1)">Hulu</button>
-        <button class="network-btn" onclick="fetchShows('2739', this, 1)">Disney+</button>
+        <button class="network-btn active" onclick="fetchShows('213', this, 1)" title="Netflix">
+            <img src="https://cdn.simpleicons.org/netflix/E50914" alt="Netflix" height="20">
+        </button>
+        <button class="network-btn" onclick="fetchShows('1024', this, 1)" title="Amazon Prime">
+            <img src="https://cdn.simpleicons.org/primevideo/00A8E1" alt="Amazon Prime" height="20">
+        </button>
+        <button class="network-btn" onclick="fetchShows('49', this, 1)" title="HBO">
+            <img src="https://cdn.simpleicons.org/hbo/000000" alt="HBO" height="20" class="theme-icon">
+        </button>
+        <button class="network-btn" onclick="fetchShows('2552', this, 1)" title="Apple TV+">
+            <img src="https://cdn.simpleicons.org/appletv/000000" alt="Apple TV+" height="20" class="theme-icon">
+        </button>
+        <button class="network-btn" onclick="fetchShows('453', this, 1)" title="Hulu">
+            <img src="https://cdn.simpleicons.org/hulu/1CE783" alt="Hulu" height="20">
+        </button>
+        <button class="network-btn" onclick="fetchShows('2739', this, 1)" title="Disney+">
+            <img src="https://cdn.simpleicons.org/disneyplus/113CCF" alt="Disney+" height="26">
+        </button>
         <button class="network-btn" onclick="showUpcoming(this, 1)">📅 Upcoming</button>
         <button class="fav-filter-btn" onclick="showFavorites(this)">⭐ My Favorites</button>
         <button class="watched-filter-btn" onclick="showWatched(this)">✔️ Watched Shows</button>
