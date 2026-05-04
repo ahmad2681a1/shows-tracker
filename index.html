@@ -10,944 +10,246 @@
     <title>New Shows Tracker</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <style>
-        /* ----- متغيرات الألوان للوضع الفاتح (الافتراضي) ----- */
-        :root { 
-            --bg-body: #fdfcf5;
-            --bg-card: #ffffff; 
-            --text-main: #1e293b; 
-            --text-muted: #64748b; 
-            --border-light: #e2e8f0;
-            --accent-red: #e50914; 
-            --accent-blue: #3b82f6; 
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
-            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
-            --modal-overlay-top: rgba(255, 255, 255, 0.60);
-            --modal-overlay-bottom: rgba(255, 255, 255, 0.95);
-        }
-
-        /* ----- متغيرات الألوان للوضع المظلم (Dark Mode) ----- */
-        [data-theme="dark"] {
-            --bg-body: #0f172a; 
-            --bg-card: #1e293b; 
-            --text-main: #f8fafc; 
-            --text-muted: #94a3b8; 
-            --border-light: #334155;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.5);
-            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.5);
-            --modal-overlay-top: rgba(15, 23, 42, 0.70);
-            --modal-overlay-bottom: rgba(15, 23, 42, 0.98);
-        }
-        
-        body { 
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; 
-            margin: 0; 
-            padding: 0; 
-            line-height: 1.5; 
-            transition: background-color 0.3s, color 0.3s;
-            background-color: var(--bg-body);
-            background-image: url('https://www.transparenttextures.com/patterns/az-subtle.png');
-            background-repeat: repeat;
-            color: var(--text-main);
-        }
-        
-        .theme-toggle { position: absolute; top: 20px; right: 20px; background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-light); padding: 8px 16px; border-radius: 25px; cursor: pointer; font-size: 1rem; box-shadow: var(--shadow-sm); transition: 0.3s; z-index: 100; display: flex; align-items: center; gap: 8px; font-weight: bold; }
-        .theme-toggle:hover { transform: scale(1.05); border-color: var(--accent-blue); }
-
-        header { text-align: center; padding: 3rem 2rem; background: var(--bg-card); border-bottom: 1px solid var(--border-light); box-shadow: var(--shadow-sm); position: relative; transition: background-color 0.3s; }
-        header h1 { margin-top: 0; font-size: 2.5rem; color: var(--text-main); font-weight: 800; letter-spacing: -1px; }
-        header p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 1.5rem; }
-        
-        .controls-wrapper { max-width: 800px; margin: 0 auto; padding: 0 20px; display: flex; flex-direction: column; gap: 15px; }
-        .search-container { display: flex; justify-content: center; gap: 10px; }
-        .search-container input { flex: 1; padding: 12px 20px; border-radius: 25px; border: 1px solid var(--border-light); background-color: var(--bg-body); color: var(--text-main); font-size: 1rem; outline: none; transition: 0.3s; }
-        .search-container input:focus { border-color: var(--accent-red); box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.1); }
-        .search-container button { background-color: var(--accent-red); border-radius: 25px; color: white; border: none; padding: 10px 25px; cursor: pointer; font-weight: bold; transition: 0.3s; }
-        .search-container button:hover { background-color: #cc0812; }
-        
-        .dropdowns-row { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
-        .sort-container, .genre-container { display: flex; align-items: center; background-color: var(--bg-card); padding: 6px 15px; border-radius: 25px; border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); transition: 0.3s; }
-        .sort-container:hover, .genre-container:hover { border-color: var(--accent-blue); }
-        .sort-container label, .genre-container label { color: var(--text-muted); font-weight: 600; margin-right: 8px; font-size: 0.9rem; }
-        .sort-container select, .genre-container select { background-color: transparent; color: var(--text-main); border: none; font-size: 0.95rem; font-weight: 500; outline: none; cursor: pointer; }
-        .sort-container select option, .genre-container select option { background-color: var(--bg-card); color: var(--text-main); }
-        
-        .filters { display: flex; justify-content: center; gap: 10px; padding: 25px 20px 10px; flex-wrap: wrap; }
-        button.network-btn { background-color: var(--bg-card); color: var(--text-muted); border: 1px solid var(--border-light); padding: 8px 18px; border-radius: 20px; cursor: pointer; transition: 0.3s; font-weight: 600; box-shadow: var(--shadow-sm); }
-        button.network-btn:hover { border-color: var(--accent-red); color: var(--accent-red); }
-        button.network-btn.active { background-color: var(--accent-red); color: white; border-color: var(--accent-red); }
-        
-        .fav-filter-btn { background-color: #fef3c7 !important; color: #b45309 !important; border: 1px solid #fbbf24 !important; padding: 8px 18px; border-radius: 20px; font-weight: 600; cursor: pointer; transition: 0.3s; box-shadow: var(--shadow-sm); }
-        .fav-filter-btn.active { background-color: #fde68a !important; }
-        .watched-filter-btn { background-color: #dcfce7 !important; color: #166534 !important; border: 1px solid #86efac !important; padding: 8px 18px; border-radius: 20px; font-weight: 600; cursor: pointer; transition: 0.3s; box-shadow: var(--shadow-sm); }
-        .watched-filter-btn.active { background-color: #bbf7d0 !important; }
-
-        /* --- Grid & Cards --- */
-        .shows-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 25px; padding: 20px; max-width: 1250px; margin: 0 auto; }
-        .show-card { background-color: var(--bg-card); border-radius: 12px; border: 1px solid var(--border-light); overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; position: relative; cursor: pointer; display: flex; flex-direction: column; box-shadow: var(--shadow-sm); }
-        .show-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); z-index: 2; border-color: var(--accent-blue); }
-        .show-image { width: 100%; height: 320px; object-fit: cover; background-color: var(--border-light); border-bottom: 1px solid var(--border-light); }
-        .show-info { padding: 15px; text-align: center; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .show-title { margin: 0 0 10px 0; font-size: 1.05rem; font-weight: 700; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        
-        .card-meta-footer { display: flex; flex-wrap: nowrap; justify-content: center; gap: 6px; }
-        .rating-pill { display: flex; align-items: center; gap: 4px; background-color: var(--bg-body); padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); border: 1px solid var(--border-light); white-space: nowrap; }
-        .icon-tmdb { height: 10px; }
-        .icon-imdb { height: 12px; border-radius: 2px; }
-        .watched-badge { position: absolute; top: 10px; right: 10px; color: white; padding: 4px 8px; border-radius: 6px; font-size: 0.8rem; line-height: 1; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.2); font-weight: bold; text-shadow: 0 1px 1px rgba(0,0,0,0.3); }
-
-        .skeleton { background: linear-gradient(90deg, var(--border-light) 25%, var(--bg-body) 50%, var(--border-light) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
-        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-        .skeleton-card { background-color: var(--bg-card); border-radius: 12px; border: 1px solid var(--border-light); overflow: hidden; display: flex; flex-direction: column; }
-        .skeleton-img { width: 100%; height: 320px; }
-        .skeleton-info { padding: 15px; display: flex; flex-direction: column; gap: 10px; align-items: center; }
-        .skeleton-text { height: 18px; border-radius: 4px; width: 80%; }
-        .skeleton-text-small { height: 14px; border-radius: 4px; width: 100%; }
-        .loading-message { text-align: center; color: var(--text-muted); padding: 40px; font-size: 1.2rem; grid-column: 1 / -1; font-weight: 500; }
-
-        /* ----- Modal Design ----- */
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
-        .modal-content { background-color: var(--bg-card); padding: 35px; border-radius: 16px; max-width: 950px; width: 100%; position: relative; animation: fadeIn 0.3s ease-out; display: flex; gap: 30px; flex-wrap: wrap; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); border: 1px solid var(--border-light); background-size: cover; background-position: center; background-repeat: no-repeat; }
-        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 30px; cursor: pointer; color: var(--text-muted); transition: 0.2s; line-height: 1; z-index: 10;}
-        .close-btn:hover { color: var(--text-main); }
-        .modal-poster { width: 280px; border-radius: 12px; object-fit: cover; align-self: flex-start; box-shadow: var(--shadow-md); border: 1px solid var(--border-light); z-index: 2;}
-        .modal-details { flex: 1; min-width: 300px; z-index: 2;}
-        .modal-details h2 { margin-top: 0; margin-bottom: 10px; color: var(--text-main); font-size: 2.2rem; font-weight: 800; letter-spacing: -0.5px; }
-        
-        .modal-meta-info { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;}
-        .meta-badge { background-color: var(--bg-body); border: 1px solid var(--border-light); padding: 4px 10px; border-radius: 6px; color: var(--text-main); font-weight: 600; }
-        
-        .modal-genres { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; width: 100%; }
-        .genre-pill { background-color: var(--bg-body); border: 1px solid var(--border-light); padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; color: var(--text-main); box-shadow: var(--shadow-sm); }
-
-        .ratings-box { background-color: var(--bg-body); padding: 12px; border-radius: 10px; border: 1px solid var(--border-light); margin: 15px 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; }
-        .rating-item { display: flex; flex-direction: column; align-items: center; text-align: center; background-color: var(--bg-card); padding: 10px; border-radius: 8px; border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); }
-        .rating-label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px; letter-spacing: 1px; text-transform: uppercase; font-weight: 700;}
-        .rating-value { font-size: 1.2rem; font-weight: 800; color: var(--text-main); }
-        .rating-votes { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; font-weight: 500; }
-        
-        .modal-overview { line-height: 1.7; color: var(--text-main); font-size: 1.05rem; margin-top: 15px; }
-        
-        .action-buttons { display: flex; gap: 12px; margin-top: 25px; flex-wrap: wrap; align-items: center; }
-        .trailer-btn, .fav-btn { text-decoration: none; padding: 0 18px; height: 42px; border-radius: 8px; font-weight: bold; font-size: 0.95rem; cursor: pointer; transition: 0.2s; border: none; display: flex; align-items: center; justify-content: center; gap: 8px; box-sizing: border-box; }
-        .trailer-btn { background-color: var(--accent-red); color: white; box-shadow: 0 4px 6px rgba(229, 9, 20, 0.2); }
-        .trailer-btn:hover { background-color: #cc0812; transform: translateY(-2px); box-shadow: 0 6px 8px rgba(229, 9, 20, 0.3); }
-        .fav-btn { background-color: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); }
-        .fav-btn:hover { background-color: var(--bg-body); border-color: var(--accent-blue); transform: translateY(-2px); }
-
-        /* --- تصميم كروت المواسم --- */
-        .seasons-section-title { width: 100%; border-top: 1px solid var(--border-light); padding-top: 20px; margin-top: 10px; font-size: 1.1rem; font-weight: 800; color: var(--text-main); }
-        .seasons-container { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px; scrollbar-width: thin; scrollbar-color: var(--border-light) transparent; }
-        .season-card { min-width: 130px; width: 130px; display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; }
-        .season-poster-box { position: relative; width: 100%; height: 195px; border-radius: 8px; overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--border-light); }
-        .season-poster { width: 100%; height: 100%; object-fit: cover; }
-        .season-action-bar { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(15, 23, 42, 0.95); display: flex; align-items: center; justify-content: space-between; padding: 6px 10px; border-top: 1px solid rgba(255,255,255,0.1); }
-        .season-check-btn { background: none; border: none; color: #64748b; cursor: pointer; padding: 0; display: flex; align-items: center; transition: 0.2s; outline: none; }
-        .season-check-btn:hover { color: #ffffff; transform: scale(1.1); }
-        .season-check-btn.watched { color: #8b5cf6; } 
-        .season-ep-count { color: #cbd5e1; font-size: 0.75rem; font-weight: bold; }
-        .season-info { text-align: center; }
-        .season-name { font-size: 0.9rem; font-weight: 700; color: var(--text-main); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-        /* --- أزرار المشاركة وزر Stremio --- */
-        .share-row { display: flex; align-items: center; gap: 12px; margin-top: 25px; border-top: 1px solid var(--border-light); padding-top: 20px; flex-wrap: wrap; z-index: 2;}
-        .share-label { color: var(--text-muted); font-weight: 700; font-size: 1.05rem; margin-right: 5px; }
-        .share-btn { text-decoration: none; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: 0.2s; box-shadow: var(--shadow-sm); }
-        .share-btn svg { width: 20px; height: 20px; fill: white; }
-        .share-wa { background-color: #25D366; }
-        .share-tw { background-color: #0f1419; }
-        .share-btn:hover { transform: scale(1.1); box-shadow: var(--shadow-md); }
-        
-        .stremio-btn { background-color: #8A5A9E; color: white; text-decoration: none; padding: 0 18px; height: 40px; border-radius: 20px; display: flex; align-items: center; gap: 8px; font-weight: bold; font-size: 0.95rem; transition: 0.3s; box-shadow: 0 4px 10px rgba(138, 90, 158, 0.3); border: 1px solid #724885; }
-        .stremio-btn:hover { transform: scale(1.05); background-color: #6a3e7a; color: white; box-shadow: 0 6px 15px rgba(138, 90, 158, 0.5); }
-
-        .recommendations-section { width: 100%; margin-top: 35px; border-top: 1px solid var(--border-light); padding-top: 25px; z-index: 2;}
-        .recommendations-section h3 { margin-top: 0; color: var(--text-main); font-weight: 800; font-size: 1.4rem; }
-        .rec-container { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px; scrollbar-width: thin; scrollbar-color: var(--border-light) var(--bg-body); }
-        .rec-container::-webkit-scrollbar { height: 8px; }
-        .rec-container::-webkit-scrollbar-track { background: var(--bg-body); border-radius: 10px; }
-        .rec-container::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 10px; }
-        .rec-card { min-width: 140px; width: 140px; cursor: pointer; transition: 0.2s; }
-        .rec-card:hover { transform: translateY(-5px); }
-        .rec-img { width: 100%; height: 210px; object-fit: cover; border-radius: 8px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-light); }
-        .rec-title { font-size: 0.9rem; font-weight: 600; text-align: center; margin-top: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-main); }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* --- توافق الموقع مع الجوال (Mobile Responsive) المحسن --- */
-        @media (max-width: 600px) {
-            .shows-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; padding: 10px; }
-            .show-image { height: 230px; }
-            .show-title { font-size: 0.9rem; }
-            .rating-pill { padding: 3px 6px; font-size: 0.65rem; }
-            .filters { gap: 6px; padding: 15px 10px 5px; }
-            button.network-btn, .fav-filter-btn, .watched-filter-btn { padding: 6px 10px; font-size: 0.75rem; }
-            header { padding: 3.5rem 1rem 2rem; }
-            header h1 { font-size: 1.8rem; }
-            .theme-toggle { top: 10px; right: 10px; padding: 5px 10px; font-size: 0.8rem; }
-            
-            .modal { padding: 10px; }
-            .modal-content { 
-                padding: 20px 15px; gap: 15px; flex-direction: column; align-items: center; 
-                width: 100%; box-sizing: border-box; 
-            }
-            .modal-poster { width: 140px; margin: 0 auto; }
-            
-            .modal-details { min-width: 100%; width: 100%; box-sizing: border-box; }
-            .modal-details h2 { font-size: 1.4rem; text-align: center; line-height: 1.2; }
-            .modal-meta-info { justify-content: center; font-size: 0.8rem; }
-            .meta-badge { padding: 3px 8px; font-size: 0.75rem; }
-            .modal-genres { justify-content: center; }
-            .genre-pill { font-size: 0.7rem; padding: 3px 10px; }
-            
-            .ratings-box { grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 8px; margin: 10px 0; }
-            .rating-value { font-size: 0.9rem; }
-            .rating-label { font-size: 0.65rem; }
-            .rating-votes { font-size: 0.65rem; margin-top: 2px; }
-            
-            .modal-overview { font-size: 0.9rem; text-align: center; margin-top: 10px; }
-            
-            .action-buttons { justify-content: center; }
-            .trailer-btn, .fav-btn { font-size: 0.85rem; padding: 0 12px; height: 38px; }
-            
-            .share-row { justify-content: center; flex-direction: column; gap: 15px; text-align: center; }
-            .stremio-btn { margin: 0; width: 100%; justify-content: center; box-sizing: border-box; }
-
-            .seasons-container, .rec-container {
-                overflow-x: auto !important; -webkit-overflow-scrolling: touch; width: 100%; padding-bottom: 15px;
-            }
-            
-            #seasons-tracker-container, .recommendations-section {
-                max-width: 100%; overflow: hidden;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <header>
-        <button id="theme-toggle" class="theme-toggle">🌙 Dark Mode</button>
-        <h1>📺 New Shows Tracker</h1>
-        <p>Your minimalist guide to the latest and most popular TV shows</p>
-        
-        <div class="controls-wrapper">
+        <div class="header-actions">
+            <button class="header-btn" onclick="showFavorites(this)" style="--accent-blue: #fbbf24; border-color: rgba(251, 191, 36, 0.4); color: #fbbf24;">
+                <span class="material-symbols-outlined">star</span> Favorites
+            </button>
+            <button class="header-btn" onclick="showWatched(this)" style="--accent-blue: #3b82f6; border-color: rgba(59, 130, 246, 0.4); color: #3b82f6;">
+                <span class="material-symbols-outlined">analytics</span> My Tracker
+            </button>
+            <button id="theme-toggle" class="theme-toggle-modern" title="Toggle Dark/Light Mode">
+                <span class="material-symbols-outlined theme-icon">dark_mode</span>
+            </button>
+        </div>
+        <h1>Cinematic Streaming Tracker</h1>
+        <p>Discover and track your favorite cinematic journeys in a minimalist, premium interface.</p>
+    </header>
+
+    <div class="main-toolbar">
+        <div class="controls-row">
             <div class="search-container">
-                <input type="text" id="search-input" placeholder="Search for any TV show..." onkeypress="handleKeyPress(event)">
-                <button onclick="performSearch()">Search</button>
+                <span class="material-symbols-outlined search-icon-inside">search</span>
+                <input type="text" id="search-input" placeholder="Search for any TV show..." onkeypress="handleKeyPress(event)" oninput="handleSearchInput(this.value)">
+                <div id="search-suggestions" class="suggestions-dropdown"></div>
             </div>
+            <button class="search-btn-modern" onclick="performSearch()">Search</button>
             
-            <div class="dropdowns-row">
-                <div class="sort-container">
-                    <label for="sort-select">Sort:</label>
-                    <select id="sort-select" onchange="applyFilters()">
+            <div class="dropdowns-row" style="margin-top: 0;">
+                <!-- Custom Sort Dropdown -->
+                <div class="custom-dropdown" id="sort-dropdown-wrapper">
+                    <div class="dropdown-trigger" onclick="toggleCustomDropdown('sort-menu', event)">
+                        <span class="material-symbols-outlined dropdown-icon">sort</span>
+                        <span id="sort-label">Most Popular</span>
+                        <span class="material-symbols-outlined dropdown-arrow">expand_more</span>
+                    </div>
+                    <div class="custom-dropdown-menu" id="sort-menu">
+                        <div class="custom-option" onclick="selectCustomOption('sort', 'popularity.desc', 'Most Popular')">Most Popular</div>
+                        <div class="custom-option" onclick="selectCustomOption('sort', 'first_air_date.desc', 'Newest Release')">Newest Release</div>
+                        <div class="custom-option" onclick="selectCustomOption('sort', 'vote_average.desc', 'Highest Rated')">Highest Rated</div>
+                    </div>
+                    <!-- Hidden input to keep compatibility with existing filter logic -->
+                    <select id="sort-select" style="display: none;" onchange="applyFilters()">
                         <option value="popularity.desc">Most Popular</option>
                         <option value="first_air_date.desc">Newest Release</option>
                         <option value="vote_average.desc">Highest Rated</option>
                     </select>
                 </div>
-                <div class="genre-container">
-                    <label for="genre-select">Genre:</label>
-                    <select id="genre-select" onchange="applyFilters()">
+
+                <!-- Custom Genre Dropdown -->
+                <div class="custom-dropdown" id="genre-dropdown-wrapper">
+                    <div class="dropdown-trigger" onclick="toggleCustomDropdown('genre-menu', event)">
+                        <span class="material-symbols-outlined dropdown-icon">category</span>
+                        <span id="genre-label">All Genres</span>
+                        <span class="material-symbols-outlined dropdown-arrow">expand_more</span>
+                    </div>
+                    <div class="custom-dropdown-menu" id="genre-menu">
+                        <!-- Options will be populated via JS -->
+                        <div class="custom-option" onclick="selectCustomOption('genre', '', 'All Genres')">All Genres</div>
+                    </div>
+                    <!-- Hidden input for existing logic -->
+                    <select id="genre-select" style="display: none;" onchange="applyFilters()">
                         <option value="">All Genres</option>
                     </select>
                 </div>
             </div>
         </div>
-    </header>
-
-    <div class="filters" id="filters">
-        <button class="network-btn active" onclick="fetchShows('213', this, 1)">Netflix</button>
-        <button class="network-btn" onclick="fetchShows('1024', this, 1)">Amazon Prime</button>
-        <button class="network-btn" onclick="fetchShows('49', this, 1)">HBO</button>
-        <button class="network-btn" onclick="fetchShows('2552', this, 1)">Apple TV+</button>
-        <button class="network-btn" onclick="fetchShows('453', this, 1)">Hulu</button>
-        <button class="network-btn" onclick="fetchShows('2739', this, 1)">Disney+</button>
-        <button class="fav-filter-btn" onclick="showFavorites(this)">⭐ My Favorites</button>
-        <button class="watched-filter-btn" onclick="showWatched(this)">✔️ Watched Shows</button>
     </div>
 
-    <div class="shows-grid" id="shows-grid"></div>
+    <div class="filters-wrapper">
+        <div class="filters" id="filters">
+            <button class="network-btn active" onclick="fetchShows('213', this, 1)" title="Netflix">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" alt="Netflix">
+            </button>
+            <button class="network-btn" onclick="fetchShows('1024', this, 1)" title="Amazon Prime">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/1/11/Amazon_Prime_Video_logo.svg" alt="Amazon Prime" class="prime-logo">
+            </button>
+            <button class="network-btn" onclick="fetchShows('49', this, 1)" title="HBO">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/d/de/HBO_logo.svg" alt="HBO" class="theme-icon">
+            </button>
+            <button class="network-btn" onclick="fetchShows('2552', this, 1)" title="Apple TV+">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/2/28/Apple_TV_Plus_Logo.svg" alt="Apple TV+" class="theme-icon">
+            </button>
+            <button class="network-btn" onclick="fetchShows('453', this, 1)" title="Hulu">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Hulu_logo_%282018%29.svg" alt="Hulu">
+            </button>
+            <button class="network-btn" onclick="fetchShows('2739', this, 1)" title="Disney+">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/64/Disney%2B_2024.svg" alt="Disney+" class="disney-logo">
+            </button>
+            <button class="network-btn" onclick="fetchShows('3353', this, 1)" title="Peacock">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/d/d3/NBCUniversal_Peacock_Logo.svg" alt="Peacock" class="peacock-logo">
+            </button>
+            <button class="network-btn" onclick="fetchShows('4330', this, 1)" title="Paramount+">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Paramount_Plus.svg" alt="Paramount+" class="paramount-logo">
+            </button>
+            <button class="network-btn" onclick="fetchShows('174', this, 1)" title="AMC">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/1/1d/Amc_logo.svg" alt="AMC">
+            </button>
+        </div>
+    </div>
+    
+    <div id="tracker-sub-nav" class="tracker-sub-nav" style="display: none;">
+        <div class="sub-nav-container">
+            <button class="sub-filter-btn active" onclick="filterTracker('watching', this)">
+                <span class="material-symbols-outlined">play_circle</span> Watching
+            </button>
+            <button class="sub-filter-btn" onclick="filterTracker('downloaded', this)">
+                <span class="material-symbols-outlined">download_for_offline</span> Downloaded
+            </button>
+            <button class="sub-filter-btn" onclick="filterTracker('plan', this)">
+                <span class="material-symbols-outlined">schedule</span> Watchlist
+            </button>
+            <button class="sub-filter-btn" onclick="filterTracker('completed', this)">
+                <span class="material-symbols-outlined">task_alt</span> Completed
+            </button>
+            <button class="sub-filter-btn" onclick="filterTracker('dropped', this)">
+                <span class="material-symbols-outlined">cancel</span> Dropped
+            </button>
+            <div class="sub-nav-divider"></div>
+            <button class="sub-filter-btn stats-btn" onclick="showStats(this)">
+                <span class="material-symbols-outlined">bar_chart</span> Watch Stats
+            </button>
+        </div>
+    </div>
 
+    <div class="stats-container" id="stats-container" style="display: none;">
+        <div class="stats-header">
+            <h2>Your Watching Statistics</h2>
+            <p>A comprehensive breakdown of your viewing habits.</p>
+        </div>
+        <div class="stats-dashboard" id="stats-dashboard"></div>
+        <div id="stats-loader" class="stats-loader" style="display: none;">
+            <div class="spinner"></div>
+            <p>Crunching your viewing data...</p>
+        </div>
+    </div>
+
+    <div id="tracker-sort-wrapper" class="tracker-sort-floating" style="display: none;">
+        <button class="sort-icon-btn" onclick="toggleTrackerSortMenu()" title="Sort Shows">
+            <span class="material-symbols-outlined">sort</span>
+        </button>
+        <div id="tracker-sort-menu" class="sort-menu-dropdown">
+            <div class="sort-option" onclick="applyTrackerSort('newest')">Last Added</div>
+            <div class="sort-option" onclick="applyTrackerSort('oldest')">Oldest</div>
+        </div>
+    </div>
+    <div id="shows-grid" class="shows-grid"></div>
+    <div id="loading-trigger" style="height: 10px; margin-bottom: 50px;"></div>
+
+    <!-- The Modal -->
     <div id="show-modal" class="modal">
-        <div class="modal-content" id="modal-content-box">
+        <div class="modal-content cinematic-modal" id="modal-content-box">
             <span class="close-btn" onclick="closeModal()">&times;</span>
-            <img id="modal-img" src="" alt="Poster" class="modal-poster">
             
-            <div class="modal-details">
-                <h2 id="modal-title">Show Title</h2>
-                
-                <div class="modal-meta-info">
-                    <span id="modal-date" class="meta-badge">📅 Loading...</span>
-                    <span id="modal-status" class="meta-badge">Status: Loading...</span>
-                    <span id="modal-seasons" class="meta-badge">Seasons: Loading...</span>
-                    <span id="modal-country" class="meta-badge">🌍 Origin: Loading...</span>
+            <div class="modal-body-wrapper">
+                <div class="modal-sidebar">
+                    <img id="modal-img" src="" alt="Poster" class="modal-poster">
+                    
+                    <div class="modal-actions glass-panel" style="margin-top: 10px; display: flex; flex-direction: row; gap: 8px; padding: 10px; border-radius: 12px; align-items: center; justify-content: space-between;">
+                        <a id="trailer-btn" class="trailer-btn" href="#" target="_blank" style="display: none; flex: 1; height: 36px; padding: 0; font-size: 0.85rem; font-weight: 700; text-align: center; justify-content: center; gap: 4px;"><span class="material-symbols-outlined" style="font-size: 18px;">play_circle</span> Trailer</a>
+                        <a id="stremio-btn" class="stremio-btn" href="#" title="Play on Stremio" style="display: none; flex: 1; height: 36px; padding: 0; font-size: 0.85rem; text-align: center; justify-content: center; gap: 4px;">
+                            <img src="https://www.stremio.com/website/stremio-logo-small.png" alt="Stremio" style="height: 16px; margin-right: 0px; vertical-align: middle;"> Stremio
+                        </a>
+                    </div>
                 </div>
                 
-                <div id="modal-genres" class="modal-genres"></div>
-                
-                <div class="ratings-box">
-                    <div class="rating-item" style="color: #01b4e4;">
-                        <span class="rating-label">TMDB</span> 
-                        <span class="rating-value" style="display: flex; align-items: center; gap: 6px;">
-                            <img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_square_1-5bdc75aaebeb75dc7ae79426ddd9be3b2be1e342510f8202baf6bffa71d7f5c4.svg" alt="TMDB" style="height: 14px;">
-                            <span id="modal-tmdb-rating">...</span>
-                        </span>
-                        <span id="modal-tmdb-votes" class="rating-votes"></span>
+                <div class="modal-details">
+                    <h2 id="modal-title" class="cinematic-title">Show Title</h2>
+                    
+                    <div class="modal-meta-info">
+                        <span id="modal-date" class="meta-badge">📅 Loading...</span>
+                        <span id="modal-status" class="meta-badge">Status: Loading...</span>
+                        <span id="modal-seasons" class="meta-badge">Seasons: Loading...</span>
+                        <span id="modal-country" class="meta-badge">🌍 Origin: Loading...</span>
                     </div>
                     
-                    <div class="rating-item" style="color: #d97706;">
-                        <span class="rating-label">IMDb</span> 
-                        <span class="rating-value" style="display: flex; align-items: center; gap: 6px;">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg" alt="IMDb" style="height: 16px; border-radius: 2px;">
-                            <span id="modal-imdb-rating">...</span>
-                        </span>
-                        <span id="modal-imdb-votes" class="rating-votes"></span>
+                    <div id="modal-genres" class="modal-genres"></div>
+                    
+                    <div class="overview-section" style="margin-bottom: 20px;">
+                        <h3 class="section-heading">Overview</h3>
+                        <p id="modal-overview" class="modal-overview"></p>
                     </div>
                     
-                    <div class="rating-item" style="color: #ed1c24;">
-                        <span class="rating-label">Trakt</span> 
-                        <span class="rating-value" style="display: flex; align-items: center; gap: 6px;">
-                            <img src="https://cdn.simpleicons.org/trakt/ed1c24" alt="Trakt" style="height: 16px;">
-                            <span id="modal-trakt-rating">...</span>
-                        </span>
-                        <span id="modal-trakt-votes" class="rating-votes"></span>
+                    <div class="ratings-box">
+                        <div class="rating-item tmdb">
+                            <span class="rating-label">TMDB</span> 
+                            <span class="rating-value">
+                                <img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_square_1-5bdc75aaebeb75dc7ae79426ddd9be3b2be1e342510f8202baf6bffa71d7f5c4.svg" alt="TMDB">
+                                <span id="modal-tmdb-rating">...</span>
+                            </span>
+                            <span id="modal-tmdb-votes" class="rating-votes"></span>
+                        </div>
+                        <div class="rating-item imdb">
+                            <span class="rating-label">IMDb</span> 
+                            <span class="rating-value">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg" alt="IMDb">
+                                <span id="modal-imdb-rating">...</span>
+                            </span>
+                            <span id="modal-imdb-votes" class="rating-votes"></span>
+                        </div>
+                        <div class="rating-item trakt">
+                            <span class="rating-label">Trakt</span> 
+                            <span class="rating-value">
+                                <img src="https://cdn.simpleicons.org/trakt/ed1c24" alt="Trakt">
+                                <span id="modal-trakt-rating">...</span>
+                            </span>
+                            <span id="modal-trakt-votes" class="rating-votes"></span>
+                        </div>
                     </div>
-                </div>
-
-                <h3>Overview:</h3>
-                <p id="modal-overview" class="modal-overview"></p>
-                
-                <div class="action-buttons">
-                    <a id="trailer-btn" class="trailer-btn" href="#" target="_blank" style="display: none;">▶ Watch Trailer</a>
-                    <button id="favorite-btn" class="fav-btn">❤️ Add to Favorites</button>
-                </div>
-
-                <div id="seasons-tracker-container" style="display: none; width: 100%;">
-                    <div class="seasons-section-title">Seasons</div>
-                    <div id="seasons-list" class="seasons-container"></div>
-                </div>
-
-                <div class="share-row">
-                    <span class="share-label">Share on:</span>
-                    <a id="share-wa" class="share-btn share-wa" target="_blank" href="#" title="WhatsApp">
-                        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
-                        </a>
-                        <a id="share-tw" class="share-btn share-tw" target="_blank" href="#" title="X">
-                            <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                        </a>
-                        <a id="stremio-btn" class="stremio-btn" href="#" title="Play on Stremio" style="display: none;">
-                            <span class="material-symbols-outlined">play_circle</span>
-                            Open in Stremio
-                        </a>
+                    
+                    <div id="seasons-tracker-container" style="display: none; width: 100%; margin-top: 30px;">
+                        <h3 class="section-heading">Seasons</h3>
+                        <div id="seasons-list" class="seasons-container"></div>
                     </div>
-                </div>
 
-                <div class="recommendations-section" id="rec-section" style="display: none;">
-                    <h3>Similar Shows</h3>
-                    <div class="rec-container" id="rec-container"></div>
+                    <div class="cast-section" id="cast-section" style="display: none; margin-top: 30px;">
+                        <h3 class="section-heading">Cast & Crew</h3>
+                        <div class="cast-container" id="cast-container"></div>
+                    </div>
+
+                    <div class="recommendations-section" id="rec-section" style="display: none; margin-top: 30px;">
+                        <h3 class="section-heading">Similar Shows</h3>
+                        <div class="rec-container" id="rec-container"></div>
+                    </div>
                 </div>
             </div>
         </div>
-        <script>
-        const TMDB_API_KEY = 'e7be99b2666a862f16f0a6b5441c150b';
-        const OMDB_API_KEY = '75583472'; // هذا المفتاح حده 1000 طلب يومياً (سيتجدد غداً)
-        const TRAKT_CLIENT_ID = '7357626e48140b10327a133e653fda5d2c73fd27ab8af345c3c9a18584c171ad';  
-        const BASE_URL = 'https://api.themoviedb.org/3';
-        const IMG_URL = 'https://image.tmdb.org/t/p/w500';
+    </div>
 
-        const themeToggleBtn = document.getElementById('theme-toggle');
-        const currentTheme = localStorage.getItem('theme') || 'light';
-        
-        if (currentTheme === 'dark') {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            themeToggleBtn.innerHTML = '☀️ Light Mode';
-        }
+    <div id="trailer-modal" class="modal" style="z-index: 6000;">
+        <div class="modal-content" style="max-width: 900px; padding: 0; overflow: hidden; background: black; border: none; align-items: center; justify-content: center;">
+            <span class="close-btn" onclick="closeTrailerModal()" style="color: white; right: 15px; top: 10px; font-size: 40px;">&times;</span>
+            <div id="trailer-video-container" style="position: relative; width: 100%; padding-bottom: 56.25%; height: 0;">
+                <iframe id="trailer-iframe" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
 
-        themeToggleBtn.addEventListener('click', () => {
-            let theme = document.documentElement.getAttribute('data-theme');
-            if (theme === 'dark') {
-                document.documentElement.setAttribute('data-theme', 'light');
-                localStorage.setItem('theme', 'light');
-                themeToggleBtn.innerHTML = '🌙 Dark Mode';
-            } else {
-                document.documentElement.setAttribute('data-theme', 'dark');
-                localStorage.setItem('theme', 'dark');
-                themeToggleBtn.innerHTML = '☀️ Light Mode';
-            }
-        });
-
-        const grid = document.getElementById('shows-grid');
-        const modal = document.getElementById('show-modal');
-
-        let currentPage = 1;
-        let currentMode = 'network';
-        let currentNetwork = '213';
-        let currentSearchQuery = '';
-        let isLoading = false;
-        let hasMorePages = true;
-        let imdbCache = JSON.parse(sessionStorage.getItem('imdbCache')) || {};
-
-        function formatVotes(votesStr) {
-            if (!votesStr || votesStr === "N/A") return "";
-            const votes = parseInt(votesStr.toString().replace(/,/g, ''));
-            if (isNaN(votes)) return "";
-            if (votes >= 1000000) return (votes / 1000000).toFixed(1) + 'M';
-            if (votes >= 1000) return (votes / 1000).toFixed(1).replace('.0', '') + 'K';
-            return votes.toString();
-        }
-
-        async function fetchGenres() {
-            try {
-                const response = await fetch(`${BASE_URL}/genre/tv/list?api_key=${TMDB_API_KEY}&language=en-US`);
-                const data = await response.json();
-                const genreSelect = document.getElementById('genre-select');
-                data.genres.forEach(genre => {
-                    const option = document.createElement('option');
-                    option.value = genre.id;
-                    option.textContent = genre.name;
-                    genreSelect.appendChild(option);
-                });
-            } catch (error) { console.error("Error loading genres", error); }
-        }
-        fetchGenres();
-
-        function applyFilters() {
-            if (currentMode === 'network') fetchShows(currentNetwork, document.querySelector('.filters button.active'), 1);
-            else if (currentMode === 'search') performSearch(1);
-            else if (currentMode === 'favorites') showFavorites(document.querySelector('.fav-filter-btn'));
-            else if (currentMode === 'watched') showWatched(document.querySelector('.watched-filter-btn'));
-        }
-
-        function showSkeletons(count = 20, clearGrid = false) {
-            if (clearGrid) grid.innerHTML = '';
-            for (let i = 0; i < count; i++) {
-                const skeleton = document.createElement('div');
-                skeleton.className = 'skeleton-card skeleton-item';
-                skeleton.innerHTML = `
-                    <div class="skeleton-img skeleton"></div>
-                    <div class="skeleton-info">
-                        <div class="skeleton-text skeleton"></div>
-                        <div class="skeleton-text-small skeleton"></div>
-                    </div>
-                `;
-                grid.appendChild(skeleton);
-            }
-        }
-
-        function removeSkeletons() {
-            const skeletons = document.querySelectorAll('.skeleton-item');
-            skeletons.forEach(s => s.remove());
-        }
-
-        async function fetchShows(networkId, btnElement, page = 1) {
-            if (isLoading) return;
-            isLoading = true;
-            currentMode = 'network';
-            currentNetwork = networkId;
-            currentPage = page;
-
-            if (page === 1) {
-                document.getElementById('search-input').value = '';
-                hasMorePages = true;
-                showSkeletons(20, true);
-            } else {
-                showSkeletons(8, false);
-            }
-            
-            if (btnElement) {
-                document.querySelectorAll('.filters button').forEach(btn => btn.classList.remove('active'));
-                btnElement.classList.add('active');
-            }
-
-            const sortValue = document.getElementById('sort-select').value;
-            const genreValue = document.getElementById('genre-select').value;
-            
-            let extraParams = '';
-            if (sortValue === 'vote_average.desc') extraParams = '&vote_count.gte=200';
-            else if (sortValue === 'first_air_date.desc') extraParams = '&vote_count.gte=5';
-            if (genreValue) extraParams += `&with_genres=${genreValue}`;
-
-            try {
-                const response = await fetch(`${BASE_URL}/discover/tv?api_key=${TMDB_API_KEY}&language=en-US&sort_by=${sortValue}${extraParams}&with_networks=${networkId}&page=${page}`);
-                if (!response.ok) throw new Error('Connection error.');
-                const data = await response.json();
-                
-                removeSkeletons();
-                displayShows(data.results);
-                
-                hasMorePages = data.page < data.total_pages;
-                if (data.results.length === 0 && page === 1) grid.innerHTML = '<div class="loading-message">No shows found for this filter.</div>';
-            } catch (error) {
-                removeSkeletons();
-                if (page === 1) grid.innerHTML = `<div class="loading-message" style="color: var(--accent-red);">${error.message}</div>`;
-            }
-            isLoading = false;
-        }
-
-        async function performSearch(page = 1) {
-            if (isLoading) return;
-            isLoading = true;
-            currentMode = 'search';
-            currentPage = page;
-
-            if (page === 1) {
-                currentSearchQuery = document.getElementById('search-input').value.trim();
-                hasMorePages = true;
-                showSkeletons(20, true);
-                document.querySelectorAll('.filters button').forEach(btn => btn.classList.remove('active'));
-            } else {
-                showSkeletons(8, false);
-            }
-
-            if (!currentSearchQuery) { isLoading = false; removeSkeletons(); return; }
-
-            try {
-                const response = await fetch(`${BASE_URL}/search/tv?api_key=${TMDB_API_KEY}&language=en-US&query=${encodeURIComponent(currentSearchQuery)}&page=${page}`);
-                const data = await response.json();
-                
-                removeSkeletons();
-                if (page === 1 && data.results.length === 0) {
-                    grid.innerHTML = '<div class="loading-message">No shows found. Try another name!</div>';
-                    isLoading = false; return;
-                }
-
-                let sortedResults = data.results;
-                const genreValue = document.getElementById('genre-select').value;
-                if (genreValue) sortedResults = sortedResults.filter(show => show.genre_ids && show.genre_ids.includes(parseInt(genreValue)));
-
-                const sortValue = document.getElementById('sort-select').value;
-                if (sortValue === 'first_air_date.desc') sortedResults.sort((a, b) => new Date(b.first_air_date || 0) - new Date(a.first_air_date || 0));
-                else if (sortValue === 'vote_average.desc') sortedResults.sort((a, b) => b.vote_average - a.vote_average);
-                else sortedResults.sort((a, b) => b.popularity - a.popularity);
-
-                if (sortedResults.length === 0 && page === 1) {
-                    grid.innerHTML = '<div class="loading-message">No results match this genre.</div>';
-                } else {
-                    displayShows(sortedResults);
-                }
-                hasMorePages = data.page < data.total_pages;
-            } catch (error) {
-                removeSkeletons();
-                if (page === 1) grid.innerHTML = `<div class="loading-message" style="color: var(--accent-red);">${error.message}</div>`;
-            }
-            isLoading = false;
-        }
-
-        function handleKeyPress(event) { if (event.key === 'Enter') performSearch(1); }
-
-        function showFavorites(btnElement) {
-            currentMode = 'favorites';
-            document.getElementById('search-input').value = '';
-            hasMorePages = false; 
-            
-            if (btnElement) {
-                document.querySelectorAll('.filters button').forEach(btn => btn.classList.remove('active'));
-                btnElement.classList.add('active');
-            }
-
-            grid.innerHTML = '';
-            let favorites = JSON.parse(localStorage.getItem('my_favorite_shows')) || [];
-            
-            const genreValue = document.getElementById('genre-select').value;
-            if (genreValue) favorites = favorites.filter(show => show.genre_ids && show.genre_ids.includes(parseInt(genreValue)));
-
-            if (favorites.length === 0) {
-                grid.innerHTML = '<div class="loading-message">No favorite shows found here. ⭐</div>';
-                return;
-            }
-
-            const sortValue = document.getElementById('sort-select').value;
-            if (sortValue === 'first_air_date.desc') favorites.sort((a, b) => new Date(b.first_air_date || 0) - new Date(a.first_air_date || 0));
-            else if (sortValue === 'vote_average.desc') favorites.sort((a, b) => b.vote_average - a.vote_average);
-            else favorites.sort((a, b) => b.popularity - a.popularity);
-
-            displayShows(favorites);
-        }
-
-        function showWatched(btnElement) {
-            currentMode = 'watched';
-            document.getElementById('search-input').value = '';
-            hasMorePages = false; 
-            
-            if (btnElement) {
-                document.querySelectorAll('.filters button').forEach(btn => btn.classList.remove('active'));
-                btnElement.classList.add('active');
-            }
-
-            grid.innerHTML = '';
-            let watched = JSON.parse(localStorage.getItem('my_watched_shows')) || [];
-            
-            const genreValue = document.getElementById('genre-select').value;
-            if (genreValue) watched = watched.filter(show => show.genre_ids && show.genre_ids.includes(parseInt(genreValue)));
-
-            if (watched.length === 0) {
-                grid.innerHTML = '<div class="loading-message">You haven\'t tracked any shows yet. ✔️</div>';
-                return;
-            }
-
-            const sortValue = document.getElementById('sort-select').value;
-            if (sortValue === 'first_air_date.desc') watched.sort((a, b) => new Date(b.first_air_date || 0) - new Date(a.first_air_date || 0));
-            else if (sortValue === 'vote_average.desc') watched.sort((a, b) => b.vote_average - a.vote_average);
-            else watched.sort((a, b) => b.popularity - a.popularity);
-
-            displayShows(watched);
-        }
-
-        window.addEventListener('scroll', () => {
-            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500) {
-                if (!isLoading && hasMorePages) {
-                    if (currentMode === 'network') fetchShows(currentNetwork, null, currentPage + 1);
-                    else if (currentMode === 'search') performSearch(currentPage + 1);
-                }
-            }
-        });
-
-        async function fetchIMDbForCard(tmdbId) {
-            const span = document.getElementById(`card-imdb-${tmdbId}`);
-            if (!span) return;
-            
-            if (imdbCache[tmdbId]) {
-                span.innerText = imdbCache[tmdbId];
-                return;
-            }
-
-            try {
-                const extRes = await fetch(`${BASE_URL}/tv/${tmdbId}/external_ids?api_key=${TMDB_API_KEY}`);
-                const extData = await extRes.json();
-                const imdbId = extData.imdb_id;
-                
-                if (!imdbId) {
-                    imdbCache[tmdbId] = "N/A";
-                    if(document.getElementById(`card-imdb-${tmdbId}`)) document.getElementById(`card-imdb-${tmdbId}`).innerText = "N/A";
-                    return;
-                }
-                
-                const omdbRes = await fetch(`https://www.omdbapi.com/?i=${imdbId}&apikey=${OMDB_API_KEY}`);
-                const omdbData = await omdbRes.json();
-                
-                let rating = "N/A";
-                if (omdbData.Response === "True" && omdbData.imdbRating && omdbData.imdbRating !== "N/A") {
-                    rating = omdbData.imdbRating;
-                }
-                
-                imdbCache[tmdbId] = rating;
-                sessionStorage.setItem('imdbCache', JSON.stringify(imdbCache));
-                
-                if(document.getElementById(`card-imdb-${tmdbId}`)) {
-                    document.getElementById(`card-imdb-${tmdbId}`).innerText = rating;
-                }
-            } catch (error) { }
-        }
-
-        function displayShows(showsToDisplay) {
-            let watchedShows = JSON.parse(localStorage.getItem('my_watched_shows')) || [];
-
-            showsToDisplay.forEach(show => {
-                const card = document.createElement('div');
-                card.className = 'show-card';
-                card.id = `card-${show.id}`;
-                card.onclick = () => openModal(show);
-                
-                const posterPath = show.poster_path ? IMG_URL + show.poster_path : 'https://via.placeholder.com/500x750?text=No+Image';
-                const releaseYear = show.first_air_date ? show.first_air_date.substring(0,4) : 'N/A';
-                const tmdbRating = show.vote_average ? show.vote_average.toFixed(1) : 'NR';
-                
-                const savedWatched = watchedShows.find(w => w.id === show.id);
-                let badgeHTML = '';
-                
-                if (savedWatched && savedWatched.watched_seasons && savedWatched.watched_seasons.length > 0) {
-                    badgeHTML = `<div class="watched-badge" style="background-color: #8b5cf6;">✔️ S: ${savedWatched.watched_seasons.length}</div>`;
-                } else if (savedWatched && savedWatched.watched_episodes > 0) {
-                    badgeHTML = `<div class="watched-badge" style="background-color: #3b82f6;">📺 Tracked</div>`;
-                } else if (savedWatched && (savedWatched.watch_status === 'completed' || savedWatched.watched_progress === 'all' || savedWatched.watched_progress === '0')) {
-                    badgeHTML = `<div class="watched-badge" style="background-color: #10b981;">✔️ Watched</div>`;
-                }
-
-                card.innerHTML = `
-                    ${badgeHTML}
-                    <img src="${posterPath}" alt="${show.name}" class="show-image" loading="lazy">
-                    <div class="show-info">
-                        <h3 class="show-title">${show.name}</h3>
-                        <div class="card-meta-footer">
-                            <div class="rating-pill">
-                                <img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_square_1-5bdc75aaebeb75dc7ae79426ddd9be3b2be1e342510f8202baf6bffa71d7f5c4.svg" alt="TMDB" class="icon-tmdb">
-                                <span>${tmdbRating}</span>
-                            </div>
-                            <div class="rating-pill">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg" alt="IMDb" class="icon-imdb">
-                                <span id="card-imdb-${show.id}">${imdbCache[show.id] || '⏳'}</span>
-                            </div>
-                            <div class="rating-pill">📅 ${releaseYear}</div>
-                        </div>
-                    </div>
-                `;
-                grid.appendChild(card);
-                
-                if (!imdbCache[show.id]) fetchIMDbForCard(show.id);
-            });
-        }
-
-        async function openModal(show) {
-            document.getElementById('modal-title').innerText = show.name;
-            document.getElementById('modal-date').innerText = '📅 ' + (show.first_air_date || 'N/A');
-            document.getElementById('modal-overview').innerText = show.overview ? show.overview : 'Overview not available.';
-            document.getElementById('modal-status').innerText = 'Status: Loading...';
-            document.getElementById('modal-seasons').innerText = 'Seasons: Loading...';
-
-            const countryCode = (show.origin_country && show.origin_country.length > 0) ? show.origin_country[0] : null;
-            if (countryCode) {
-                const countryName = new Intl.DisplayNames(['en'], { type: 'region' }).of(countryCode);
-                const flagUrl = `https://flagcdn.com/20x15/${countryCode.toLowerCase()}.png`;
-                document.getElementById('modal-country').innerHTML = `<img src="${flagUrl}" alt="${countryCode}" style="vertical-align: middle; border-radius: 2px; margin-right: 5px;"> ${countryName}`;
-            } else {
-                document.getElementById('modal-country').innerHTML = `🌍 Unknown`;
-            }
-            
-            // --- تصفير وتعبئة التقييمات ---
-            document.getElementById('modal-tmdb-rating').innerText = show.vote_average ? show.vote_average.toFixed(1) + ' / 10' : 'N/A';
-            document.getElementById('modal-tmdb-votes').innerText = show.vote_count ? formatVotes(show.vote_count) : '';
-
-            document.getElementById('modal-imdb-rating').innerText = imdbCache[show.id] ? imdbCache[show.id] + ' / 10' : '⏳';
-            document.getElementById('modal-imdb-votes').innerText = '';
-
-            document.getElementById('modal-trakt-rating').innerText = '⏳';
-            document.getElementById('modal-trakt-votes').innerText = '';
-
-            const stremioBtn = document.getElementById('stremio-btn');
-            stremioBtn.style.display = 'none'; // نخفيه حتى نجد الـ ID
-
-            // جلب المعرفات مرة واحدة فقط (لتخفيف الضغط على السيرفرات)
-            fetch(`${BASE_URL}/tv/${show.id}/external_ids?api_key=${TMDB_API_KEY}`)
-            .then(res => res.json())
-            .then(extData => {
-                const imdbId = extData.imdb_id;
-                
-                if (imdbId) {
-                    // تفعيل زر Stremio
-                    stremioBtn.href = `stremio:///detail/series/${imdbId}/${imdbId}`;
-                    stremioBtn.style.display = 'inline-flex';
-
-                    // 1. جلب تقييم Trakt
-                    fetch(`https://api.trakt.tv/shows/${imdbId}/ratings`, {
-                        headers: { "Content-Type": "application/json", "trakt-api-version": "2", "trakt-api-key": TRAKT_CLIENT_ID }
-                    })
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data && data.rating) {
-                            document.getElementById('modal-trakt-rating').innerText = data.rating.toFixed(1) + ' / 10';
-                            document.getElementById('modal-trakt-votes').innerText = data.votes ? formatVotes(data.votes) : '';
-                        } else {
-                            document.getElementById('modal-trakt-rating').innerText = 'N/A';
-                        }
-                    }).catch(err => document.getElementById('modal-trakt-rating').innerText = 'Error');
-                    
-                    // 2. جلب تقييم IMDb
-                    fetch(`https://www.omdbapi.com/?i=${imdbId}&apikey=${OMDB_API_KEY}`)
-                    .then(res => res.json())
-                    .then(omdbData => {
-                        if (omdbData.Response === "True" && omdbData.imdbRating && omdbData.imdbRating !== "N/A") {
-                            document.getElementById('modal-imdb-rating').innerText = omdbData.imdbRating + ' / 10';
-                            document.getElementById('modal-imdb-votes').innerText = omdbData.imdbVotes ? formatVotes(omdbData.imdbVotes) : '';
-                            
-                            // تحديث الكاش والكرت الخارجي
-                            imdbCache[show.id] = omdbData.imdbRating;
-                            sessionStorage.setItem('imdbCache', JSON.stringify(imdbCache));
-                            const cardImdbSpan = document.getElementById(`card-imdb-${show.id}`);
-                            if(cardImdbSpan) cardImdbSpan.innerText = omdbData.imdbRating;
-                        } else {
-                            document.getElementById('modal-imdb-rating').innerText = 'N/A';
-                        }
-                    }).catch(err => document.getElementById('modal-imdb-rating').innerText = 'Error');
-
-                } else {
-                    document.getElementById('modal-trakt-rating').innerText = 'N/A';
-                    document.getElementById('modal-imdb-rating').innerText = 'N/A';
-                }
-            });
-            
-            document.getElementById('modal-genres').innerHTML = '';
-            const posterPath = show.poster_path ? IMG_URL + show.poster_path : 'https://via.placeholder.com/500x750?text=No+Image';
-            document.getElementById('modal-img').src = posterPath;
-            
-            const trailerBtn = document.getElementById('trailer-btn');
-            trailerBtn.style.display = 'none';
-            document.getElementById('rec-section').style.display = 'none';
-            document.getElementById('rec-container').innerHTML = '';
-
-            const backdropUrl = show.backdrop_path ? `https://image.tmdb.org/t/p/w1280${show.backdrop_path}` : '';
-            const modalContentBox = document.getElementById('modal-content-box');
-            if (backdropUrl) {
-                modalContentBox.style.backgroundImage = `linear-gradient(to bottom, var(--modal-overlay-top), var(--modal-overlay-bottom)), url('${backdropUrl}')`;
-            } else {
-                modalContentBox.style.backgroundImage = 'none';
-            }
-
-            let favorites = JSON.parse(localStorage.getItem('my_favorite_shows')) || [];
-            let favBtn = document.getElementById('favorite-btn');
-            let newFavBtn = favBtn.cloneNode(true);
-            favBtn.parentNode.replaceChild(newFavBtn, favBtn);
-            
-            const isFav = favorites.some(f => f.id === show.id);
-            newFavBtn.innerHTML = isFav ? '❌ Remove Favorite' : '❤️ Add to Favorites';
-            newFavBtn.onclick = (e) => {
-                e.preventDefault();
-                favorites = JSON.parse(localStorage.getItem('my_favorite_shows')) || [];
-                const index = favorites.findIndex(f => f.id === show.id);
-                if (index !== -1) {
-                    favorites.splice(index, 1);
-                    newFavBtn.innerHTML = '❤️ Add to Favorites';
-                    const card = document.getElementById(`card-${show.id}`);
-                    if (currentMode === 'favorites' && card) card.style.display = 'none';
-                } else {
-                    favorites.push(show);
-                    newFavBtn.innerHTML = '❌ Remove Favorite';
-                }
-                localStorage.setItem('my_favorite_shows', JSON.stringify(favorites));
-            };
-
-            const siteUrl = encodeURIComponent("https://ahmad2681a1.github.io/shows-tracker/");
-            const shareText = encodeURIComponent(`📺 I just discovered "${show.name}"!\n⭐ Rating: ${show.vote_average ? show.vote_average.toFixed(1) : 'N/A'}\nCheck it out here:\n`);
-            document.getElementById('share-wa').href = `https://api.whatsapp.com/send?text=${shareText}%20${siteUrl}`;
-            document.getElementById('share-tw').href = `https://twitter.com/intent/tweet?text=${shareText}&url=${siteUrl}`;
-
-            modal.style.display = 'flex';
-            document.querySelector('.modal-content').scrollTop = 0;
-            
-            fetch(`${BASE_URL}/tv/${show.id}?api_key=${TMDB_API_KEY}&language=en-US`)
-                .then(res => res.json())
-                .then(details => {
-                    document.getElementById('modal-status').innerText = 'Status: ' + (details.status || 'Unknown');
-                    document.getElementById('modal-seasons').innerText = 'Seasons: ' + (details.number_of_seasons || 'N/A');
-                    
-                    const genresContainer = document.getElementById('modal-genres');
-                    if (details.genres && details.genres.length > 0) {
-                        genresContainer.innerHTML = details.genres.map(g => 
-                             `<span class="genre-pill">${g.name}</span>`
-                        ).join('');
-                    }
-
-                    const seasonsTrackerContainer = document.getElementById('seasons-tracker-container');
-                    const seasonsList = document.getElementById('seasons-list');
-                    seasonsList.innerHTML = '';
-                    let validSeasons = details.seasons ? details.seasons.filter(s => s.episode_count > 0) : [];
-                    if (validSeasons.length > 0) {
-                        seasonsTrackerContainer.style.display = 'block';
-                        let list = JSON.parse(localStorage.getItem('my_watched_shows')) || [];
-                        let existingShow = list.find(w => w.id === show.id);
-                        let watchedSeasons = existingShow && existingShow.watched_seasons ? existingShow.watched_seasons : [];
-                        validSeasons.forEach(season => {
-                            const poster = season.poster_path ? IMG_URL + season.poster_path : (show.poster_path ? IMG_URL + show.poster_path : 'https://via.placeholder.com/130x195?text=No+Poster');
-                            const isWatched = watchedSeasons.includes(season.season_number);
-                            const seasonCard = document.createElement('div');
-                            seasonCard.className = 'season-card';
-                            seasonCard.innerHTML = `
-                                 <div class="season-poster-box">
-                                    <img src="${poster}" class="season-poster" alt="${season.name}" loading="lazy">
-                                    <div class="season-action-bar">
-                                        <button class="season-check-btn ${isWatched ? 'watched' : ''}" data-season="${season.season_number}" title="Mark Season as Watched">
-                                            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' ${isWatched ? '1' : '0'}; font-size: 22px;">check_circle</span>
-                                        </button>
-                                        <span class="season-ep-count">${season.episode_count} Ep</span>
-                                    </div>
-                                </div>
-                                <div class="season-info">
-                                     <p class="season-name">${season.name}</p>
-                                </div>
-                            `;
-                            seasonsList.appendChild(seasonCard);
-                        });
-
-                        seasonsList.querySelectorAll('.season-check-btn').forEach(btn => {
-                            btn.onclick = (e) => {
-                                const seasonNum = parseInt(btn.getAttribute('data-season'));
-                                const isCurrentlyWatched = btn.classList.contains('watched');
-                                if (isCurrentlyWatched) {
-                                    watchedSeasons = watchedSeasons.filter(s => s !== seasonNum);
-                                    btn.classList.remove('watched');
-                                    btn.querySelector('span').style.fontVariationSettings = "'FILL' 0";
-                                } else {
-                                    watchedSeasons.push(seasonNum);
-                                    btn.classList.add('watched');
-                                    btn.querySelector('span').style.fontVariationSettings = "'FILL' 1";
-                                }
-                                
-                                let currentList = JSON.parse(localStorage.getItem('my_watched_shows')) || [];
-                                let idx = currentList.findIndex(w => w.id === show.id);
-                                show.watched_seasons = watchedSeasons;
-                                if (watchedSeasons.length > 0) {
-                                    if (idx > -1) currentList[idx] = show;
-                                    else currentList.push(show);
-                                } else {
-                                    currentList = currentList.filter(w => w.id !== show.id);
-                                }
-                                localStorage.setItem('my_watched_shows', JSON.stringify(currentList));
-                                const card = document.getElementById(`card-${show.id}`);
-                                if (card) {
-                                    let oldBadge = card.querySelector('.watched-badge');
-                                    if (oldBadge) oldBadge.remove();
-                                    if (watchedSeasons.length > 0) {
-                                        let badge = document.createElement('div');
-                                        badge.className = 'watched-badge';
-                                        badge.style.backgroundColor = '#8b5cf6';
-                                        badge.innerText = `✔️ S: ${watchedSeasons.length}`;
-                                        card.insertBefore(badge, card.firstChild);
-                                    } else if (currentMode === 'watched') {
-                                        card.style.display = 'none';
-                                    }
-                                }
-                            };
-                        });
-                    } else {
-                        seasonsTrackerContainer.style.display = 'none';
-                    }
-                })
-                .catch((err) => {
-                    console.error("Error fetching details:", err);
-                    document.getElementById('modal-status').innerText = 'Status: N/A';
-                    document.getElementById('modal-seasons').innerText = 'Seasons: N/A';
-                });
-            
-            fetch(`${BASE_URL}/tv/${show.id}/videos?api_key=${TMDB_API_KEY}`) 
-                .then(res => res.json())
-                .then(data => {
-                    if (data.results && data.results.length > 0) {
-                        let trailer = data.results.find(vid => vid.site === 'YouTube' && vid.type === 'Trailer') || 
-                                      data.results.find(vid => vid.site === 'YouTube' && vid.type === 'Teaser') || 
-                                      data.results.find(vid => vid.site === 'YouTube');
-                        if (trailer) {
-                            trailerBtn.href = `https://www.youtube.com/watch?v=${trailer.key}`;
-                            trailerBtn.style.display = 'inline-flex';
-                        }
-                    }
-                });
-                
-            fetch(`${BASE_URL}/tv/${show.id}/recommendations?api_key=${TMDB_API_KEY}&language=en-US`)
-                .then(res => res.json())
-                .then(data => {
-                    if (data.results && data.results.length > 0) {
-                        const recContainer = document.getElementById('rec-container');
-                        recContainer.innerHTML = '';
-                        data.results.slice(0, 10).forEach(recShow => {
-                            if (!recShow.poster_path) return;
-                            const recCard = document.createElement('div');
-                            recCard.className = 'rec-card';
-                            recCard.onclick = () => { closeModal(); openModal(recShow); };
-                            recCard.innerHTML = `
-                                <img class="rec-img" src="${IMG_URL + recShow.poster_path}" alt="${recShow.name}" loading="lazy">
-                                <div class="rec-title">${recShow.name}</div>
-                            `;
-                            recContainer.appendChild(recCard);
-                        });
-                        if (recContainer.innerHTML !== '') document.getElementById('rec-section').style.display = 'block';
-                    }
-                });
-        }
-
-        function closeModal() { modal.style.display = 'none'; }
-        window.onclick = function(event) { if (event.target == modal) closeModal(); }
-
-        fetchShows('213', document.querySelector('.filters button.active'), 1);
-        </script>
-    </body>
-    </html>
+    <script src="script.js"></script>
+</body>
+</html>
