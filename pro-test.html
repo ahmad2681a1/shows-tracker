@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro Dashboard - Shows Tracker</title>
+    <style>
+        /* الألوان الاحترافية (SaaS Light Theme) */
+        :root {
+            --bg-main: #f3f4f6; /* رمادي فاتح جداً مريح للعين */
+            --bg-card: #ffffff;
+            --text-dark: #111827;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+            --primary: #4f46e5; /* أزرق/بنفسجي احترافي */
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-main);
+            color: var(--text-dark);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* 1. الشريط العلوي (Toolbar) */
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .toolbar-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .toolbar-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .pro-input, .pro-select {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.85rem;
+            outline: none;
+            color: var(--text-dark);
+            background: var(--bg-card);
+        }
+
+        .pro-input:focus, .pro-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+        }
+
+        /* 2. حاوية الجدول (Data Grid) */
+        .data-grid {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        /* تخطيط الأعمدة باستخدام CSS Grid */
+        .grid-row {
+            display: grid;
+            grid-template-columns: 40px 3fr 2fr 1fr 1fr 80px;
+            gap: 16px;
+            align-items: center;
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.2s ease;
+        }
+
+        /* ترويسة الجدول (Header) */
+        .grid-header {
+            background: #f9fafb;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+        }
+
+        .grid-row:not(.grid-header):hover {
+            background: #f9fafb;
+        }
+
+        .grid-row:last-child {
+            border-bottom: none;
+        }
+
+        /* 3. عناصر الجدول الداخلي */
+        .mini-poster {
+            width: 40px;
+            height: 60px;
+            border-radius: 4px;
+            object-fit: cover;
+        }
+
+        .show-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .show-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .show-meta {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* شريط التقدم النحيف */
+        .progress-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .progress-bar-bg {
+            flex-grow: 1;
+            height: 6px;
+            background: var(--border-color);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        .progress-text {
+            font-size: 0.8rem;
+            font-weight: 500;
+            min-width: 35px;
+        }
+
+        /* شارة الحالة (Status Badge) */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge.downloaded {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge.watching {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        /* عمود الحجم */
+        .size-col {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* زر الخيارات */
+        .action-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .action-btn:hover {
+            background: var(--border-color);
+            color: var(--text-dark);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        
+        <!-- أدوات التحكم والفلترة -->
+        <header class="toolbar">
+            <h1 class="toolbar-title">Library Management</h1>
+            <div class="toolbar-actions">
+                <input type="text" class="pro-input" placeholder="🔍 Search shows...">
+                <select class="pro-select">
+                    <option>Sort by: Recently Added</option>
+                    <option>Sort by: File Size (Largest)</option>
+                    <option>Sort by: Progress</option>
+                </select>
+                <select class="pro-select">
+                    <option>Filter: All</option>
+                    <option>Filter: Downloaded</option>
+                </select>
+            </div>
+        </header>
+
+        <!-- شبكة البيانات (List View) -->
+        <div class="data-grid">
+            
+            <!-- ترويسة الأعمدة -->
+            <div class="grid-row grid-header">
+                <div>Cover</div>
+                <div>Show Details</div>
+                <div>Watch Progress</div>
+                <div>Local Size</div>
+                <div>Status</div>
+                <div>Actions</div>
+            </div>
+
+            <!-- صف مسلسل 1 -->
+            <div class="grid-row">
+                <img src="https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?w=100&q=80" class="mini-poster" alt="Poster">
+                <div class="show-info">
+                    <span class="show-title">The Cyclone</span>
+                    <span class="show-meta">S1 • E4 / 10 Eps</span>
+                </div>
+                <div class="progress-wrapper">
+                    <div class="progress-bar-bg"><div class="progress-fill" style="width: 40%;"></div></div>
+                    <span class="progress-text">40%</span>
+                </div>
+                <div class="size-col">💾 24.5 GB</div>
+                <div><span class="badge downloaded">Downloaded</span></div>
+                <div><button class="action-btn">•••</button></div>
+            </div>
+
+            <!-- صف مسلسل 2 -->
+            <div class="grid-row">
+                <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=100&q=80" class="mini-poster" alt="Poster">
+                <div class="show-info">
+                    <span class="show-title">Dark Matter</span>
+                    <span class="show-meta">S2 • E1 / 8 Eps</span>
+                </div>
+                <div class="progress-wrapper">
+                    <div class="progress-bar-bg"><div class="progress-fill" style="width: 12%;"></div></div>
+                    <span class="progress-text">12%</span>
+                </div>
+                <div class="size-col">☁️ --</div>
+                <div><span class="badge watching">Watching</span></div>
+                <div><button class="action-btn">•••</button></div>
+            </div>
+
+            <!-- صف مسلسل 3 -->
+            <div class="grid-row">
+                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=100&q=80" class="mini-poster" alt="Poster">
+                <div class="show-info">
+                    <span class="show-title">Abstract Art</span>
+                    <span class="show-meta">S1 • E8 / 8 Eps</span>
+                </div>
+                <div class="progress-wrapper">
+                    <div class="progress-bar-bg"><div class="progress-fill" style="width: 100%; background: var(--success);"></div></div>
+                    <span class="progress-text">100%</span>
+                </div>
+                <div class="size-col">💾 18.2 GB</div>
+                <div><span class="badge downloaded">Downloaded</span></div>
+                <div><button class="action-btn">•••</button></div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
