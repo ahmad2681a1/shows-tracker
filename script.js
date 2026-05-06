@@ -1854,6 +1854,51 @@ const TMDB_API_KEY = 'e7be99b2666a862f16f0a6b5441c150b';
                 }
             }
         }
+        
+        window.exportData = function() {
+            const data = {};
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                data[key] = localStorage.getItem(key);
+            }
+            const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `shows_tracker_backup_${new Date().toISOString().slice(0,10)}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('<span class="material-symbols-outlined">download_done</span> Backup downloaded!');
+        };
+
+        window.importData = function() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        const data = JSON.parse(event.target.result);
+                        if (confirm('This will overwrite your current data. Are you sure?')) {
+                            localStorage.clear();
+                            Object.keys(data).forEach(key => {
+                                localStorage.setItem(key, data[key]);
+                            });
+                            showToast('<span class="material-symbols-outlined">check_circle</span> Data imported! Reloading...');
+                            setTimeout(() => location.reload(), 1500);
+                        }
+                    } catch (err) {
+                        alert('Invalid backup file.');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        };
 
         async function toggleTraktDetails() {
             const panel = document.getElementById('trakt-details-panel');

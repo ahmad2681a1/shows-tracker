@@ -141,6 +141,14 @@
         <div class="stats-header">
             <h2>Your Watching Statistics</h2>
             <p>A comprehensive breakdown of your viewing habits.</p>
+            <div class="data-mgmt-btns">
+                <button class="data-btn export-btn" onclick="exportData()" title="Export your data to a file">
+                    <span class="material-symbols-outlined">download</span> Export Backup
+                </button>
+                <button class="data-btn import-btn" onclick="importData()" title="Import data from a backup file">
+                    <span class="material-symbols-outlined">upload</span> Import Backup
+                </button>
+            </div>
         </div>
                 <div class="stats-dashboard" id="stats-dashboard">
             <!-- Row 1: Time (Span 4) + Storage (Span 2) -->
