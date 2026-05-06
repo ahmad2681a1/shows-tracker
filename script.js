@@ -1185,8 +1185,8 @@ const TMDB_API_KEY = 'e7be99b2666a862f16f0a6b5441c150b';
                 let favText = isFav ? '<span class="material-symbols-outlined" style="color:var(--accent-red)">heart_minus</span> Remove Favorite' : '<span class="material-symbols-outlined">favorite</span> Add to Favorites';
                 let favAction = isFav ? 'remove_favorite' : 'favorite';
 
-                let compText = currentStatus === 'completed' ? '<span class="material-symbols-outlined">remove_done</span> Remove Watched' : '<span class="material-symbols-outlined" style="color:#10b981">done_all</span> Mark Watched';
-                let compAction = currentStatus === 'completed' ? 'remove_status' : 'completed';
+                let compText = (currentStatus === 'completed' || currentStatus === 'watching') ? '<span class="material-symbols-outlined">remove_done</span> Remove Watched' : '<span class="material-symbols-outlined" style="color:#10b981">done_all</span> Mark Watched';
+                let compAction = (currentStatus === 'completed' || currentStatus === 'watching') ? 'remove_status' : 'completed';
 
                 let planText = currentStatus === 'plan' ? '<span class="material-symbols-outlined">playlist_remove</span> Remove Watchlist' : '<span class="material-symbols-outlined" style="color:#facc15">playlist_add</span> Add to Watchlist';
                 let planAction = currentStatus === 'plan' ? 'remove_status' : 'plan';
