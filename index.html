@@ -141,8 +141,114 @@
         <div class="stats-header">
             <h2>Your Watching Statistics</h2>
             <p>A comprehensive breakdown of your viewing habits.</p>
+            <div class="data-mgmt-btns">
+                <button class="data-btn export-btn" onclick="exportData()" title="Export your data to a file">
+                    <span class="material-symbols-outlined">download</span> Export Backup
+                </button>
+                <button class="data-btn import-btn" onclick="importData()" title="Import data from a backup file">
+                    <span class="material-symbols-outlined">upload</span> Import Backup
+                </button>
+            </div>
         </div>
-        <div class="stats-dashboard" id="stats-dashboard"></div>
+                <div class="stats-dashboard" id="stats-dashboard">
+            <!-- Row 1: Time (Span 4) + Storage (Span 2) -->
+            <div class="stat-card hero span-4 row-2">
+                <div class="hero-icon-container">
+                    <span class="material-symbols-outlined">schedule</span>
+                </div>
+                <div class="hero-content">
+                    <h3>Total Viewing Time</h3>
+                    <div class="time-display">
+                        <div class="time-group">
+                            <span class="time-value" id="stat-days">0</span>
+                            <span class="time-label">Days</span>
+                        </div>
+                        <div class="time-group">
+                            <span class="time-value" id="stat-hours">0</span>
+                            <span class="time-label">Hours</span>
+                        </div>
+                        <div class="time-group">
+                            <span class="time-value" id="stat-mins">0</span>
+                            <span class="time-label">Minutes</span>
+                        </div>
+                    </div>
+                    <div class="episode-badge">
+                        <span class="material-symbols-outlined">movie</span>
+                        <span id="stat-episodes">Calculated from <b>0</b> watched episodes</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card storage-card span-2 row-2">
+                <h3><span class="material-symbols-outlined">inventory_2</span> Storage</h3>
+                <div class="stat-mini-grid">
+                    <div class="mini-stat-card">
+                        <span class="material-symbols-outlined" style="color: #6366f1;">download_for_offline</span>
+                        <div>
+                            <div class="mini-stat-value" id="stat-downloaded-count">0</div>
+                            <div class="mini-stat-label">Downloaded</div>
+                        </div>
+                    </div>
+                    <div class="mini-stat-card">
+                        <span class="material-symbols-outlined" style="color: #8b5cf6;">database</span>
+                        <div>
+                            <div class="mini-stat-value" id="stat-total-size">0.00 TB</div>
+                            <div class="mini-stat-label">Total Storage</div>
+                        </div>
+                    </div>
+                    <div class="mini-stat-card">
+                        <span class="material-symbols-outlined" style="color: #ec4899;">check_circle</span>
+                        <div>
+                            <div class="mini-stat-value" id="stat-total-eps">0</div>
+                            <div class="mini-stat-label">Total Episodes</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 2: Top Networks (Span 4) + More Metrics (Span 2) -->
+            <div class="stat-card span-4 row-2">
+                <h3><span class="material-symbols-outlined">hub</span> Top Networks</h3>
+                <div class="chart-wrapper">
+                    <canvas id="networksChart"></canvas>
+                </div>
+            </div>
+
+            <div class="stat-card span-2 row-2">
+                <h3><span class="material-symbols-outlined">analytics</span> More Metrics</h3>
+                <div class="stat-mini-grid">
+                    <div class="mini-stat-card">
+                        <span class="material-symbols-outlined" style="color: #facc15;">tv</span>
+                        <div>
+                            <div class="mini-stat-value" id="stat-total-shows">0</div>
+                            <div class="mini-stat-label">Total Shows</div>
+                        </div>
+                    </div>
+                    <div class="mini-stat-card">
+                        <span class="material-symbols-outlined" style="color: #fbbf24;">star</span>
+                        <div>
+                            <div class="mini-stat-value" id="stat-avg-rating">0.0</div>
+                            <div class="mini-stat-label">Avg Rating</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 3: Genre Breakdown (Span 3) + Status Distribution (Span 3) -->
+            <div class="stat-card span-3 row-2">
+                <h3><span class="material-symbols-outlined">pie_chart</span> Genre Breakdown</h3>
+                <div class="chart-wrapper">
+                    <canvas id="genresChart"></canvas>
+                </div>
+            </div>
+
+            <div class="stat-card span-3 row-2">
+                <h3><span class="material-symbols-outlined">data_usage</span> Status Distribution</h3>
+                <div class="chart-wrapper">
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+        </div>
         <div id="stats-loader" class="stats-loader" style="display: none;">
             <div class="spinner"></div>
             <p>Crunching your viewing data...</p>
@@ -156,8 +262,17 @@
         <div id="tracker-sort-menu" class="sort-menu-dropdown">
             <div class="sort-option" onclick="applyTrackerSort('newest')">Last Added</div>
             <div class="sort-option" onclick="applyTrackerSort('oldest')">Oldest</div>
+            <div class="sort-option" onclick="applyTrackerSort('size')">Size</div>
         </div>
     </div>
+    <!-- Continue Watching Section -->
+    <section id="continue-watching-section" class="continue-watching-section" style="display: none;">
+        <h3 class="section-heading"><span class="material-symbols-outlined">history</span> Continue Watching</h3>
+        <div id="continue-watching-list" class="continue-watching-list">
+            <!-- Cards will be injected here -->
+        </div>
+    </section>
+
     <div id="shows-grid" class="shows-grid"></div>
     <div id="loading-trigger" style="height: 10px; margin-bottom: 50px;"></div>
 
@@ -176,19 +291,27 @@
                             <img src="https://www.stremio.com/website/stremio-logo-small.png" alt="Stremio" style="height: 16px; margin-right: 0px; vertical-align: middle;"> Stremio
                         </a>
                     </div>
-                </div>
+
+                </div> <!-- End modal-sidebar -->
                 
                 <div class="modal-details">
                     <h2 id="modal-title" class="cinematic-title">Show Title</h2>
                     
                     <div class="modal-meta-info">
-                        <span id="modal-date" class="meta-badge">📅 Loading...</span>
-                        <span id="modal-status" class="meta-badge">Status: Loading...</span>
-                        <span id="modal-seasons" class="meta-badge">Seasons: Loading...</span>
-                        <span id="modal-country" class="meta-badge">🌍 Origin: Loading...</span>
+                        <span id="modal-date" class="meta-badge date">📅 Loading...</span>
+                        <span id="modal-status" class="meta-badge status">Loading...</span>
+                        <span id="modal-seasons" class="meta-badge seasons">Loading...</span>
+                        <span id="modal-country" class="meta-badge origin">🌍 Loading...</span>
                     </div>
                     
-                    <div id="modal-genres" class="modal-genres"></div>
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 25px;">
+                        <div id="modal-genres" class="modal-genres" style="margin-bottom: 0;"></div>
+                        <span class="info-toggle-btn" onclick="toggleTraktDetails()" title="Advanced Trakt Info">ⓘ</span>
+                    </div>
+                    
+                    <div id="trakt-details-panel" class="trakt-details-panel hidden">
+                        <!-- Will be filled by JS -->
+                    </div>
                     
                     <div class="overview-section" style="margin-bottom: 20px;">
                         <h3 class="section-heading">Overview</h3>
@@ -197,45 +320,60 @@
                     
                     <div class="ratings-box">
                         <div class="rating-item tmdb">
-                            <span class="rating-label">TMDB</span> 
                             <span class="rating-value">
                                 <img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_square_1-5bdc75aaebeb75dc7ae79426ddd9be3b2be1e342510f8202baf6bffa71d7f5c4.svg" alt="TMDB">
-                                <span id="modal-tmdb-rating">...</span>
+                                <span id="modal-tmdb-rating"></span>
                             </span>
                             <span id="modal-tmdb-votes" class="rating-votes"></span>
                         </div>
                         <div class="rating-item imdb">
-                            <span class="rating-label">IMDb</span> 
                             <span class="rating-value">
                                 <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg" alt="IMDb">
-                                <span id="modal-imdb-rating">...</span>
+                                <span id="modal-imdb-rating"></span>
                             </span>
                             <span id="modal-imdb-votes" class="rating-votes"></span>
                         </div>
-                        <div class="rating-item trakt">
-                            <span class="rating-label">Trakt</span> 
+                        <div class="rating-item trakt" id="trakt-rating-item" style="display: none;">
                             <span class="rating-value">
-                                <img src="https://cdn.simpleicons.org/trakt/ed1c24" alt="Trakt">
-                                <span id="modal-trakt-rating">...</span>
+                                <img src="trakt-logo-custom.png" alt="Trakt" style="height: 18px !important; width: auto; vertical-align: middle;">
+                                <span id="modal-trakt-rating"></span>
                             </span>
                             <span id="modal-trakt-votes" class="rating-votes"></span>
                         </div>
+                        <div class="rating-item rt" id="rt-rating-item" style="display: none;">
+                            <span class="rating-value">
+                                <img src="rt-icon.png" alt="RT">
+                                <span id="modal-rt-rating"></span>
+                            </span>
+                        </div>
                     </div>
-                    
-                    <div id="seasons-tracker-container" style="display: none; width: 100%; margin-top: 30px;">
+                </div>
+            </div> <!-- End modal-body-wrapper -->
+
+            <!-- Full Width Sections Area -->
+            <div class="modal-sections-full">
+                <div id="seasons-tracker-container" class="seasons-tracker-container" style="display: none;">
+                    <div class="seasons-header-row">
                         <h3 class="section-heading">Seasons</h3>
-                        <div id="seasons-list" class="seasons-container"></div>
+                        <div class="custom-dropdown" id="season-dropdown">
+                            <div class="dropdown-trigger" id="dropdown-trigger" onclick="toggleCustomDropdown('dropdown-menu', event)">
+                                <span id="current-season-label">Season 1</span>
+                                <span class="material-symbols-outlined dropdown-arrow">expand_more</span>
+                            </div>
+                            <div class="custom-dropdown-menu" id="dropdown-menu"></div>
+                        </div>
                     </div>
+                    <div id="episodes-list" class="episodes-scroll-container"></div>
+                </div>
 
-                    <div class="cast-section" id="cast-section" style="display: none; margin-top: 30px;">
-                        <h3 class="section-heading">Cast & Crew</h3>
-                        <div class="cast-container" id="cast-container"></div>
-                    </div>
+                <div class="cast-section" id="cast-section" style="display: none;">
+                    <h3 class="section-heading">Cast & Crew</h3>
+                    <div class="cast-container" id="cast-container"></div>
+                </div>
 
-                    <div class="recommendations-section" id="rec-section" style="display: none; margin-top: 30px;">
-                        <h3 class="section-heading">Similar Shows</h3>
-                        <div class="rec-container" id="rec-container"></div>
-                    </div>
+                <div class="recommendations-section" id="rec-section" style="display: none;">
+                    <h3 class="section-heading">Similar Shows</h3>
+                    <div class="rec-container" id="rec-container"></div>
                 </div>
             </div>
         </div>
