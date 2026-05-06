@@ -1987,12 +1987,12 @@
             position: absolute;
             top: 10px;
             right: 10px;
-            background: rgba(15, 23, 42, 0.6);
+            background: rgba(15, 23, 42, 0.8);
             backdrop-filter: blur(8px);
             color: white;
             padding: 5px 12px;
             border-radius: 12px;
-            font-size: 0.75rem;
+            font-size: 0.85rem;
             font-weight: 800;
             display: flex;
             align-items: center;
@@ -2000,9 +2000,9 @@
             z-index: 110;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-            opacity: 0.35; /* Slightly visible by default */
+            opacity: 0.8; /* More visible by default as requested */
             pointer-events: none;
         }
 
